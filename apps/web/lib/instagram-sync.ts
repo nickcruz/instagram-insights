@@ -356,6 +356,8 @@ class GraphApiError extends Error {
   }
 }
 
+const GRAPH_RETRY_DELAYS_MS = [400, 900, 1800];
+
 function nowUtc() {
   return new Date();
 }
@@ -462,46 +464,80 @@ function compactError(error: unknown) {
   return error instanceof Error ? error.message : "Unknown Instagram sync error.";
 }
 
-async function graphGet(url: URL, timeout = 60_000) {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      signal: controller.signal,
-      cache: "no-store",
-    });
-
-    const text = await response.text();
-    const payload = text ? (JSON.parse(text) as GraphResponse) : {};
-
-    if (!response.ok) {
-      throw new GraphApiError(
-        `HTTP ${response.status} for ${url.toString()}`,
-        payload,
-        response.status,
-      );
-    }
-
-    return payload;
-  } catch (error) {
-    if (error instanceof GraphApiError) {
-      throw error;
-    }
-
-    if (error instanceof Error && error.name === "AbortError") {
-      throw new GraphApiError(`Request timed out for ${url.toString()}`);
-    }
-
-    throw new GraphApiError(
-      `Network error for ${url.toString()}: ${
-        error instanceof Error ? error.message : "unknown"
-      }`,
-    );
-  } finally {
-    clearTimeout(timeoutId);
+function isRetryableGraphError(error: unknown) {
+  if (!(error instanceof GraphApiError)) {
+    return false;
   }
+
+  if (typeof error.status !== "number") {
+    return true;
+  }
+
+  return error.status === 429 || error.status >= 500;
+}
+
+function sleep(ms: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+async function graphGet(url: URL, timeout = 60_000) {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt <= GRAPH_RETRY_DELAYS_MS.length; attempt += 1) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        signal: controller.signal,
+        cache: "no-store",
+      });
+
+      const text = await response.text();
+      const payload = text ? (JSON.parse(text) as GraphResponse) : {};
+
+      if (!response.ok) {
+        throw new GraphApiError(
+          `HTTP ${response.status} for ${url.toString()}`,
+          payload,
+          response.status,
+        );
+      }
+
+      return payload;
+    } catch (error) {
+      const normalizedError =
+        error instanceof GraphApiError
+          ? error
+          : error instanceof Error && error.name === "AbortError"
+            ? new GraphApiError(`Request timed out for ${url.toString()}`)
+            : new GraphApiError(
+                `Network error for ${url.toString()}: ${
+                  error instanceof Error ? error.message : "unknown"
+                }`,
+              );
+
+      lastError = normalizedError;
+
+      if (
+        attempt === GRAPH_RETRY_DELAYS_MS.length ||
+        !isRetryableGraphError(normalizedError)
+      ) {
+        throw normalizedError;
+      }
+
+      await sleep(GRAPH_RETRY_DELAYS_MS[attempt]);
+    } finally {
+      clearTimeout(timeoutId);
+    }
+  }
+
+  throw lastError instanceof Error
+    ? lastError
+    : new GraphApiError(`Network error for ${url.toString()}: unknown`);
 }
 
 async function graphGetPath(
