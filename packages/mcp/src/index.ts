@@ -17,6 +17,11 @@ import { z } from "zod";
 
 type McpContext = {
   userId: string;
+  triggerSync?: (input: {
+    userId: string;
+    force?: boolean;
+    staleAfterHours?: number;
+  }) => Promise<Record<string, unknown>>;
 };
 
 function jsonText(data: unknown) {
@@ -147,6 +152,34 @@ function createInstagramInsightsMcpServer(context: McpContext) {
           userId: context.userId,
         }),
       ),
+  );
+
+  server.registerTool(
+    "trigger_sync",
+    {
+      title: "Trigger Sync",
+      description:
+        "Queue a new Instagram full sync for the authenticated user. If force is false, the tool may reuse an already-active run or skip queueing when the latest sync is fresh enough.",
+      inputSchema: z.object({
+        force: z.boolean().optional(),
+        staleAfterHours: z.number().int().min(1).max(24 * 30).optional(),
+      }),
+    },
+    async (input) => {
+      if (!context.triggerSync) {
+        return jsonResult({
+          error: "Sync triggering is not enabled for this MCP server.",
+        });
+      }
+
+      return jsonResult(
+        await context.triggerSync({
+          userId: context.userId,
+          force: input.force,
+          staleAfterHours: input.staleAfterHours,
+        }),
+      );
+    },
   );
 
   server.registerResource(

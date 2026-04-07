@@ -160,7 +160,7 @@ function serializeInstagramAccount(
   };
 }
 
-function serializeSyncRunSummary(
+export function serializeSyncRunSummary(
   row: RawSyncRun,
 ): InstagramSyncRunSummary {
   return {
@@ -656,6 +656,17 @@ export async function getLatestInstagramSyncRun(userId: string) {
       .orderBy(desc(instagramSyncRuns.startedAt), desc(instagramSyncRuns.id))
       .limit(1)
   )[0] ?? null;
+}
+
+export async function getLatestActiveInstagramSyncRunByUserId(userId: string) {
+  const rows = await getDb()
+    .select()
+    .from(instagramSyncRuns)
+    .where(eq(instagramSyncRuns.userId, userId))
+    .orderBy(desc(instagramSyncRuns.startedAt), desc(instagramSyncRuns.id))
+    .limit(10);
+
+  return rows.find((row) => row.status === "queued" || row.status === "running") ?? null;
 }
 
 export async function getAccountOverviewByUserId(

@@ -11,6 +11,7 @@ The app now exposes:
 
 - A hosted MCP endpoint at `/mcp`
 - Read-only REST endpoints under `/api/v1/*`
+- A sync-triggering REST endpoint at `POST /api/v1/sync-runs`
 - A signed-in dashboard page at `/profile/developer`
 - A public docs page at `/developers`
 
@@ -197,4 +198,5 @@ The hosted MCP is ready when all of these are true:
 - `codex mcp add ... --url ... --bearer-token-env-var ...` works
 - `claude mcp add --transport http ... --header ...` works
 - MCP tools can read account overview, media, and sync runs
+- MCP tools can trigger a sync with `trigger_sync`
 - MCP resources can read `schema://overview` and `schema://table/instagram_media_item`

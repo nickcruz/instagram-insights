@@ -24,7 +24,7 @@ export type InstagramSyncWorkflowInput = {
   syncRunId: string;
   userId: string;
   instagramAccountId: string;
-  triggerType: "manual" | "scheduled";
+  triggerType: "manual" | "scheduled" | "developer_api";
 };
 
 export async function instagramFullSyncWorkflow(
