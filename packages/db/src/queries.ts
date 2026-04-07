@@ -11,7 +11,7 @@ import type {
   SyncRunDetailResponse,
   SyncRunListResponse,
 } from "@instagram-insights/contracts";
-import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
+import { and, desc, eq, gte, isNull, lte, ne, or, sql } from "drizzle-orm";
 
 import { getDb } from "./client";
 import {
@@ -62,6 +62,31 @@ type SyncRunProgress = {
   totalBundles?: number;
   completedBundles?: number;
   activeBundleLabel?: string | null;
+  transcriptEligibleCount?: number;
+  transcriptCompletedCount?: number;
+  transcriptFailedCount?: number;
+  activeTranscriptMediaId?: string | null;
+};
+
+type TranscriptStatus = "processing" | "completed" | "failed";
+
+type TranscriptSuccessInput = {
+  mediaId: string;
+  syncRunId: string;
+  transcriptText: string;
+  transcriptLanguage?: string | null;
+  transcriptModel: string;
+  transcriptClipSeconds: number;
+  transcriptMetadata?: Record<string, unknown> | null;
+};
+
+type TranscriptFailureInput = {
+  mediaId: string;
+  syncRunId: string;
+  error: string;
+  transcriptModel?: string | null;
+  transcriptClipSeconds?: number | null;
+  transcriptMetadata?: Record<string, unknown> | null;
 };
 
 type PaginationCursor = {
@@ -209,6 +234,14 @@ function serializeMediaListItem(
     postedAt: toIsoString(row.postedAt),
     username: row.username ?? null,
     isCommentEnabled: row.isCommentEnabled ?? null,
+    transcriptStatus: row.transcriptStatus ?? null,
+    transcriptText: row.transcriptText ?? null,
+    transcriptLanguage: row.transcriptLanguage ?? null,
+    transcriptModel: row.transcriptModel ?? null,
+    transcriptClipSeconds: row.transcriptClipSeconds ?? null,
+    transcriptError: row.transcriptError ?? null,
+    transcriptMetadata: toRecord(row.transcriptMetadata),
+    transcriptUpdatedAt: toIsoString(row.transcriptUpdatedAt),
     syncedAt: row.syncedAt.toISOString(),
     createdAt: row.createdAt.toISOString(),
     updatedAt: row.updatedAt.toISOString(),
@@ -405,6 +438,10 @@ export async function createInstagramSyncRun(input: {
           totalBundles: 0,
           completedBundles: 0,
           activeBundleLabel: null,
+          transcriptEligibleCount: 0,
+          transcriptCompletedCount: 0,
+          transcriptFailedCount: 0,
+          activeTranscriptMediaId: null,
         },
         startedAt: new Date(),
         updatedAt: new Date(),
@@ -511,13 +548,9 @@ export async function persistInstagramSyncResult(input: SyncResultInput) {
     await tx
       .update(instagramSyncRuns)
       .set({
-        status: "completed",
         currentStep: "persist",
-        progressPercent: 100,
-        statusMessage: "Sync completed",
-        progress: null,
+        statusMessage: "Sync data persisted",
         lastHeartbeatAt: now,
-        completedAt: now,
         durationSeconds: input.summary.durationSeconds,
         mediaCount: input.summary.mediaCount,
         warningCount: input.summary.warningCount,
@@ -644,6 +677,135 @@ export async function persistInstagramSyncResult(input: SyncResultInput) {
           },
         });
     }
+  });
+}
+
+export async function markInstagramSyncRunCompleted(input: {
+  runId: string;
+  statusMessage?: string | null;
+}) {
+  const now = new Date();
+
+  return (
+    await getDb()
+      .update(instagramSyncRuns)
+      .set({
+        status: "completed",
+        currentStep: "complete",
+        progressPercent: 100,
+        statusMessage: input.statusMessage ?? "Sync completed",
+        progress: null,
+        lastHeartbeatAt: now,
+        completedAt: now,
+        updatedAt: now,
+      })
+      .where(eq(instagramSyncRuns.id, input.runId))
+      .returning()
+  )[0] ?? null;
+}
+
+export async function listInstagramMediaItemsForTranscription(input: {
+  syncRunId: string;
+  userId: string;
+}) {
+  return await getDb()
+    .select({
+      id: instagramMediaItems.id,
+      mediaType: instagramMediaItems.mediaType,
+      mediaUrl: instagramMediaItems.mediaUrl,
+      transcriptStatus: instagramMediaItems.transcriptStatus,
+    })
+    .from(instagramMediaItems)
+    .where(
+      and(
+        eq(instagramMediaItems.userId, input.userId),
+        eq(instagramMediaItems.lastSyncRunId, input.syncRunId),
+        eq(instagramMediaItems.mediaType, "VIDEO"),
+        or(
+          isNull(instagramMediaItems.transcriptStatus),
+          ne(instagramMediaItems.transcriptStatus, "completed"),
+        ),
+      ),
+    )
+    .orderBy(desc(instagramMediaItems.postedAt), desc(instagramMediaItems.id));
+}
+
+async function updateInstagramMediaTranscriptStatus(input: {
+  mediaId: string;
+  syncRunId: string;
+  transcriptStatus: TranscriptStatus;
+  transcriptText?: string | null;
+  transcriptLanguage?: string | null;
+  transcriptModel?: string | null;
+  transcriptClipSeconds?: number | null;
+  transcriptError?: string | null;
+  transcriptMetadata?: Record<string, unknown> | null;
+}) {
+  return (
+    await getDb()
+      .update(instagramMediaItems)
+      .set({
+        transcriptStatus: input.transcriptStatus,
+        transcriptText: input.transcriptText ?? null,
+        transcriptLanguage: input.transcriptLanguage ?? null,
+        transcriptModel: input.transcriptModel ?? null,
+        transcriptClipSeconds: input.transcriptClipSeconds ?? null,
+        transcriptError: input.transcriptError ?? null,
+        transcriptMetadata: input.transcriptMetadata ?? null,
+        transcriptUpdatedAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(instagramMediaItems.id, input.mediaId),
+          eq(instagramMediaItems.lastSyncRunId, input.syncRunId),
+        ),
+      )
+      .returning()
+  )[0] ?? null;
+}
+
+export async function markInstagramMediaItemTranscriptionStarted(input: {
+  mediaId: string;
+  syncRunId: string;
+}) {
+  return updateInstagramMediaTranscriptStatus({
+    mediaId: input.mediaId,
+    syncRunId: input.syncRunId,
+    transcriptStatus: "processing",
+    transcriptError: null,
+  });
+}
+
+export async function persistInstagramMediaItemTranscriptionSuccess(
+  input: TranscriptSuccessInput,
+) {
+  return updateInstagramMediaTranscriptStatus({
+    mediaId: input.mediaId,
+    syncRunId: input.syncRunId,
+    transcriptStatus: "completed",
+    transcriptText: input.transcriptText,
+    transcriptLanguage: input.transcriptLanguage ?? null,
+    transcriptModel: input.transcriptModel,
+    transcriptClipSeconds: input.transcriptClipSeconds,
+    transcriptError: null,
+    transcriptMetadata: input.transcriptMetadata ?? null,
+  });
+}
+
+export async function persistInstagramMediaItemTranscriptionFailure(
+  input: TranscriptFailureInput,
+) {
+  return updateInstagramMediaTranscriptStatus({
+    mediaId: input.mediaId,
+    syncRunId: input.syncRunId,
+    transcriptStatus: "failed",
+    transcriptText: null,
+    transcriptLanguage: null,
+    transcriptModel: input.transcriptModel ?? null,
+    transcriptClipSeconds: input.transcriptClipSeconds ?? null,
+    transcriptError: input.error,
+    transcriptMetadata: input.transcriptMetadata ?? null,
   });
 }
 

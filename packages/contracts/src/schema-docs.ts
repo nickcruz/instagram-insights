@@ -418,6 +418,7 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
     notes: [
       "This table is suitable for agent prompts like 'show my latest reels with the highest reach'.",
       "The `raw` column preserves the normalized per-media payload; `insights` is the easiest field for metrics.",
+      "Transcript fields are updated after media persistence by the offline transcriber service path.",
     ],
     columns: [
       {
@@ -521,6 +522,54 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
         type: "boolean",
         visibility: "public",
         description: "Whether comments are enabled for the media.",
+      },
+      {
+        name: "transcriptStatus",
+        type: "text",
+        visibility: "public",
+        description: "Best-effort transcript state such as processing, completed, or failed.",
+      },
+      {
+        name: "transcriptText",
+        type: "text",
+        visibility: "public",
+        description: "Transcript text generated for eligible video media.",
+      },
+      {
+        name: "transcriptLanguage",
+        type: "text",
+        visibility: "public",
+        description: "Detected transcript language.",
+      },
+      {
+        name: "transcriptModel",
+        type: "text",
+        visibility: "public",
+        description: "Local Whisper model used to generate the transcript.",
+      },
+      {
+        name: "transcriptClipSeconds",
+        type: "integer",
+        visibility: "public",
+        description: "How many seconds of source audio were included in the transcript clip.",
+      },
+      {
+        name: "transcriptError",
+        type: "text",
+        visibility: "public",
+        description: "Last transcription error for the media when a best-effort attempt failed.",
+      },
+      {
+        name: "transcriptMetadata",
+        type: "jsonb",
+        visibility: "public",
+        description: "Structured transcript metadata such as truncation and requested clip length.",
+      },
+      {
+        name: "transcriptUpdatedAt",
+        type: "timestamp",
+        visibility: "public",
+        description: "When transcript fields were last updated.",
       },
       {
         name: "topComments",

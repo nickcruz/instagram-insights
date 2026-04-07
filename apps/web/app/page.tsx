@@ -30,8 +30,8 @@ const pillars = [
   },
   {
     icon: Mic,
-    title: "10-second hook transcripts",
-    body: "New video media will fan out to a dedicated Whisper service so we can persist short transcript hooks for downstream UI and MCP usage.",
+    title: "Offline Whisper transcripts",
+    body: "New video media will fan out to a dedicated offline Whisper service so we can persist short transcript hooks for downstream UI and MCP usage.",
   },
 ];
 

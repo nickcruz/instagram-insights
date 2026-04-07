@@ -2,7 +2,14 @@ import { getWorkflowMetadata } from "workflow";
 
 import type { GraphResponse } from "@/lib/instagram-sync";
 import {
+  chunkTranscriptionItems,
+  DEFAULT_TRANSCRIBER_CONCURRENCY,
+  isTranscriberConfigured,
+  resolveTranscriberMaxSeconds,
+} from "@/lib/transcriber";
+import {
   chunkMediaCatalogStep,
+  completeRunStep,
   createBootstrapStep,
   createEmptyProgress,
   failRunStep,
@@ -17,7 +24,9 @@ import {
   mergeBundleManifestsStep,
   normalizeMediaBatchStep,
   persistSyncResultStep,
+  listEligibleTranscriptionTargetsStep,
   loadInstagramAccount,
+  transcribeMediaItemStep,
 } from "@/workflows/instagram-full-sync-steps";
 
 export type InstagramSyncWorkflowInput = {
@@ -305,6 +314,105 @@ export async function instagramFullSyncWorkflow(
       mediaItems,
       manifest: bootstrap.manifest,
       fallbackUsername: link.username,
+    });
+
+    const transcriberReady = isTranscriberConfigured();
+    const transcriptTargets = transcriberReady
+      ? await listEligibleTranscriptionTargetsStep({
+          syncRunId: input.syncRunId,
+          userId: input.userId,
+        })
+      : [];
+
+    progress = {
+      ...progress,
+      transcriptEligibleCount: transcriptTargets.length,
+      transcriptCompletedCount: 0,
+      transcriptFailedCount: 0,
+      activeTranscriptMediaId: null,
+    };
+
+    currentStep = "transcribe-media";
+    progressPercent = 98;
+    await markRunProgress({
+      runId: input.syncRunId,
+      status: "running",
+      currentStep,
+      progressPercent,
+      statusMessage: !transcriberReady
+        ? "Transcriber service is not configured; skipping video transcripts"
+        : transcriptTargets.length > 0
+          ? `Transcribing ${transcriptTargets.length} video media items`
+          : "No video media eligible for transcription",
+      progress,
+    });
+
+    if (transcriberReady && transcriptTargets.length > 0) {
+      const maxSeconds = resolveTranscriberMaxSeconds();
+      let transcriptCompletedCount = 0;
+      let transcriptFailedCount = 0;
+
+      for (const chunk of chunkTranscriptionItems(
+        transcriptTargets,
+        DEFAULT_TRANSCRIBER_CONCURRENCY,
+      )) {
+        progress = {
+          ...progress,
+          activeTranscriptMediaId: chunk[0]?.id ?? null,
+        };
+
+        await markRunProgress({
+          runId: input.syncRunId,
+          status: "running",
+          currentStep,
+          progressPercent,
+          statusMessage: `Transcribing video media (${transcriptCompletedCount + transcriptFailedCount}/${transcriptTargets.length})`,
+          progress,
+        });
+
+        const results = await Promise.all(
+          chunk.map((target) =>
+            transcribeMediaItemStep({
+              syncRunId: input.syncRunId,
+              mediaId: target.id,
+              mediaUrl: target.mediaUrl ?? "",
+              maxSeconds,
+            }),
+          ),
+        );
+
+        for (const result of results) {
+          if (result.status === "completed") {
+            transcriptCompletedCount += 1;
+          } else {
+            transcriptFailedCount += 1;
+          }
+        }
+
+        progress = {
+          ...progress,
+          transcriptCompletedCount,
+          transcriptFailedCount,
+          activeTranscriptMediaId: null,
+        };
+
+        await markRunProgress({
+          runId: input.syncRunId,
+          status: "running",
+          currentStep,
+          progressPercent,
+          statusMessage: `Transcribing video media (${transcriptCompletedCount + transcriptFailedCount}/${transcriptTargets.length})`,
+          progress,
+        });
+      }
+    }
+
+    await completeRunStep({
+      syncRunId: input.syncRunId,
+      statusMessage:
+        transcriberReady && transcriptTargets.length > 0
+          ? "Sync completed with offline video transcripts"
+          : "Sync completed",
     });
 
     return {

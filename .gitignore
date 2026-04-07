@@ -7,3 +7,6 @@ dist
 coverage
 *.tsbuildinfo
 __pycache__
+.pytest_cache
+.venv
+cdk.out

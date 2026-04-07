@@ -11,7 +11,10 @@
     "build": "yarn workspace @instagram-insights/web build",
     "lint": "yarn workspace @instagram-insights/web lint",
     "typecheck": "yarn workspace @instagram-insights/web typecheck",
-    "test": "tsx --test \"**/*.test.ts\"",
+    "test": "yarn test:web && yarn test:transcriber",
+    "test:web": "yarn workspace @instagram-insights/web test",
+    "test:transcriber": "python3 -m pytest services/transcriber/tests",
+    "infra:synth": "yarn workspace @instagram-insights/infra synth",
     "db:generate": "yarn workspace @instagram-insights/db db:generate",
     "db:push": "yarn workspace @instagram-insights/db db:push"
   },

@@ -10,6 +10,10 @@ export type SyncRunProgressState = {
   totalBundles?: number;
   completedBundles?: number;
   activeBundleLabel?: string | null;
+  transcriptEligibleCount?: number;
+  transcriptCompletedCount?: number;
+  transcriptFailedCount?: number;
+  activeTranscriptMediaId?: string | null;
 } | null;
 
 export type LinkedInstagramAccountSummary = {
@@ -87,6 +91,14 @@ export type InstagramMediaListItem = {
   postedAt: string | null;
   username: string | null;
   isCommentEnabled: boolean | null;
+  transcriptStatus: string | null;
+  transcriptText: string | null;
+  transcriptLanguage: string | null;
+  transcriptModel: string | null;
+  transcriptClipSeconds: number | null;
+  transcriptError: string | null;
+  transcriptMetadata: Record<string, unknown> | null;
+  transcriptUpdatedAt: string | null;
   syncedAt: string;
   createdAt: string;
   updatedAt: string;

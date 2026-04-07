@@ -1,10 +1,16 @@
 import { FatalError } from "workflow";
 import {
   getInstagramAccountById,
+  listInstagramMediaItemsForTranscription,
+  markInstagramMediaItemTranscriptionStarted,
+  markInstagramSyncRunCompleted,
   markInstagramSyncRunFailed,
+  persistInstagramMediaItemTranscriptionFailure,
+  persistInstagramMediaItemTranscriptionSuccess,
   persistInstagramSyncResult,
   updateInstagramSyncRunProgress,
 } from "@instagram-insights/db";
+import type { TranscriptionResponse } from "@instagram-insights/contracts";
 
 import {
   chunkMediaCatalog,
@@ -23,6 +29,12 @@ import {
   type Manifest,
   type MediaBundle,
 } from "@/lib/instagram-sync";
+import {
+  buildTranscriptMetadata,
+  isInstagramMediaEligibleForTranscription,
+  isTranscriberConfigured,
+  transcribeInstagramMedia,
+} from "@/lib/transcriber";
 
 export type InstagramWorkflowLink = {
   accessToken: string;
@@ -37,6 +49,10 @@ export type SyncRunProgressState = {
   totalBundles: number;
   completedBundles: number;
   activeBundleLabel: string | null;
+  transcriptEligibleCount: number;
+  transcriptCompletedCount: number;
+  transcriptFailedCount: number;
+  activeTranscriptMediaId: string | null;
 };
 
 export type MediaDetailBundleResult = {
@@ -51,6 +67,19 @@ export type MediaMetricsBundleResult = {
   manifest: Manifest;
 };
 
+export type TranscriptionTarget = {
+  id: string;
+  mediaType: string | null;
+  mediaUrl: string | null;
+  transcriptStatus: string | null;
+};
+
+export type TranscriptionStepResult = {
+  mediaId: string;
+  status: "completed" | "failed";
+  error: string | null;
+};
+
 export function createEmptyProgress(): SyncRunProgressState {
   return {
     mediaCatalogCount: 0,
@@ -58,6 +87,10 @@ export function createEmptyProgress(): SyncRunProgressState {
     totalBundles: 0,
     completedBundles: 0,
     activeBundleLabel: null,
+    transcriptEligibleCount: 0,
+    transcriptCompletedCount: 0,
+    transcriptFailedCount: 0,
+    activeTranscriptMediaId: null,
   };
 }
 
@@ -345,6 +378,148 @@ export async function persistSyncResultStep(input: {
   });
 
   return result.summary;
+}
+
+export async function listEligibleTranscriptionTargetsStep(input: {
+  syncRunId: string;
+  userId: string;
+}) {
+  "use step";
+
+  if (!isTranscriberConfigured()) {
+    return [] as TranscriptionTarget[];
+  }
+
+  const mediaItems = await listInstagramMediaItemsForTranscription(input);
+
+  return mediaItems.filter(isInstagramMediaEligibleForTranscription);
+}
+
+function buildFailureMetadata(input: {
+  mediaUrl: string;
+  requestedMaxSeconds: number;
+  clipSeconds?: number | null;
+  model?: string | null;
+}) {
+  return {
+    mediaUrl: input.mediaUrl,
+    requestedMaxSeconds: input.requestedMaxSeconds,
+    clipSeconds: input.clipSeconds ?? null,
+    model: input.model ?? null,
+  } satisfies Record<string, unknown>;
+}
+
+export async function transcribeMediaItemStep(input: {
+  syncRunId: string;
+  mediaId: string;
+  mediaUrl: string;
+  maxSeconds: number;
+}) {
+  "use step";
+
+  await markInstagramMediaItemTranscriptionStarted({
+    mediaId: input.mediaId,
+    syncRunId: input.syncRunId,
+  });
+
+  try {
+    const response = await transcribeInstagramMedia({
+      mediaId: input.mediaId,
+      mediaUrl: input.mediaUrl,
+      maxSeconds: input.maxSeconds,
+    });
+
+    if (response.status === "completed" && response.transcriptText) {
+      await persistInstagramMediaItemTranscriptionSuccess({
+        mediaId: input.mediaId,
+        syncRunId: input.syncRunId,
+        transcriptText: response.transcriptText,
+        transcriptLanguage: response.language ?? null,
+        transcriptModel: response.model,
+        transcriptClipSeconds: response.clipSeconds,
+        transcriptMetadata: buildTranscriptMetadata({
+          mediaUrl: input.mediaUrl,
+          requestedMaxSeconds: input.maxSeconds,
+          response,
+        }),
+      });
+
+      return {
+        mediaId: input.mediaId,
+        status: "completed",
+        error: null,
+      } satisfies TranscriptionStepResult;
+    }
+
+    const error = response.error ?? "Offline transcription failed.";
+    await persistTranscriptFailure({
+      syncRunId: input.syncRunId,
+      mediaId: input.mediaId,
+      mediaUrl: input.mediaUrl,
+      maxSeconds: input.maxSeconds,
+      error,
+      response,
+    });
+
+    return {
+      mediaId: input.mediaId,
+      status: "failed",
+      error,
+    } satisfies TranscriptionStepResult;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Offline transcription failed.";
+
+    await persistTranscriptFailure({
+      syncRunId: input.syncRunId,
+      mediaId: input.mediaId,
+      mediaUrl: input.mediaUrl,
+      maxSeconds: input.maxSeconds,
+      error: message,
+      response: null,
+    });
+
+    return {
+      mediaId: input.mediaId,
+      status: "failed",
+      error: message,
+    } satisfies TranscriptionStepResult;
+  }
+}
+
+async function persistTranscriptFailure(input: {
+  syncRunId: string;
+  mediaId: string;
+  mediaUrl: string;
+  maxSeconds: number;
+  error: string;
+  response: Pick<TranscriptionResponse, "clipSeconds" | "model"> | null;
+}) {
+  await persistInstagramMediaItemTranscriptionFailure({
+    mediaId: input.mediaId,
+    syncRunId: input.syncRunId,
+    error: input.error,
+    transcriptModel: input.response?.model ?? null,
+    transcriptClipSeconds: input.response?.clipSeconds ?? null,
+    transcriptMetadata: buildFailureMetadata({
+      mediaUrl: input.mediaUrl,
+      requestedMaxSeconds: input.maxSeconds,
+      clipSeconds: input.response?.clipSeconds ?? null,
+      model: input.response?.model ?? null,
+    }),
+  });
+}
+
+export async function completeRunStep(input: {
+  syncRunId: string;
+  statusMessage?: string | null;
+}) {
+  "use step";
+
+  await markInstagramSyncRunCompleted({
+    runId: input.syncRunId,
+    statusMessage: input.statusMessage,
+  });
 }
 
 export async function failRunStep(input: {
