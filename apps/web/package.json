@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.1",
+    "@instagram-insights/contracts": "*",
     "@instagram-insights/db": "*",
+    "@instagram-insights/mcp": "*",
     "@radix-ui/react-slot": "latest",
     "class-variance-authority": "latest",
     "clsx": "latest",
@@ -28,7 +30,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "eslint": "latest",
+    "eslint": "9.39.4",
     "eslint-config-next": "latest",
     "postcss": "latest",
     "typescript": "latest"

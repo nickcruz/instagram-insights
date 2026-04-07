@@ -1,8 +1,11 @@
 import {
   getInstagramAccountByUserId,
   getLatestInstagramSyncRun,
+  listDeveloperApiKeySummariesByUserId,
   isDatabaseConfigured,
 } from "@instagram-insights/db";
+import { ArrowRight, KeyRound } from "lucide-react";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import {
@@ -12,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { auth, isGoogleAuthConfigured } from "@/lib/auth";
 import { isInstagramConfigured } from "@/lib/instagram-oauth";
 import { InstagramLinkCard } from "@/components/instagram-link-card";
@@ -43,6 +47,10 @@ export default async function ProfilePage({
     userId && isDatabaseConfigured
       ? await getLatestInstagramSyncRun(userId)
       : null;
+  const developerKeys =
+    userId && isDatabaseConfigured
+      ? await listDeveloperApiKeySummariesByUserId(userId)
+      : [];
 
   return (
     <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(194,123,63,0.20),transparent_34%),linear-gradient(180deg,#f7efe2_0%,#f3eadc_35%,#efe4d6_100%)] px-6 py-10 md:px-10">
@@ -136,6 +144,40 @@ export default async function ProfilePage({
               : null
           }
         />
+
+        <Card className="bg-white/80 backdrop-blur">
+          <CardHeader>
+            <CardTitle>Developer access</CardTitle>
+            <CardDescription>
+              Create personal API keys, install the hosted MCP, and query your
+              ingested Instagram tables from Codex or Claude Code.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex size-12 items-center justify-center rounded-2xl bg-[var(--primary)]/10 text-[var(--primary)]">
+                <KeyRound className="size-5" />
+              </div>
+              <div className="space-y-1 text-sm text-[var(--muted-foreground)]">
+                <p>
+                  {instagramAccount
+                    ? `${developerKeys.length} API key(s) created for this user.`
+                    : "Link Instagram first, then create API keys for developer access."}
+                </p>
+                <p>
+                  The hosted MCP and REST API are read-only and scoped to this
+                  signed-in user.
+                </p>
+              </div>
+            </div>
+            <Button asChild>
+              <Link href="/profile/developer">
+                Open Developer Access
+                <ArrowRight className="size-4" />
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </main>
   );

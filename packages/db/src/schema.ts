@@ -3,6 +3,7 @@ import crypto from "node:crypto";
 import {
   boolean,
   doublePrecision,
+  index,
   integer,
   jsonb,
   pgTable,
@@ -115,6 +116,32 @@ export const instagramAccounts = pgTable(
     instagramUserIdIdx: uniqueIndex("instagram_account_instagram_user_id_idx").on(
       table.instagramUserId,
     ),
+  }),
+);
+
+export const developerApiKeys = pgTable(
+  "developer_api_key",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    keyPrefix: text("keyPrefix").notNull(),
+    secretHash: text("secretHash").notNull(),
+    lastUsedAt: timestamp("lastUsedAt", { mode: "date" }),
+    expiresAt: timestamp("expiresAt", { mode: "date" }),
+    revokedAt: timestamp("revokedAt", { mode: "date" }),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => ({
+    keyPrefixIdx: uniqueIndex("developer_api_key_key_prefix_idx").on(
+      table.keyPrefix,
+    ),
+    userIdIdx: index("developer_api_key_user_id_idx").on(table.userId),
   }),
 );
 

@@ -11,7 +11,11 @@
     "build": "yarn workspace @instagram-insights/web build",
     "lint": "yarn workspace @instagram-insights/web lint",
     "typecheck": "yarn workspace @instagram-insights/web typecheck",
+    "test": "tsx --test \"**/*.test.ts\"",
     "db:generate": "yarn workspace @instagram-insights/db db:generate",
     "db:push": "yarn workspace @instagram-insights/db db:push"
+  },
+  "devDependencies": {
+    "tsx": "^4.21.0"
   }
 }

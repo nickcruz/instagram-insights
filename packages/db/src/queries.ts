@@ -1,7 +1,21 @@
-import { and, desc, eq } from "drizzle-orm";
+import type {
+  AccountOverviewResponse,
+  DeveloperApiKeySummary,
+  InstagramMediaDetail,
+  InstagramMediaListItem,
+  InstagramSyncRunDetail,
+  InstagramSyncRunSummary,
+  LatestSnapshotResponse,
+  MediaDetailResponse,
+  MediaListResponse,
+  SyncRunDetailResponse,
+  SyncRunListResponse,
+} from "@instagram-insights/contracts";
+import { and, desc, eq, gte, lte, sql } from "drizzle-orm";
 
 import { getDb } from "./client";
 import {
+  developerApiKeys,
   instagramAccountSnapshots,
   instagramAccounts,
   instagramMediaItems,
@@ -50,7 +64,25 @@ type SyncRunProgress = {
   activeBundleLabel?: string | null;
 };
 
+type PaginationCursor = {
+  sortAt: string;
+  id: string;
+};
+
+type RawSyncRun = typeof instagramSyncRuns.$inferSelect;
+type RawInstagramAccount = typeof instagramAccounts.$inferSelect;
+type RawMediaItem = typeof instagramMediaItems.$inferSelect;
+type RawApiKey = typeof developerApiKeys.$inferSelect;
+
 function toDate(value: unknown) {
+  if (!value) {
+    return null;
+  }
+
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+
   if (typeof value !== "string") {
     return null;
   }
@@ -58,6 +90,161 @@ function toDate(value: unknown) {
   const parsed = new Date(value);
   return Number.isNaN(parsed.getTime()) ? null : parsed;
 }
+
+function toIsoString(value: Date | null | undefined) {
+  return value ? value.toISOString() : null;
+}
+
+function isRecord(
+  value: unknown,
+): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function toRecord(value: unknown) {
+  return isRecord(value) ? value : null;
+}
+
+function toArray(value: unknown) {
+  return Array.isArray(value) ? value : null;
+}
+
+function clampLimit(value: number | undefined, fallback = 25, max = 100) {
+  if (!value || Number.isNaN(value)) {
+    return fallback;
+  }
+
+  return Math.max(1, Math.min(value, max));
+}
+
+function encodeCursor(input: PaginationCursor) {
+  return Buffer.from(JSON.stringify(input), "utf8").toString("base64url");
+}
+
+function decodeCursor(value: string | null | undefined) {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(
+      Buffer.from(value, "base64url").toString("utf8"),
+    ) as PaginationCursor;
+
+    if (
+      !parsed ||
+      typeof parsed.sortAt !== "string" ||
+      typeof parsed.id !== "string"
+    ) {
+      return null;
+    }
+
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function serializeInstagramAccount(
+  row: RawInstagramAccount,
+) {
+  return {
+    id: row.id,
+    instagramUserId: row.instagramUserId,
+    username: row.username,
+    graphApiVersion: row.graphApiVersion,
+    linkedAt: row.linkedAt.toISOString(),
+    lastSyncedAt: toIsoString(row.lastSyncedAt),
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+function serializeSyncRunSummary(
+  row: RawSyncRun,
+): InstagramSyncRunSummary {
+  return {
+    id: row.id,
+    instagramAccountId: row.instagramAccountId,
+    status: row.status,
+    triggerType: row.triggerType ?? null,
+    workflowRunId: row.workflowRunId ?? null,
+    currentStep: row.currentStep ?? null,
+    progressPercent: row.progressPercent ?? null,
+    statusMessage: row.statusMessage ?? null,
+    startedAt: row.startedAt.toISOString(),
+    completedAt: toIsoString(row.completedAt),
+    lastHeartbeatAt: toIsoString(row.lastHeartbeatAt),
+    durationSeconds: row.durationSeconds ?? null,
+    mediaCount: row.mediaCount ?? null,
+    warningCount: row.warningCount ?? null,
+    error: row.error ?? null,
+    progress:
+      row.progress && isRecord(row.progress)
+        ? (row.progress as InstagramSyncRunSummary["progress"])
+        : null,
+    summary: toRecord(row.summary),
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+function serializeMediaListItem(
+  row: RawMediaItem,
+): InstagramMediaListItem {
+  return {
+    id: row.id,
+    instagramAccountId: row.instagramAccountId,
+    lastSyncRunId: row.lastSyncRunId ?? null,
+    caption: row.caption ?? null,
+    commentsCount: row.commentsCount ?? null,
+    likeCount: row.likeCount ?? null,
+    mediaProductType: row.mediaProductType ?? null,
+    mediaType: row.mediaType ?? null,
+    mediaUrl: row.mediaUrl ?? null,
+    thumbnailUrl: row.thumbnailUrl ?? null,
+    previewUrl: row.previewUrl ?? null,
+    permalink: row.permalink ?? null,
+    shortcode: row.shortcode ?? null,
+    postedAt: toIsoString(row.postedAt),
+    username: row.username ?? null,
+    isCommentEnabled: row.isCommentEnabled ?? null,
+    syncedAt: row.syncedAt.toISOString(),
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+function serializeMediaDetail(
+  row: RawMediaItem,
+): InstagramMediaDetail {
+  return {
+    ...serializeMediaListItem(row),
+    topComments: toArray(row.topComments),
+    insights: toRecord(row.insights),
+    warnings: toArray(row.warnings),
+    errors: toArray(row.errors),
+    raw: toRecord(row.raw),
+  };
+}
+
+function serializeApiKey(
+  row: RawApiKey,
+): DeveloperApiKeySummary {
+  return {
+    id: row.id,
+    name: row.name,
+    keyPrefix: row.keyPrefix,
+    lastUsedAt: toIsoString(row.lastUsedAt),
+    expiresAt: toIsoString(row.expiresAt),
+    revokedAt: toIsoString(row.revokedAt),
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
+  };
+}
+
+const mediaSortAtExpression =
+  sql<Date>`coalesce(${instagramMediaItems.postedAt}, ${instagramMediaItems.syncedAt}, ${instagramMediaItems.createdAt})`;
 
 export async function getInstagramAccountByUserId(userId: string) {
   return (
@@ -121,6 +308,80 @@ export async function upsertInstagramAccount(input: InstagramAccountInput) {
       })
       .returning()
   )[0];
+}
+
+export async function createDeveloperApiKey(input: {
+  userId: string;
+  name: string;
+  keyPrefix: string;
+  secretHash: string;
+  expiresAt?: Date | null;
+}) {
+  return (
+    await getDb()
+      .insert(developerApiKeys)
+      .values({
+        userId: input.userId,
+        name: input.name,
+        keyPrefix: input.keyPrefix,
+        secretHash: input.secretHash,
+        expiresAt: input.expiresAt ?? null,
+        updatedAt: new Date(),
+      })
+      .returning()
+  )[0];
+}
+
+export async function listDeveloperApiKeysByUserId(userId: string) {
+  return await getDb()
+    .select()
+    .from(developerApiKeys)
+    .where(eq(developerApiKeys.userId, userId))
+    .orderBy(desc(developerApiKeys.createdAt));
+}
+
+export async function getDeveloperApiKeyByPrefix(keyPrefix: string) {
+  return (
+    await getDb()
+      .select()
+      .from(developerApiKeys)
+      .where(eq(developerApiKeys.keyPrefix, keyPrefix))
+      .limit(1)
+  )[0] ?? null;
+}
+
+export async function touchDeveloperApiKeyLastUsed(keyId: string) {
+  return (
+    await getDb()
+      .update(developerApiKeys)
+      .set({
+        lastUsedAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(developerApiKeys.id, keyId))
+      .returning()
+  )[0] ?? null;
+}
+
+export async function revokeDeveloperApiKey(input: {
+  keyId: string;
+  userId: string;
+}) {
+  return (
+    await getDb()
+      .update(developerApiKeys)
+      .set({
+        revokedAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(developerApiKeys.id, input.keyId),
+          eq(developerApiKeys.userId, input.userId),
+        ),
+      )
+      .returning()
+  )[0] ?? null;
 }
 
 export async function createInstagramSyncRun(input: {
@@ -392,7 +653,246 @@ export async function getLatestInstagramSyncRun(userId: string) {
       .select()
       .from(instagramSyncRuns)
       .where(eq(instagramSyncRuns.userId, userId))
-      .orderBy(desc(instagramSyncRuns.startedAt))
+      .orderBy(desc(instagramSyncRuns.startedAt), desc(instagramSyncRuns.id))
       .limit(1)
   )[0] ?? null;
+}
+
+export async function getAccountOverviewByUserId(
+  userId: string,
+): Promise<AccountOverviewResponse> {
+  const [account, latestSyncRun] = await Promise.all([
+    getInstagramAccountByUserId(userId),
+    getLatestInstagramSyncRun(userId),
+  ]);
+
+  if (!account) {
+    return {
+      status: "not_linked",
+      account: null,
+      latestSyncRun: null,
+    };
+  }
+
+  return {
+    status: account.lastSyncedAt ? "ready" : "not_synced",
+    account: serializeInstagramAccount(account),
+    latestSyncRun: latestSyncRun ? serializeSyncRunSummary(latestSyncRun) : null,
+  };
+}
+
+export async function getLatestSnapshotByUserId(
+  userId: string,
+): Promise<LatestSnapshotResponse> {
+  const account = await getInstagramAccountByUserId(userId);
+
+  if (!account) {
+    return {
+      status: "not_linked",
+      account: null,
+      latestSyncRun: null,
+      snapshot: null,
+    };
+  }
+
+  const snapshotRow = (
+    await getDb()
+      .select({
+        snapshot: instagramAccountSnapshots,
+        syncRun: instagramSyncRuns,
+      })
+      .from(instagramAccountSnapshots)
+      .innerJoin(
+        instagramSyncRuns,
+        eq(instagramSyncRuns.id, instagramAccountSnapshots.syncRunId),
+      )
+      .where(eq(instagramSyncRuns.userId, userId))
+      .orderBy(
+        desc(instagramAccountSnapshots.createdAt),
+        desc(instagramAccountSnapshots.syncRunId),
+      )
+      .limit(1)
+  )[0] ?? null;
+
+  if (!snapshotRow) {
+    return {
+      status: "not_synced",
+      account: serializeInstagramAccount(account),
+      latestSyncRun: null,
+      snapshot: null,
+    };
+  }
+
+  return {
+    status: "ready",
+    account: serializeInstagramAccount(account),
+    latestSyncRun: serializeSyncRunSummary(snapshotRow.syncRun),
+    snapshot: {
+      syncRunId: snapshotRow.snapshot.syncRunId,
+      instagramAccountId: snapshotRow.snapshot.instagramAccountId,
+      createdAt: snapshotRow.snapshot.createdAt.toISOString(),
+      account: toRecord(snapshotRow.snapshot.account) ?? {},
+      accountInsights: toRecord(snapshotRow.snapshot.accountInsights) ?? {},
+      analysisFacts: toRecord(snapshotRow.snapshot.analysisFacts) ?? {},
+      highlights: toRecord(snapshotRow.snapshot.highlights) ?? {},
+      warnings: toArray(snapshotRow.snapshot.warnings) ?? [],
+      fetchManifest: toRecord(snapshotRow.snapshot.fetchManifest) ?? {},
+    },
+  };
+}
+
+export async function listInstagramMediaByUserId(input: {
+  userId: string;
+  limit?: number;
+  cursor?: string | null;
+  mediaType?: string | null;
+  since?: string | null;
+  until?: string | null;
+}): Promise<MediaListResponse> {
+  const limit = clampLimit(input.limit);
+  const cursor = decodeCursor(input.cursor);
+  const since = toDate(input.since);
+  const until = toDate(input.until);
+
+  const conditions = [eq(instagramMediaItems.userId, input.userId)];
+
+  if (input.mediaType) {
+    conditions.push(eq(instagramMediaItems.mediaType, input.mediaType));
+  }
+
+  if (since) {
+    conditions.push(gte(mediaSortAtExpression, since));
+  }
+
+  if (until) {
+    conditions.push(lte(mediaSortAtExpression, until));
+  }
+
+  if (cursor) {
+    const cursorDate = toDate(cursor.sortAt);
+
+    if (cursorDate) {
+      conditions.push(
+        sql`(${mediaSortAtExpression} < ${cursorDate} OR (${mediaSortAtExpression} = ${cursorDate} AND ${instagramMediaItems.id} < ${cursor.id}))`,
+      );
+    }
+  }
+
+  const rows = await getDb()
+    .select({
+      media: instagramMediaItems,
+      sortAt: mediaSortAtExpression,
+    })
+    .from(instagramMediaItems)
+    .where(and(...conditions))
+    .orderBy(desc(mediaSortAtExpression), desc(instagramMediaItems.id))
+    .limit(limit + 1);
+
+  const hasMore = rows.length > limit;
+  const pageRows = hasMore ? rows.slice(0, limit) : rows;
+  const lastRow = pageRows.at(-1);
+
+  return {
+    items: pageRows.map(({ media }) => serializeMediaListItem(media)),
+    nextCursor:
+      hasMore && lastRow?.sortAt
+        ? encodeCursor({
+            sortAt: lastRow.sortAt.toISOString(),
+            id: lastRow.media.id,
+          })
+        : null,
+  };
+}
+
+export async function getInstagramMediaDetailById(input: {
+  mediaId: string;
+  userId: string;
+}): Promise<MediaDetailResponse> {
+  const media =
+    (
+      await getDb()
+        .select()
+        .from(instagramMediaItems)
+        .where(
+          and(
+            eq(instagramMediaItems.id, input.mediaId),
+            eq(instagramMediaItems.userId, input.userId),
+          ),
+        )
+        .limit(1)
+    )[0] ?? null;
+
+  return {
+    media: media ? serializeMediaDetail(media) : null,
+  };
+}
+
+export async function listInstagramSyncRunsByUserId(input: {
+  userId: string;
+  limit?: number;
+  cursor?: string | null;
+}): Promise<SyncRunListResponse> {
+  const limit = clampLimit(input.limit);
+  const cursor = decodeCursor(input.cursor);
+  const conditions = [eq(instagramSyncRuns.userId, input.userId)];
+
+  if (cursor) {
+    const cursorDate = toDate(cursor.sortAt);
+
+    if (cursorDate) {
+      conditions.push(
+        sql`(${instagramSyncRuns.startedAt} < ${cursorDate} OR (${instagramSyncRuns.startedAt} = ${cursorDate} AND ${instagramSyncRuns.id} < ${cursor.id}))`,
+      );
+    }
+  }
+
+  const rows = await getDb()
+    .select()
+    .from(instagramSyncRuns)
+    .where(and(...conditions))
+    .orderBy(desc(instagramSyncRuns.startedAt), desc(instagramSyncRuns.id))
+    .limit(limit + 1);
+
+  const hasMore = rows.length > limit;
+  const pageRows = hasMore ? rows.slice(0, limit) : rows;
+  const lastRow = pageRows.at(-1);
+
+  return {
+    items: pageRows.map(serializeSyncRunSummary),
+    nextCursor:
+      hasMore && lastRow
+        ? encodeCursor({
+            sortAt: lastRow.startedAt.toISOString(),
+            id: lastRow.id,
+          })
+        : null,
+  };
+}
+
+export async function getInstagramSyncRunDetailById(input: {
+  syncRunId: string;
+  userId: string;
+}): Promise<SyncRunDetailResponse> {
+  const syncRun = await getInstagramSyncRunById({
+    runId: input.syncRunId,
+    userId: input.userId,
+  });
+
+  if (!syncRun) {
+    return {
+      syncRun: null,
+    };
+  }
+
+  return {
+    syncRun: {
+      ...serializeSyncRunSummary(syncRun),
+      report: toRecord(syncRun.report),
+    } satisfies InstagramSyncRunDetail,
+  };
+}
+
+export async function listDeveloperApiKeySummariesByUserId(userId: string) {
+  const rows = await listDeveloperApiKeysByUserId(userId);
+  return rows.map(serializeApiKey);
 }

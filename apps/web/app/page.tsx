@@ -77,6 +77,12 @@ export default async function HomePage() {
                   googleAvailable={isGoogleAuthConfigured}
                 />
                 <Button asChild size="lg" variant="outline">
+                  <Link href="/developers">
+                    Developer docs
+                    <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
                   <Link href={session ? "/profile" : "#"}>
                     {session ? "Open profile" : "Profile appears after sign-in"}
                     <ArrowRight className="size-4" />
