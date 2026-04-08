@@ -17,23 +17,22 @@ import { instagramFullSyncWorkflow } from "@/workflows/instagram-full-sync";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-function summarizeAnalyticsPayload(
-  payload: Record<string, unknown> | undefined,
-) {
-  if (!payload) {
+function summarizeAnalyticsPayload(payload: unknown) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     return undefined;
   }
 
-  const entries = Object.entries(payload);
+  const record = payload as Record<string, unknown>;
+  const entries = Object.entries(record);
 
   return {
     keys: entries.map(([key]) => key),
     item_count:
-      Array.isArray(payload.items) || Array.isArray(payload.contents)
-        ? (payload.items ?? payload.contents).length
+      Array.isArray(record.items) || Array.isArray(record.contents)
+        ? ((record.items ?? record.contents) as unknown[]).length
         : undefined,
     error:
-      typeof payload.error === "string" ? payload.error : undefined,
+      typeof record.error === "string" ? record.error : undefined,
   };
 }
 
