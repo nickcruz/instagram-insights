@@ -11,10 +11,31 @@ import { handleInstagramInsightsMcpRequest } from "@instagram-insights/mcp";
 import { start } from "workflow/api";
 
 import { requireDeveloperApiKey } from "@/lib/developer-api-auth";
+import { getPostHogClient } from "@/lib/posthog-server";
 import { instagramFullSyncWorkflow } from "@/workflows/instagram-full-sync";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+
+function summarizeAnalyticsPayload(
+  payload: Record<string, unknown> | undefined,
+) {
+  if (!payload) {
+    return undefined;
+  }
+
+  const entries = Object.entries(payload);
+
+  return {
+    keys: entries.map(([key]) => key),
+    item_count:
+      Array.isArray(payload.items) || Array.isArray(payload.contents)
+        ? (payload.items ?? payload.contents).length
+        : undefined,
+    error:
+      typeof payload.error === "string" ? payload.error : undefined,
+  };
+}
 
 async function handleRequest(request: Request) {
   const authResult = await requireDeveloperApiKey(request);
@@ -25,6 +46,18 @@ async function handleRequest(request: Request) {
 
   return handleInstagramInsightsMcpRequest(request, {
     userId: authResult.auth.userId,
+    trackToolCall: async ({ toolName, userId, status, input, output, error }) => {
+      getPostHogClient().capture({
+        distinctId: userId,
+        event: `mcp_tool_${status}`,
+        properties: {
+          tool_name: toolName,
+          input: summarizeAnalyticsPayload(input),
+          output: summarizeAnalyticsPayload(output),
+          error,
+        },
+      });
+    },
     triggerSync: async ({ userId, force = false, staleAfterHours = 24 }) => {
       const instagramAccount = await getInstagramAccountByUserId(userId);
 

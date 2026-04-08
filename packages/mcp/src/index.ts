@@ -22,6 +22,14 @@ type McpContext = {
     force?: boolean;
     staleAfterHours?: number;
   }) => Promise<Record<string, unknown>>;
+  trackToolCall?: (event: {
+    toolName: string;
+    userId: string;
+    status: "started" | "succeeded" | "failed";
+    input?: Record<string, unknown>;
+    output?: Record<string, unknown>;
+    error?: string;
+  }) => void | Promise<void>;
 };
 
 function jsonText(data: unknown) {
@@ -37,6 +45,55 @@ function jsonResult<T extends Record<string, unknown>>(data: T) {
       },
     ],
     structuredContent: data,
+  };
+}
+
+async function trackToolCall(
+  context: McpContext,
+  event: Parameters<NonNullable<McpContext["trackToolCall"]>>[0],
+) {
+  await context.trackToolCall?.(event);
+}
+
+function withToolTracking<TInput extends Record<string, unknown> | void>(
+  context: McpContext,
+  toolName: string,
+  handler: (input: TInput) => Promise<ReturnType<typeof jsonResult>>,
+) {
+  return async (input: TInput) => {
+    await trackToolCall(context, {
+      toolName,
+      userId: context.userId,
+      status: "started",
+      input: (input ?? undefined) as Record<string, unknown> | undefined,
+    });
+
+    try {
+      const result = await handler(input);
+
+      await trackToolCall(context, {
+        toolName,
+        userId: context.userId,
+        status: "succeeded",
+        input: (input ?? undefined) as Record<string, unknown> | undefined,
+        output:
+          result.structuredContent && typeof result.structuredContent === "object"
+            ? (result.structuredContent as Record<string, unknown>)
+            : undefined,
+      });
+
+      return result;
+    } catch (error) {
+      await trackToolCall(context, {
+        toolName,
+        userId: context.userId,
+        status: "failed",
+        input: (input ?? undefined) as Record<string, unknown> | undefined,
+        error: error instanceof Error ? error.message : "Unknown MCP tool error.",
+      });
+
+      throw error;
+    }
   };
 }
 
@@ -60,7 +117,9 @@ function createInstagramInsightsMcpServer(context: McpContext) {
       description:
         "Return the linked Instagram account summary and the latest sync run for the authenticated user.",
     },
-    async () => jsonResult(await getAccountOverviewByUserId(context.userId)),
+    withToolTracking(context, "get_account_overview", async () =>
+      jsonResult(await getAccountOverviewByUserId(context.userId)),
+    ),
   );
 
   server.registerTool(
@@ -70,7 +129,9 @@ function createInstagramInsightsMcpServer(context: McpContext) {
       description:
         "Return the latest normalized account snapshot for the authenticated user.",
     },
-    async () => jsonResult(await getLatestSnapshotByUserId(context.userId)),
+    withToolTracking(context, "get_latest_snapshot", async () =>
+      jsonResult(await getLatestSnapshotByUserId(context.userId)),
+    ),
   );
 
   server.registerTool(
@@ -87,13 +148,14 @@ function createInstagramInsightsMcpServer(context: McpContext) {
         until: z.string().optional(),
       }),
     },
-    async (input) =>
+    withToolTracking(context, "list_media", async (input) =>
       jsonResult(
         await listInstagramMediaByUserId({
           userId: context.userId,
           ...input,
         }),
       ),
+    ),
   );
 
   server.registerTool(
@@ -106,13 +168,14 @@ function createInstagramInsightsMcpServer(context: McpContext) {
         mediaId: z.string(),
       }),
     },
-    async ({ mediaId }) =>
+    withToolTracking(context, "get_media", async ({ mediaId }) =>
       jsonResult(
         await getInstagramMediaDetailById({
           mediaId,
           userId: context.userId,
         }),
       ),
+    ),
   );
 
   server.registerTool(
@@ -126,13 +189,14 @@ function createInstagramInsightsMcpServer(context: McpContext) {
         cursor: z.string().optional(),
       }),
     },
-    async (input) =>
+    withToolTracking(context, "list_sync_runs", async (input) =>
       jsonResult(
         await listInstagramSyncRunsByUserId({
           userId: context.userId,
           ...input,
         }),
       ),
+    ),
   );
 
   server.registerTool(
@@ -145,13 +209,14 @@ function createInstagramInsightsMcpServer(context: McpContext) {
         syncRunId: z.string(),
       }),
     },
-    async ({ syncRunId }) =>
+    withToolTracking(context, "get_sync_run", async ({ syncRunId }) =>
       jsonResult(
         await getInstagramSyncRunDetailById({
           syncRunId,
           userId: context.userId,
         }),
       ),
+    ),
   );
 
   server.registerTool(
@@ -165,7 +230,7 @@ function createInstagramInsightsMcpServer(context: McpContext) {
         staleAfterHours: z.number().int().min(1).max(24 * 30).optional(),
       }),
     },
-    async (input) => {
+    withToolTracking(context, "trigger_sync", async (input) => {
       if (!context.triggerSync) {
         return jsonResult({
           error: "Sync triggering is not enabled for this MCP server.",
@@ -179,7 +244,7 @@ function createInstagramInsightsMcpServer(context: McpContext) {
           staleAfterHours: input.staleAfterHours,
         }),
       );
-    },
+    }),
   );
 
   server.registerResource(
