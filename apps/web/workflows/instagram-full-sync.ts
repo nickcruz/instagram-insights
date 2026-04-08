@@ -7,6 +7,7 @@ import {
   isTranscriberConfigured,
   resolveTranscriberMaxSeconds,
 } from "@/lib/transcriber";
+import { RECENT_MEDIA_WINDOW_DAYS } from "@/lib/instagram-sync";
 import {
   chunkMediaCatalogStep,
   completeRunStep,
@@ -132,7 +133,7 @@ export async function instagramFullSyncWorkflow(
       status: "running",
       currentStep,
       progressPercent,
-      statusMessage: "Filtering media to the last 30 days",
+      statusMessage: `Filtering media to the last ${RECENT_MEDIA_WINDOW_DAYS} days`,
       progress,
     });
 

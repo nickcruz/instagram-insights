@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { RECENT_MEDIA_WINDOW_DAYS } from "@/lib/instagram-sync";
 
 type SyncSummary = {
   username: string;
@@ -137,7 +138,8 @@ export function ManualSyncCard({
         <CardTitle>Manual Instagram sync</CardTitle>
         <CardDescription>
           Queue a durable workflow run that ingests Instagram data in the
-          background using the linked access token.
+          background using the linked access token. Media enrichment currently
+          covers the last {RECENT_MEDIA_WINDOW_DAYS} days of content.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-5">
@@ -196,7 +198,7 @@ export function ManualSyncCard({
             <div className="grid gap-3 md:grid-cols-4">
               <div>
                 <p className="text-xs uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
-                  Recent media
+                  Recent media ({RECENT_MEDIA_WINDOW_DAYS}d)
                 </p>
                 <p className="mt-1 text-sm font-semibold">
                   {syncRun.progress?.recentMediaCount ??

@@ -35,7 +35,7 @@ const endpointRows = [
 const promptExamples = [
   "Use get_account_overview and tell me whether my latest sync looks healthy.",
   "If the latest completed sync is older than 12 hours, call trigger_sync and poll get_sync_run until it completes.",
-  "Read schema://table/instagram_media_item and then list my latest REELS posts from the last 30 days.",
+  "Read schema://table/instagram_media_item and then list my latest REELS posts from the last 60 days.",
   "Compare my two most recent completed sync runs and summarize any changes in reach or warnings.",
 ];
 

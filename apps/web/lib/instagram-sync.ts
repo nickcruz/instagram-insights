@@ -3,6 +3,7 @@ import type { InstagramLink } from "@/lib/instagram-link";
 
 const DEFAULT_API_VERSION = "v25.0";
 const DEFAULT_BASE_URL = "https://graph.instagram.com";
+export const RECENT_MEDIA_WINDOW_DAYS = 60;
 
 const ACCOUNT_PROFILE_FIELD_CANDIDATES = [
   [
@@ -689,7 +690,7 @@ export function filterRecentMediaCatalog(input: {
   windowDays?: number;
 }) {
   const now = input.now ?? nowUtc();
-  const windowDays = input.windowDays ?? 30;
+  const windowDays = input.windowDays ?? RECENT_MEDIA_WINDOW_DAYS;
   const threshold = new Date(now.getTime() - windowDays * 24 * 60 * 60 * 1000);
   const recentMedia: GraphResponse[] = [];
 

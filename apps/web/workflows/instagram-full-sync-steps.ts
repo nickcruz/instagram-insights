@@ -21,6 +21,7 @@ import {
   finalizeInstagramSyncResult,
   mergeManifestFragments,
   normalizeMediaBatch,
+  RECENT_MEDIA_WINDOW_DAYS,
   runInstagramAccountInsightsStage,
   runInstagramMediaCatalogStage,
   runInstagramProfileStage,
@@ -190,7 +191,7 @@ export async function filterRecentMediaCatalogStep(input: {
   return filterRecentMediaCatalog({
     mediaCatalog: input.mediaCatalog,
     manifest: input.manifest,
-    windowDays: 30,
+    windowDays: RECENT_MEDIA_WINDOW_DAYS,
   });
 }
 

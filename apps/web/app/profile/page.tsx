@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { auth, isGoogleAuthConfigured } from "@/lib/auth";
 import { isInstagramConfigured } from "@/lib/instagram-oauth";
+import { RECENT_MEDIA_WINDOW_DAYS } from "@/lib/instagram-sync";
 import { InstagramLinkCard } from "@/components/instagram-link-card";
 import { ManualSyncCard } from "@/components/manual-sync-card";
 
@@ -60,7 +61,8 @@ export default async function ProfilePage({
             <CardTitle>Profile</CardTitle>
             <CardDescription>
               This signed-in app user is the owner for future Instagram tokens,
-              syncs, transcripts, and dashboard data.
+              syncs, transcripts, and dashboard data. Sync runs currently enrich
+              the last {RECENT_MEDIA_WINDOW_DAYS} days of media.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 md:grid-cols-3">
