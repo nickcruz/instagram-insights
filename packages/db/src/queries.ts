@@ -967,13 +967,21 @@ export async function listInstagramMediaByUserId(input: {
 
   return {
     items: pageRows.map(({ media }) => serializeMediaListItem(media)),
-    nextCursor:
-      hasMore && lastRow?.sortAt
-        ? encodeCursor({
-            sortAt: lastRow.sortAt.toISOString(),
-            id: lastRow.media.id,
-          })
-        : null,
+    nextCursor: (() => {
+      if (!hasMore || !lastRow) {
+        return null;
+      }
+
+      const cursorSortAt = toDate(lastRow.sortAt);
+      if (!cursorSortAt) {
+        return null;
+      }
+
+      return encodeCursor({
+        sortAt: cursorSortAt.toISOString(),
+        id: lastRow.media.id,
+      });
+    })(),
   };
 }
 
