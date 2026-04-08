@@ -54,7 +54,7 @@ export default async function ProfilePage({
       : [];
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(194,123,63,0.20),transparent_34%),linear-gradient(180deg,#f7efe2_0%,#f3eadc_35%,#efe4d6_100%)] px-6 py-10 md:px-10">
+    <main className="min-h-screen bg-white px-6 py-10 md:px-10">
       <div className="mx-auto grid max-w-5xl gap-6">
         <Card className="bg-white/80 backdrop-blur">
           <CardHeader>

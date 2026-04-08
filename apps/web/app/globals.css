@@ -1,26 +1,26 @@
 @import "tailwindcss";
 
 :root {
-  --font-heading: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
-  --font-body: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-heading: "SF Pro Display", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", monospace;
-  --background: #f6ede1;
-  --foreground: #17201a;
-  --card: rgba(255, 252, 247, 0.9);
-  --card-foreground: #17201a;
-  --popover: #fffaf3;
-  --popover-foreground: #17201a;
-  --primary: #1d6b57;
-  --primary-foreground: #f7f2e7;
-  --secondary: #eadfce;
-  --secondary-foreground: #304134;
-  --muted: #efe5d7;
-  --muted-foreground: #617166;
-  --accent: #e4d6c4;
-  --accent-foreground: #203227;
-  --border: rgba(44, 58, 47, 0.12);
-  --input: rgba(44, 58, 47, 0.12);
-  --ring: #2d7d68;
+  --background: #ffffff;
+  --foreground: #171717;
+  --card: #ffffff;
+  --card-foreground: #171717;
+  --popover: #ffffff;
+  --popover-foreground: #171717;
+  --primary: #ff5f6d;
+  --primary-foreground: #ffffff;
+  --secondary: #fff0f2;
+  --secondary-foreground: #7a2230;
+  --muted: #f8f8f8;
+  --muted-foreground: #666666;
+  --accent: #ffedd5;
+  --accent-foreground: #8a2f17;
+  --border: rgba(23, 23, 23, 0.09);
+  --input: rgba(23, 23, 23, 0.09);
+  --ring: #ff7a59;
   --radius: 1rem;
 }
 
@@ -64,10 +64,13 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .font-heading {
-  font-family: var(--font-heading), serif;
+  font-family: var(--font-heading), sans-serif;
+  letter-spacing: -0.03em;
 }
 
 .font-body {

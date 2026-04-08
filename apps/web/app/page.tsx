@@ -43,7 +43,7 @@ export default async function HomePage() {
       : null;
 
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(194,123,63,0.20),transparent_34%),linear-gradient(180deg,#f7efe2_0%,#f3eadc_35%,#efe4d6_100%)] text-[var(--foreground)]">
+    <main className="min-h-screen bg-white text-[var(--foreground)]">
       <section className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-6 py-10 md:px-10">
         <div className="mb-12 flex items-center justify-between">
           <div>
