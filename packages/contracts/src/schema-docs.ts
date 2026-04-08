@@ -419,6 +419,7 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
       "This table is suitable for agent prompts like 'show my latest reels with the highest reach'.",
       "The `raw` column preserves the normalized per-media payload; `insights` is the easiest field for metrics.",
       "Transcript fields are updated after media persistence by the offline transcriber service path.",
+      "For eligible video media, transcript fields are designed for hook analysis: they capture the opening ~30 seconds rather than a full-video transcript.",
     ],
     columns: [
       {
@@ -533,7 +534,7 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
         name: "transcriptText",
         type: "text",
         visibility: "public",
-        description: "Transcript text generated for eligible video media.",
+        description: "Transcript text generated for eligible video media. This is the opening ~30 seconds of audio and should be treated as the hook or first spoken lines, not a full-video transcript.",
       },
       {
         name: "transcriptLanguage",
@@ -551,7 +552,7 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
         name: "transcriptClipSeconds",
         type: "integer",
         visibility: "public",
-        description: "How many seconds of source audio were included in the transcript clip.",
+        description: "How many seconds of source audio were included in the transcript clip, typically about 30 seconds for hook capture.",
       },
       {
         name: "transcriptError",

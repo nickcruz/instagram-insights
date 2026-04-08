@@ -78,7 +78,7 @@ function createInstagramInsightsMcpServer(context: McpContext) {
     {
       title: "List Media",
       description:
-        "List ingested Instagram media for the authenticated user with optional filters and cursor pagination.",
+        "List ingested Instagram media for the authenticated user with optional filters and cursor pagination. For eligible video media, transcript fields represent the opening ~30 seconds of audio, which should be treated as the hook or opener rather than a full-video transcript.",
       inputSchema: z.object({
         limit: z.number().int().min(1).max(100).optional(),
         cursor: z.string().optional(),
@@ -101,7 +101,7 @@ function createInstagramInsightsMcpServer(context: McpContext) {
     {
       title: "Get Media",
       description:
-        "Return one ingested Instagram media record for the authenticated user.",
+        "Return one ingested Instagram media record for the authenticated user. For eligible video media, transcriptText is the opening ~30 seconds of audio and is intended to capture the hook or first spoken lines, not the full asset.",
       inputSchema: z.object({
         mediaId: z.string(),
       }),

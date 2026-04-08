@@ -71,7 +71,13 @@ Use this to inspect ingested media with pagination and optional filters.
 
 ### `get_media`
 
-Use this when you need one media record, including stored insights and top comments when available.
+Use this when you need one media record, including stored insights, top comments when available, and any saved transcript snippet.
+
+Important transcript note:
+
+- `transcriptText` on media records is intended to represent the first 30 seconds of audio for eligible video media.
+- In practice, this transcript snippet is the hook or opening lines of the video, not a full transcription of the entire asset.
+- Use it for hook analysis, opener comparisons, and quick topic inspection rather than full-caption reconstruction.
 
 ### `list_sync_runs`
 
@@ -124,3 +130,11 @@ Useful equivalents:
 - `POST /api/v1/sync-runs`
 
 The `POST /api/v1/sync-runs` endpoint is useful for non-MCP clients and matches the MCP `trigger_sync` behavior.
+
+## Transcript Semantics
+
+For video media, the stored transcript fields on `instagram_media_item` are optimized for hook analysis:
+
+- `transcriptText` is the opening ~30 seconds of transcribed audio, not the full video.
+- This usually captures the hook, opener, or first spoken lines.
+- `transcriptStatus`, `transcriptLanguage`, `transcriptModel`, and `transcriptClipSeconds` describe the transcription job state and metadata.
