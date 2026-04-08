@@ -6,7 +6,8 @@ import type {
 import { getEnv, getRequiredEnv } from "@/lib/env";
 
 export const DEFAULT_TRANSCRIBER_MAX_SECONDS = 30;
-export const DEFAULT_TRANSCRIBER_CONCURRENCY = 2;
+export const DEFAULT_TRANSCRIBER_CONCURRENCY = 1;
+const TRANSCRIBER_RETRY_DELAYS_MS = [250, 750];
 
 export type InstagramMediaForTranscription = {
   id: string;
@@ -81,6 +82,16 @@ function getTranscriberConfig() {
   };
 }
 
+function shouldRetryTranscriberRequest(status: number) {
+  return status >= 500 && status < 600;
+}
+
+async function sleep(ms: number) {
+  await new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 function isTranscriptionResponse(
   payload: Partial<TranscriptionResponse> | { error?: string } | null,
 ): payload is TranscriptionResponse {
@@ -108,22 +119,39 @@ export async function transcribeInstagramMedia(
   const config = getTranscriberConfig();
   const endpoint = buildTranscriberEndpoint(config.serviceUrl);
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      "content-type": "application/json",
-      "x-api-key": config.apiKey,
-    },
-    body: JSON.stringify(request),
-  });
+  for (let attempt = 0; attempt <= TRANSCRIBER_RETRY_DELAYS_MS.length; attempt += 1) {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      cache: "no-store",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": config.apiKey,
+      },
+      body: JSON.stringify(request),
+    });
 
-  const payload = (await response.json().catch(() => null)) as
-    | Partial<TranscriptionResponse>
-    | { error?: string }
-    | null;
+    const payload = (await response.json().catch(() => null)) as
+      | Partial<TranscriptionResponse>
+      | { error?: string }
+      | null;
 
-  if (!response.ok) {
+    if (response.ok) {
+      if (!isTranscriptionResponse(payload)) {
+        throw new Error("Transcriber service returned an invalid response.");
+      }
+
+      return payload;
+    }
+
+    const isRetryable =
+      shouldRetryTranscriberRequest(response.status) &&
+      attempt < TRANSCRIBER_RETRY_DELAYS_MS.length;
+
+    if (isRetryable) {
+      await sleep(TRANSCRIBER_RETRY_DELAYS_MS[attempt]!);
+      continue;
+    }
+
     throw new Error(
       payload && "error" in payload && typeof payload.error === "string"
         ? payload.error
@@ -131,9 +159,5 @@ export async function transcribeInstagramMedia(
     );
   }
 
-  if (!isTranscriptionResponse(payload)) {
-    throw new Error("Transcriber service returned an invalid response.");
-  }
-
-  return payload;
+  throw new Error("Transcriber request exhausted retries.");
 }
