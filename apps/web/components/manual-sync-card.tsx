@@ -187,7 +187,7 @@ export function ManualSyncCard({
               </div>
               <div className="h-2 overflow-hidden rounded-full bg-[var(--secondary)]">
                 <div
-                  className="h-full rounded-full bg-[var(--accent)] transition-all"
+                  className="h-full rounded-full bg-[var(--ring)] transition-all"
                   style={{ width: `${Math.max(0, Math.min(progressPercent, 100))}%` }}
                 />
               </div>
