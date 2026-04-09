@@ -8,12 +8,7 @@
   "homepage": "https://github.com/nickcruz/instagram-insights",
   "repository": "https://github.com/nickcruz/instagram-insights",
   "license": "MIT",
-  "keywords": [
-    "instagram",
-    "analytics",
-    "creator",
-    "social-media",
-    "mcp"
-  ],
+  "keywords": ["instagram", "analytics", "creator", "social-media", "mcp"],
+  "skills": "./skills/",
   "category": "data-analysis"
 }

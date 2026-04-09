@@ -6,7 +6,10 @@
   "plugins": [
     {
       "name": "instagram-insights",
-      "source": "./plugins/instagram-insights",
+      "source": {
+        "source": "github",
+        "repo": "nickcruz/instagram-insights"
+      },
       "description": "Connect Instagram, trigger syncs, and analyze creator performance through the hosted MCP backend.",
       "version": "1.0.0",
       "author": {
