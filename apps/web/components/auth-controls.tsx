@@ -29,7 +29,7 @@ export function AuthControls({
         onClick={() => {
           posthog.capture("sign_out_clicked");
           posthog.reset();
-          void signOut({ callbackUrl: "/" });
+          void signOut({ callbackUrl: "/developers" });
         }}
       >
         Sign out
@@ -41,7 +41,7 @@ export function AuthControls({
     <Button
       onClick={() => {
         posthog.capture("sign_in_clicked", { provider: "google" });
-        void signIn("google", { callbackUrl: "/profile" });
+        void signIn("google", { callbackUrl: "/developers" });
       }}
     >
       Sign in with Google

@@ -30,7 +30,7 @@ export function DeveloperApiKeyManager({
   canCreateKeys,
 }: DeveloperApiKeyManagerProps) {
   const [keys, setKeys] = useState(initialKeys);
-  const [name, setName] = useState("Codex access");
+  const [name, setName] = useState("Legacy API access");
   const [error, setError] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [revealedKey, setRevealedKey] = useState<string | null>(null);
@@ -68,7 +68,7 @@ export function DeveloperApiKeyManager({
       }
 
       posthog.capture("developer_api_key_created", { key_name: name });
-      setName("Codex access");
+      setName("Legacy API access");
     } catch (cause) {
       posthog.captureException(cause);
       setError(

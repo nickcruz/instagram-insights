@@ -5,27 +5,20 @@ import {
   createMcpOAuthAuthorizationCode,
   createMcpOAuthClient,
   createMcpOAuthRefreshToken,
-  getMcpOAuthAccessTokenByHash,
   getMcpOAuthClientByClientId,
   getMcpOAuthRefreshTokenByHash,
   revokeMcpOAuthRefreshToken,
-  touchMcpOAuthAccessTokenLastUsed,
 } from "@instagram-insights/db";
 import { OAuthClientMetadataSchema } from "@modelcontextprotocol/sdk/shared/auth.js";
 
 import { getAppUrl } from "@/lib/app-url";
 import { auth, isGoogleAuthConfigured } from "@/lib/auth";
-import { getBearerToken, parseDeveloperApiKey } from "@/lib/developer-api-keys";
-import { requireDeveloperApiKey } from "@/lib/developer-api-auth";
+import { resolveBearerAuth } from "@/lib/bearer-auth";
+import { hashOpaqueSecret, MCP_TOOLS_SCOPE } from "@/lib/oauth-shared";
 
-export const MCP_TOOLS_SCOPE = "mcp:tools";
 const ACCESS_TOKEN_TTL_SECONDS = 60 * 60;
 const REFRESH_TOKEN_TTL_SECONDS = 30 * 24 * 60 * 60;
 const AUTHORIZATION_CODE_TTL_SECONDS = 10 * 60;
-
-export function hashOpaqueSecret(value: string) {
-  return crypto.createHash("sha256").update(value).digest("hex");
-}
 
 function randomOpaqueSecret(prefix: string) {
   return `${prefix}${crypto.randomBytes(32).toString("base64url")}`;
@@ -92,90 +85,20 @@ export function createMcpUnauthorizedResponse(
 }
 
 export async function requireMcpAccess(request: Request) {
-  const bearerToken = getBearerToken(request);
+  const authResult = await resolveBearerAuth(request);
 
-  if (!bearerToken) {
+  if (!authResult.ok) {
     return {
       ok: false as const,
       response: createMcpUnauthorizedResponse(
         request,
-        "Missing bearer token. Use Claude MCP OAuth or a personal API key.",
+        authResult.message,
+        authResult.status,
       ),
     };
   }
 
-  if (parseDeveloperApiKey(bearerToken)) {
-    const developerAuth = await requireDeveloperApiKey(request);
-
-    if (!developerAuth.ok) {
-      return {
-        ok: false as const,
-        response: createMcpUnauthorizedResponse(
-          request,
-          "Invalid personal API key.",
-        ),
-      };
-    }
-
-    return {
-      ok: true as const,
-      auth: {
-        userId: developerAuth.auth.userId,
-        authType: "developer_api_key" as const,
-      },
-    };
-  }
-
-  const accessToken =
-    await getMcpOAuthAccessTokenByHash(hashOpaqueSecret(bearerToken));
-
-  if (!accessToken) {
-    return {
-      ok: false as const,
-      response: createMcpUnauthorizedResponse(request, "Invalid access token."),
-    };
-  }
-
-  if (accessToken.token.revokedAt) {
-    return {
-      ok: false as const,
-      response: createMcpUnauthorizedResponse(request, "Access token revoked."),
-    };
-  }
-
-  if (accessToken.token.expiresAt.getTime() <= Date.now()) {
-    return {
-      ok: false as const,
-      response: createMcpUnauthorizedResponse(request, "Access token expired."),
-    };
-  }
-
-  const scopes = (accessToken.token.scope ?? "")
-    .split(" ")
-    .map((scope) => scope.trim())
-    .filter(Boolean);
-
-  if (!scopes.includes(MCP_TOOLS_SCOPE)) {
-    return {
-      ok: false as const,
-      response: createMcpUnauthorizedResponse(
-        request,
-        "Access token does not include mcp:tools scope.",
-        403,
-      ),
-    };
-  }
-
-  await touchMcpOAuthAccessTokenLastUsed(accessToken.token.id);
-
-  return {
-    ok: true as const,
-    auth: {
-      userId: accessToken.token.userId,
-      authType: "oauth_access_token" as const,
-      clientId: accessToken.client.clientId,
-    },
-  };
+  return authResult;
 }
 
 export function buildProtectedResourceMetadata(request: Request) {

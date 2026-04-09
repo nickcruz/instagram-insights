@@ -1,69 +1,111 @@
 # Instagram Insights MCP
 
-This document explains how LLM clients should connect to and use the hosted Instagram Insights MCP.
+This document explains how the hosted Instagram Insights MCP is packaged for Claude and how it maps to the existing backend.
 
-## What It Provides
+## Claude-first install flow
 
-The hosted MCP is exposed by the Next.js app at:
+The primary user experience is the Claude plugin, not a custom dashboard or manual MCP wiring.
+
+Install from the repository marketplace:
+
+```text
+/plugin marketplace add https://github.com/nickcruz/creator-insights.git
+/plugin install instagram-insights@creator-insights-plugins
+```
+
+The plugin bundles one remote HTTP MCP server that points at:
 
 ```text
 https://YOUR_APP_DOMAIN/mcp
 ```
 
-It supports two auth modes:
+During install, Claude authenticates that MCP server with the hosted OAuth flow. Google sign-in happens there; the plugin does not store its own tokens.
 
-- Claude Code remote MCP via OAuth 2.0
-- Personal developer API keys for REST, Codex, and non-OAuth clients
+For local development before the production app URL is finalized, set:
 
-The MCP currently exposes tools for:
+```bash
+export INSTAGRAM_INSIGHTS_APP_URL="https://YOUR_APP_DOMAIN"
+```
 
-- Reading account overview
-- Reading the latest normalized snapshot
-- Listing and reading media
-- Listing and reading sync runs
-- Triggering a full sync when data is stale
+Then load the local plugin bundle:
+
+```bash
+claude --plugin-dir ./plugins/instagram-insights
+```
+
+## What the hosted MCP provides
+
+The hosted MCP is exposed by the Next.js app at `/mcp` and keeps the existing backend contract intact.
+
+It provides tools for:
+
+- `get_setup_status`
+- `get_account_overview`
+- `get_latest_snapshot`
+- `list_media`
+- `get_media`
+- `list_sync_runs`
+- `get_sync_run`
+- `trigger_sync`
+
+It also continues to expose the schema resources already backed by the web app.
 
 ## Authentication
 
-### Claude Code OAuth
+### Primary path: Claude OAuth
 
-Claude Code can connect directly to the hosted MCP URL and complete OAuth in the browser:
+Claude should authenticate to the hosted MCP with OAuth. The server supports standard OAuth metadata under:
 
-```bash
-claude mcp add --transport http instagram-insights https://YOUR_APP_DOMAIN/mcp
-```
+- `/.well-known/oauth-authorization-server`
+- `/.well-known/oauth-protected-resource`
+- `/oauth/*`
 
-The hosted MCP advertises standard OAuth metadata and will redirect the user through the app's Google sign-in flow before issuing an MCP access token.
+Claude stores the MCP access token locally. The plugin should not write custom secret files or plugin-managed token caches.
 
-### Personal API Key
+### Compatibility path: developer API keys
 
-The MCP expects:
+The backend still supports personal developer API keys for advanced users and non-OAuth clients.
+
+Send either an OAuth access token or a developer API key as:
 
 ```http
-Authorization: Bearer YOUR_API_KEY
+Authorization: Bearer YOUR_TOKEN
 ```
 
-Create the API key in the web app first. See [api-key-setup.md](./api-key-setup.md).
+Developer API keys are now a fallback path, not the recommended Claude install flow. See [api-key-setup.md](./api-key-setup.md).
 
-## Recommended Tool Flow
+## Recommended tool flow
 
-For most agent tasks, use this order:
+For Claude plugin skills and general agent usage, use this order:
 
-1. `get_account_overview`
-2. Inspect latest sync freshness
-3. If stale, call `trigger_sync`
-4. Poll with `get_sync_run`
-5. Once complete, use `get_latest_snapshot`, `list_media`, and `get_media`
+1. `get_setup_status`
+2. Follow `recommendedNextAction`
+3. If sync is required, call `trigger_sync`
+4. Poll with `get_sync_run` until terminal
+5. Use `get_latest_snapshot`, `list_media`, and `get_media` for analysis
 
-## Tool Notes
+## Tool notes
+
+### `get_setup_status`
+
+Use this first for plugin orchestration. It returns:
+
+- whether the user has linked Instagram
+- the latest sync state
+- freshness guidance
+- `instagramLinkUrl`
+- `developersUrl`
+- the recommended next action and prompt
+
+This is the best entrypoint for setup, connect, and sync skills.
 
 ### `get_account_overview`
 
-Use this first. It gives the linked account state and latest sync context for the authenticated user.
+Use this when you need the normalized account summary without the extra setup guidance.
 
 ### `get_latest_snapshot`
 
-Use this for normalized analysis-ready data. This is usually the best source for account-level reporting.
+Use this for analysis-ready account reporting. This is usually the best source for account-level summaries and recent performance analysis.
 
 ### `list_media`
 
@@ -71,25 +113,24 @@ Use this to inspect ingested media with pagination and optional filters.
 
 ### `get_media`
 
-Use this when you need one media record, including stored insights, top comments when available, and any saved transcript snippet.
+Use this when you need a single media record, including stored insights, comments when available, and any saved transcript snippet.
 
-Important transcript note:
+Transcript note:
 
-- `transcriptText` on media records is intended to represent the first 30 seconds of audio for eligible video media.
-- In practice, this transcript snippet is the hook or opening lines of the video, not a full transcription of the entire asset.
-- Use it for hook analysis, opener comparisons, and quick topic inspection rather than full-caption reconstruction.
+- `transcriptText` is the opening portion of audio for eligible video media, not a full transcription of the entire asset.
+- It is best used for hook analysis, opener comparisons, and quick topical inspection.
 
 ### `list_sync_runs`
 
-Use this to inspect sync history and decide whether data is stale.
+Use this to inspect sync history directly.
 
 ### `get_sync_run`
 
-Use this to poll a sync run after queueing it.
+Use this to poll a queued or running sync.
 
 ### `trigger_sync`
 
-This queues a new full sync if needed.
+This queues a full sync through the same shared service used by `POST /api/v1/sync-runs`.
 
 Inputs:
 
@@ -98,25 +139,11 @@ Inputs:
 
 Behavior:
 
-- If a sync is already `queued` or `running`, it returns that run instead of queueing another one.
-- If `force` is `false` and the latest completed sync is newer than `staleAfterHours`, it does not queue a new run.
-- If `force` is `true`, it queues a new run even if the latest sync is recent.
+- Reuses the active sync run if one is already `queued` or `running`
+- Skips queueing when the latest completed sync is still fresh and `force` is `false`
+- Queues a new workflow-backed sync when the data is stale or `force` is `true`
 
-## Example Prompts
-
-```text
-Use get_account_overview and tell me whether my data is fresh enough for analysis.
-```
-
-```text
-If my latest completed sync is older than 12 hours, call trigger_sync and poll get_sync_run until it finishes.
-```
-
-```text
-Use get_latest_snapshot and summarize my strongest recent content patterns.
-```
-
-## REST Equivalents
+## REST equivalents
 
 The MCP is backed by the same authenticated API surface under `/api/v1/*`.
 
@@ -129,12 +156,23 @@ Useful equivalents:
 - `GET /api/v1/sync-runs/:syncRunId`
 - `POST /api/v1/sync-runs`
 
-The `POST /api/v1/sync-runs` endpoint is useful for non-MCP clients and matches the MCP `trigger_sync` behavior.
+These routes now accept either:
 
-## Transcript Semantics
+- an MCP OAuth bearer token
+- a legacy developer API key
 
-For video media, the stored transcript fields on `instagram_media_item` are optimized for hook analysis:
+`POST /api/v1/sync-runs` and MCP `trigger_sync` now share the same queueing behavior.
 
-- `transcriptText` is the opening ~30 seconds of transcribed audio, not the full video.
-- This usually captures the hook, opener, or first spoken lines.
-- `transcriptStatus`, `transcriptLanguage`, `transcriptModel`, and `transcriptClipSeconds` describe the transcription job state and metadata.
+## Example prompts
+
+```text
+Use get_setup_status and tell me what I still need before analysis is ready.
+```
+
+```text
+If my latest completed sync is older than 12 hours, call trigger_sync and poll get_sync_run until it finishes.
+```
+
+```text
+Use get_latest_snapshot and summarize my strongest recent content patterns.
+```

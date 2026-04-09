@@ -1,13 +1,4 @@
-import {
-  getDeveloperApiKeyByPrefix,
-  touchDeveloperApiKeyLastUsed,
-} from "@instagram-insights/db";
-
-import {
-  getBearerToken,
-  hashDeveloperApiKey,
-  parseDeveloperApiKey,
-} from "@/lib/developer-api-keys";
+import { resolveBearerAuth } from "@/lib/bearer-auth";
 
 const JSON_HEADERS = {
   "Cache-Control": "no-store",
@@ -36,66 +27,17 @@ export function createJsonResponse(data: unknown, init?: ResponseInit) {
   });
 }
 
-export async function requireDeveloperApiKey(request: Request) {
-  const apiKey = getBearerToken(request);
+export async function requireApiAccess(request: Request) {
+  const authResult = await resolveBearerAuth(request);
 
-  if (!apiKey) {
+  if (!authResult.ok) {
     return {
       ok: false as const,
-      response: createBearerChallenge(
-        "Missing bearer token. Create a personal API key in the dashboard and send it as Authorization: Bearer <token>.",
-      ),
+      response: createBearerChallenge(authResult.message, authResult.status),
     };
   }
 
-  const parsedKey = parseDeveloperApiKey(apiKey);
-
-  if (!parsedKey) {
-    return {
-      ok: false as const,
-      response: createBearerChallenge("Malformed API key."),
-    };
-  }
-
-  const keyRecord = await getDeveloperApiKeyByPrefix(parsedKey.keyPrefix);
-
-  if (!keyRecord) {
-    return {
-      ok: false as const,
-      response: createBearerChallenge("Invalid API key."),
-    };
-  }
-
-  if (keyRecord.revokedAt) {
-    return {
-      ok: false as const,
-      response: createBearerChallenge("API key has been revoked."),
-    };
-  }
-
-  if (keyRecord.expiresAt && keyRecord.expiresAt.getTime() <= Date.now()) {
-    return {
-      ok: false as const,
-      response: createBearerChallenge("API key has expired."),
-    };
-  }
-
-  if (hashDeveloperApiKey(apiKey) !== keyRecord.secretHash) {
-    return {
-      ok: false as const,
-      response: createBearerChallenge("Invalid API key."),
-    };
-  }
-
-  await touchDeveloperApiKeyLastUsed(keyRecord.id);
-
-  return {
-    ok: true as const,
-    auth: {
-      userId: keyRecord.userId,
-      keyId: keyRecord.id,
-      keyPrefix: keyRecord.keyPrefix,
-      keyName: keyRecord.name,
-    },
-  };
+  return authResult;
 }
+
+export const requireDeveloperApiKey = requireApiAccess;

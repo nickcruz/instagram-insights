@@ -16,19 +16,30 @@ import {
 } from "@/lib/instagram-oauth";
 import { getPostHogClient } from "@/lib/posthog-server";
 
+function buildAuthCompleteUrl(request: Request, status: string, message?: string) {
+  const target = new URL("/auth/complete", request.url);
+  target.searchParams.set("status", status);
+
+  if (message) {
+    target.searchParams.set("message", message);
+  }
+
+  return target;
+}
+
 export async function GET(request: Request) {
   const session = await auth();
   const userId = session?.user?.id;
 
   if (!session || !userId) {
-    return NextResponse.redirect(new URL("/?auth=required", request.url), {
+    return NextResponse.redirect(buildAuthCompleteUrl(request, "auth-required"), {
       status: 302,
     });
   }
 
   if (!isInstagramConfigured()) {
     return NextResponse.redirect(
-      new URL("/profile?instagram=config-error", request.url),
+      buildAuthCompleteUrl(request, "config-error"),
       {
         status: 302,
       },
@@ -49,10 +60,7 @@ export async function GET(request: Request) {
       properties: { reason: "oauth_error", error },
     });
     const response = NextResponse.redirect(
-      new URL(
-        `/profile?instagram=error&message=${encodeURIComponent(error)}`,
-        request.url,
-      ),
+      buildAuthCompleteUrl(request, "error", error),
       { status: 302 },
     );
     response.cookies.delete(INSTAGRAM_STATE_COOKIE);
@@ -66,7 +74,7 @@ export async function GET(request: Request) {
       properties: { reason: "state_mismatch" },
     });
     const response = NextResponse.redirect(
-      new URL("/profile?instagram=state-error", request.url),
+      buildAuthCompleteUrl(request, "state-error"),
       { status: 302 },
     );
     response.cookies.delete(INSTAGRAM_STATE_COOKIE);
@@ -98,7 +106,7 @@ export async function GET(request: Request) {
       },
     });
     const response = NextResponse.redirect(
-      new URL("/profile?instagram=linked", request.url),
+      buildAuthCompleteUrl(request, "linked"),
       { status: 302 },
     );
 
@@ -115,10 +123,7 @@ export async function GET(request: Request) {
       properties: { reason: "exchange_error", error: message },
     });
     const response = NextResponse.redirect(
-      new URL(
-        `/profile?instagram=error&message=${encodeURIComponent(message)}`,
-        request.url,
-      ),
+      buildAuthCompleteUrl(request, "error", message),
       { status: 302 },
     );
 

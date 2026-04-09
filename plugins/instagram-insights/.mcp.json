@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "instagram-insights": {
+      "type": "http",
+      "url": "${INSTAGRAM_INSIGHTS_APP_URL}/mcp"
+    }
+  }
+}

@@ -1,32 +1,36 @@
 # API Key Setup
 
-This document explains how to create and use a personal API key for the hosted REST API and MCP.
+This document explains the legacy developer API key flow for the hosted REST API and MCP.
 
-## Prerequisites
+Claude plugin users should normally use the built-in OAuth install flow instead. API keys remain available as a compatibility path for manual clients, scripts, and non-OAuth setups.
 
-Before creating a key, the user should:
+## Before you create a key
 
-1. Sign in to the app with Google
-2. Link an Instagram account
-3. Complete at least one successful sync
+The user should already have:
 
-## Create A Key
+1. Signed in with Google
+2. Linked an Instagram account
+3. Completed at least one successful sync
 
-Open the developer page in the web app:
+The supported human-facing page for this flow is:
 
 ```text
-https://YOUR_APP_DOMAIN/profile/developer
+https://YOUR_APP_DOMAIN/developers
 ```
 
-Create a new personal API key and copy the value immediately. The full secret is only shown once.
+## Create a key
+
+Sign in on `/developers`, open the legacy API key section, and create a personal key.
+
+Copy the key immediately. The full secret is only shown once.
 
 Recommended shell setup:
 
 ```bash
-export INSTAGRAM_INSIGHTS_API_KEY="paste-the-key-from-the-dashboard"
+export INSTAGRAM_INSIGHTS_API_KEY="paste-the-key-from-the-developers-page"
 ```
 
-## Use The Key With REST
+## Use the key with REST
 
 Example:
 
@@ -45,24 +49,16 @@ curl -X POST \
   https://YOUR_APP_DOMAIN/api/v1/sync-runs
 ```
 
-## Use The Key With MCP
+## Use the key with MCP
 
-Codex example:
-
-```bash
-codex mcp add instagram-insights \
-  --url https://YOUR_APP_DOMAIN/mcp \
-  --bearer-token-env-var INSTAGRAM_INSIGHTS_API_KEY
-```
-
-Claude Code example:
+If a client cannot use the hosted OAuth flow, it can still call the MCP with a bearer header:
 
 ```bash
 claude mcp add --transport http instagram-insights https://YOUR_APP_DOMAIN/mcp \
   --header "Authorization: Bearer $INSTAGRAM_INSIGHTS_API_KEY"
 ```
 
-## Common Errors
+## Common errors
 
 ### `401 Missing bearer token`
 
@@ -79,3 +75,12 @@ The key owner has not connected Instagram yet.
 ### `404 Sync run not found`
 
 The sync run belongs to another user or the ID is incorrect.
+
+## Recommendation
+
+Prefer the Claude marketplace install whenever possible:
+
+```text
+/plugin marketplace add https://github.com/nickcruz/creator-insights.git
+/plugin install instagram-insights@creator-insights-plugins
+```

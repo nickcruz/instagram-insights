@@ -2,14 +2,14 @@ import { getAccountOverviewByUserId } from "@instagram-insights/db";
 
 import {
   createJsonResponse,
-  requireDeveloperApiKey,
+  requireApiAccess,
 } from "@/lib/developer-api-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: Request) {
-  const authResult = await requireDeveloperApiKey(request);
+  const authResult = await requireApiAccess(request);
 
   if (!authResult.ok) {
     return authResult.response;

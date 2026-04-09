@@ -147,3 +147,28 @@ export type DeveloperApiKeyCreateResponse = {
   apiKey: string;
   key: DeveloperApiKeySummary;
 };
+
+export type SetupStatus = "not_linked" | "not_synced" | "syncing" | "stale" | "ready";
+
+export type SetupNextAction =
+  | "connect_instagram"
+  | "trigger_sync"
+  | "wait_for_sync"
+  | "analyze";
+
+export type SetupStatusResponse = {
+  status: SetupStatus;
+  account: LinkedInstagramAccountSummary | null;
+  latestSyncRun: InstagramSyncRunSummary | null;
+  freshness: {
+    staleAfterHours: number;
+    isFresh: boolean;
+    latestCompletedAt: string | null;
+    ageHours: number | null;
+    summary: string;
+  };
+  instagramLinkUrl: string;
+  developersUrl: string;
+  recommendedNextAction: SetupNextAction;
+  recommendedPrompt: string;
+};

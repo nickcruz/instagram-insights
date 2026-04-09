@@ -7,6 +7,7 @@ import {
   listInstagramSyncRunsByUserId,
 } from "@instagram-insights/db";
 import {
+  type SetupStatusResponse,
   getInstagramSchemaTableDoc,
   instagramSchemaOverview,
   instagramSchemaTables,
@@ -17,6 +18,7 @@ import { z } from "zod";
 
 type McpContext = {
   userId: string;
+  appUrl: string;
   triggerSync?: (input: {
     userId: string;
     force?: boolean;
@@ -45,6 +47,128 @@ function jsonResult<T extends Record<string, unknown>>(data: T) {
       },
     ],
     structuredContent: data,
+  };
+}
+
+function roundHours(hours: number) {
+  return Number(hours.toFixed(1));
+}
+
+async function buildSetupStatus(input: {
+  userId: string;
+  appUrl: string;
+  staleAfterHours: number;
+}): Promise<SetupStatusResponse> {
+  const overview = await getAccountOverviewByUserId(input.userId);
+  const latestSyncRun = overview.latestSyncRun;
+  const instagramLinkUrl = new URL("/api/login", input.appUrl).toString();
+  const developersUrl = new URL("/developers", input.appUrl).toString();
+  const latestCompletedAt = latestSyncRun?.completedAt ?? null;
+  const ageHours = latestCompletedAt
+    ? roundHours(
+        (Date.now() - new Date(latestCompletedAt).getTime()) / (60 * 60 * 1000),
+      )
+    : null;
+  const isActiveSync = Boolean(
+    latestSyncRun && ["queued", "running"].includes(latestSyncRun.status),
+  );
+  const isFresh = ageHours !== null && ageHours < input.staleAfterHours;
+
+  if (!overview.account) {
+    return {
+      status: "not_linked",
+      account: null,
+      latestSyncRun,
+      freshness: {
+        staleAfterHours: input.staleAfterHours,
+        isFresh: false,
+        latestCompletedAt: null,
+        ageHours: null,
+        summary: "No Instagram account is linked yet.",
+      },
+      instagramLinkUrl,
+      developersUrl,
+      recommendedNextAction: "connect_instagram",
+      recommendedPrompt:
+        "Ask the user to open instagramLinkUrl in a browser, finish Instagram linking, then rerun setup.",
+    };
+  }
+
+  if (isActiveSync) {
+    return {
+      status: "syncing",
+      account: overview.account,
+      latestSyncRun,
+      freshness: {
+        staleAfterHours: input.staleAfterHours,
+        isFresh: false,
+        latestCompletedAt,
+        ageHours,
+        summary: `A sync is currently ${latestSyncRun?.status ?? "running"}.`,
+      },
+      instagramLinkUrl,
+      developersUrl,
+      recommendedNextAction: "wait_for_sync",
+      recommendedPrompt: latestSyncRun?.id
+        ? `Poll get_sync_run with syncRunId "${latestSyncRun.id}" until it completes or fails.`
+        : "Check sync run status again before continuing.",
+    };
+  }
+
+  if (!latestCompletedAt) {
+    return {
+      status: "not_synced",
+      account: overview.account,
+      latestSyncRun,
+      freshness: {
+        staleAfterHours: input.staleAfterHours,
+        isFresh: false,
+        latestCompletedAt: null,
+        ageHours: null,
+        summary: "No completed sync is available yet.",
+      },
+      instagramLinkUrl,
+      developersUrl,
+      recommendedNextAction: "trigger_sync",
+      recommendedPrompt: `Call trigger_sync with force false and staleAfterHours ${input.staleAfterHours}.`,
+    };
+  }
+
+  if (!isFresh) {
+    return {
+      status: "stale",
+      account: overview.account,
+      latestSyncRun,
+      freshness: {
+        staleAfterHours: input.staleAfterHours,
+        isFresh: false,
+        latestCompletedAt,
+        ageHours,
+        summary: `The latest completed sync is ${ageHours ?? "unknown"} hours old.`,
+      },
+      instagramLinkUrl,
+      developersUrl,
+      recommendedNextAction: "trigger_sync",
+      recommendedPrompt: `Call trigger_sync with force false and staleAfterHours ${input.staleAfterHours}.`,
+    };
+  }
+
+  return {
+    status: "ready",
+    account: overview.account,
+    latestSyncRun,
+    freshness: {
+      staleAfterHours: input.staleAfterHours,
+      isFresh: true,
+      latestCompletedAt,
+      ageHours,
+      summary: `The latest completed sync is fresh enough for analysis.`,
+    },
+    instagramLinkUrl,
+    developersUrl,
+    recommendedNextAction: "analyze",
+    recommendedPrompt:
+      "Use get_latest_snapshot for account analysis, then list_media or get_media for drilldowns.",
   };
 }
 
@@ -108,6 +232,27 @@ function createInstagramInsightsMcpServer(context: McpContext) {
         logging: {},
       },
     },
+  );
+
+  server.registerTool(
+    "get_setup_status",
+    {
+      title: "Get Setup Status",
+      description:
+        "Return onboarding status for the authenticated user, including whether Instagram is linked, whether the latest sync is fresh enough, and what Claude should do next.",
+      inputSchema: z.object({
+        staleAfterHours: z.number().int().min(1).max(24 * 30).optional(),
+      }),
+    },
+    withToolTracking(context, "get_setup_status", async (input) =>
+      jsonResult(
+        await buildSetupStatus({
+          userId: context.userId,
+          appUrl: context.appUrl,
+          staleAfterHours: input.staleAfterHours ?? 24,
+        }),
+      ),
+    ),
   );
 
   server.registerTool(

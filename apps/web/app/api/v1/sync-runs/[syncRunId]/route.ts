@@ -2,7 +2,7 @@ import { getInstagramSyncRunDetailById } from "@instagram-insights/db";
 
 import {
   createJsonResponse,
-  requireDeveloperApiKey,
+  requireApiAccess,
 } from "@/lib/developer-api-auth";
 
 export const runtime = "nodejs";
@@ -15,7 +15,7 @@ type RouteContext = {
 };
 
 export async function GET(request: Request, context: RouteContext) {
-  const authResult = await requireDeveloperApiKey(request);
+  const authResult = await requireApiAccess(request);
 
   if (!authResult.ok) {
     return authResult.response;

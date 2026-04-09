@@ -2,10 +2,10 @@ import { consumeMcpOAuthAuthorizationCode, getMcpOAuthClientByClientId } from "@
 
 import {
   exchangeRefreshToken,
-  hashOpaqueSecret,
   issueOAuthTokenPair,
   verifyPkceCodeVerifier,
 } from "@/lib/mcp-oauth";
+import { hashOpaqueSecret } from "@/lib/oauth-shared";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

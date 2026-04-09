@@ -32,7 +32,7 @@ export const authOptions: NextAuthOptions = {
     strategy: isDatabaseConfigured ? "database" : "jwt",
   },
   pages: {
-    signIn: "/",
+    signIn: "/developers",
   },
   providers: isGoogleAuthConfigured
     ? [
