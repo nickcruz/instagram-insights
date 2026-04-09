@@ -11,3 +11,8 @@ __pycache__
 .venv
 cdk.out
 .env.local
+.DS_Store
+*.pyc
+/.claude
+/skills
+/posthog-setup-report.md
