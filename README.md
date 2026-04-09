@@ -1,4 +1,4 @@
-# Creator Insights
+# Instagram Insights Plugin
 
 <p align="center">
   <a href="#claude-install"><img alt="Claude Plugin" src="https://img.shields.io/badge/Claude-Plugin-D97757?logo=anthropic&logoColor=white&style=for-the-badge"/></a>
