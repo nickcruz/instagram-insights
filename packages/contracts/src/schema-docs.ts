@@ -73,6 +73,7 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
     notes: [
       "The `accessToken` column is protected and is never returned by the REST API or MCP tools.",
       "The current app model enforces one linked Instagram account per app user.",
+      "The same Instagram professional account can be linked by multiple different app users; each link is isolated to its owning user.",
     ],
     columns: [
       {
@@ -399,8 +400,8 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
     name: "instagram_media_item",
     title: "Ingested Media Items",
     description:
-      "Recent Instagram media persisted from sync runs, including post metadata, insights, comments, and raw payloads.",
-    primaryKey: ["id"],
+      "Recent Instagram media persisted from sync runs, including post metadata, insights, comments, and raw payloads. Media rows are isolated per linked account even when two app users sync the same Instagram profile.",
+    primaryKey: ["rowId"],
     joins: [
       {
         fromColumn: "instagramAccountId",
@@ -423,10 +424,16 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
     ],
     columns: [
       {
-        name: "id",
+        name: "rowId",
+        type: "text",
+        visibility: "internal",
+        description: "Internal primary key for the persisted media row.",
+      },
+      {
+        name: "instagramMediaId",
         type: "text",
         visibility: "public",
-        description: "Instagram media identifier.",
+        description: "Instagram media identifier returned by Meta. This is the external `id` surfaced by the REST API and MCP.",
       },
       {
         name: "instagramAccountId",

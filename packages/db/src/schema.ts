@@ -113,7 +113,7 @@ export const instagramAccounts = pgTable(
   },
   (table) => ({
     userIdIdx: uniqueIndex("instagram_account_user_id_idx").on(table.userId),
-    instagramUserIdIdx: uniqueIndex("instagram_account_instagram_user_id_idx").on(
+    instagramUserIdIdx: index("instagram_account_instagram_user_id_idx").on(
       table.instagramUserId,
     ),
   }),
@@ -315,47 +315,63 @@ export const instagramAccountSnapshots = pgTable("instagram_account_snapshot", {
   createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
 });
 
-export const instagramMediaItems = pgTable("instagram_media_item", {
-  id: text("id").primaryKey(),
-  instagramAccountId: text("instagramAccountId")
-    .notNull()
-    .references(() => instagramAccounts.id, { onDelete: "cascade" }),
-  userId: text("userId")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  lastSyncRunId: text("lastSyncRunId").references(() => instagramSyncRuns.id, {
-    onDelete: "set null",
+export const instagramMediaItems = pgTable(
+  "instagram_media_item",
+  {
+    rowId: text("rowId")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    instagramMediaId: text("instagramMediaId").notNull(),
+    instagramAccountId: text("instagramAccountId")
+      .notNull()
+      .references(() => instagramAccounts.id, { onDelete: "cascade" }),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    lastSyncRunId: text("lastSyncRunId").references(() => instagramSyncRuns.id, {
+      onDelete: "set null",
+    }),
+    caption: text("caption"),
+    commentsCount: integer("commentsCount"),
+    likeCount: integer("likeCount"),
+    mediaProductType: text("mediaProductType"),
+    mediaType: text("mediaType"),
+    mediaUrl: text("mediaUrl"),
+    thumbnailUrl: text("thumbnailUrl"),
+    previewUrl: text("previewUrl"),
+    permalink: text("permalink"),
+    shortcode: text("shortcode"),
+    postedAt: timestamp("postedAt", { mode: "date" }),
+    username: text("username"),
+    isCommentEnabled: boolean("isCommentEnabled"),
+    transcriptStatus: text("transcriptStatus"),
+    transcriptText: text("transcriptText"),
+    transcriptLanguage: text("transcriptLanguage"),
+    transcriptModel: text("transcriptModel"),
+    transcriptClipSeconds: integer("transcriptClipSeconds"),
+    transcriptError: text("transcriptError"),
+    transcriptMetadata: jsonb("transcriptMetadata"),
+    transcriptUpdatedAt: timestamp("transcriptUpdatedAt", { mode: "date" }),
+    topComments: jsonb("topComments"),
+    insights: jsonb("insights"),
+    warnings: jsonb("warnings"),
+    errors: jsonb("errors"),
+    raw: jsonb("raw"),
+    syncedAt: timestamp("syncedAt", { mode: "date" }).notNull().defaultNow(),
+    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
+  },
+  (table) => ({
+    accountMediaIdx: uniqueIndex("instagram_media_item_account_media_idx").on(
+      table.instagramAccountId,
+      table.instagramMediaId,
+    ),
+    userIdIdx: index("instagram_media_item_user_id_idx").on(table.userId),
+    accountIdIdx: index("instagram_media_item_account_id_idx").on(
+      table.instagramAccountId,
+    ),
   }),
-  caption: text("caption"),
-  commentsCount: integer("commentsCount"),
-  likeCount: integer("likeCount"),
-  mediaProductType: text("mediaProductType"),
-  mediaType: text("mediaType"),
-  mediaUrl: text("mediaUrl"),
-  thumbnailUrl: text("thumbnailUrl"),
-  previewUrl: text("previewUrl"),
-  permalink: text("permalink"),
-  shortcode: text("shortcode"),
-  postedAt: timestamp("postedAt", { mode: "date" }),
-  username: text("username"),
-  isCommentEnabled: boolean("isCommentEnabled"),
-  transcriptStatus: text("transcriptStatus"),
-  transcriptText: text("transcriptText"),
-  transcriptLanguage: text("transcriptLanguage"),
-  transcriptModel: text("transcriptModel"),
-  transcriptClipSeconds: integer("transcriptClipSeconds"),
-  transcriptError: text("transcriptError"),
-  transcriptMetadata: jsonb("transcriptMetadata"),
-  transcriptUpdatedAt: timestamp("transcriptUpdatedAt", { mode: "date" }),
-  topComments: jsonb("topComments"),
-  insights: jsonb("insights"),
-  warnings: jsonb("warnings"),
-  errors: jsonb("errors"),
-  raw: jsonb("raw"),
-  syncedAt: timestamp("syncedAt", { mode: "date" }).notNull().defaultNow(),
-  createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
-});
+);
 
 export const authSchema = {
   usersTable: users,

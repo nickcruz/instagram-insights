@@ -1,1 +1,0 @@
-ALTER TABLE "instagram_sync_run" ADD COLUMN "progress" jsonb;

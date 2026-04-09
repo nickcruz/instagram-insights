@@ -266,7 +266,7 @@ function serializeMediaListItem(
   row: RawMediaItem,
 ): InstagramMediaListItem {
   return {
-    id: row.id,
+    id: row.instagramMediaId,
     instagramAccountId: row.instagramAccountId,
     lastSyncRunId: row.lastSyncRunId ?? null,
     caption: row.caption ?? null,
@@ -848,7 +848,7 @@ export async function persistInstagramSyncResult(input: SyncResultInput) {
       await tx
         .insert(instagramMediaItems)
         .values({
-          id: mediaId,
+          instagramMediaId: mediaId,
           instagramAccountId: input.instagramAccountId,
           userId: input.userId,
           lastSyncRunId: input.runId,
@@ -886,7 +886,10 @@ export async function persistInstagramSyncResult(input: SyncResultInput) {
           updatedAt: now,
         })
         .onConflictDoUpdate({
-          target: instagramMediaItems.id,
+          target: [
+            instagramMediaItems.instagramAccountId,
+            instagramMediaItems.instagramMediaId,
+          ],
           set: {
             instagramAccountId: input.instagramAccountId,
             userId: input.userId,
@@ -965,7 +968,7 @@ export async function listInstagramMediaItemsForTranscription(input: {
 }) {
   return await getDb()
     .select({
-      id: instagramMediaItems.id,
+      id: instagramMediaItems.instagramMediaId,
       mediaType: instagramMediaItems.mediaType,
       mediaUrl: instagramMediaItems.mediaUrl,
       transcriptStatus: instagramMediaItems.transcriptStatus,
@@ -982,7 +985,10 @@ export async function listInstagramMediaItemsForTranscription(input: {
         ),
       ),
     )
-    .orderBy(desc(instagramMediaItems.postedAt), desc(instagramMediaItems.id));
+    .orderBy(
+      desc(instagramMediaItems.postedAt),
+      desc(instagramMediaItems.instagramMediaId),
+    );
 }
 
 async function updateInstagramMediaTranscriptStatus(input: {
@@ -1012,7 +1018,7 @@ async function updateInstagramMediaTranscriptStatus(input: {
       })
       .where(
         and(
-          eq(instagramMediaItems.id, input.mediaId),
+          eq(instagramMediaItems.instagramMediaId, input.mediaId),
           eq(instagramMediaItems.lastSyncRunId, input.syncRunId),
         ),
       )
@@ -1201,7 +1207,7 @@ export async function listInstagramMediaByUserId(input: {
 
     if (cursorDate) {
       conditions.push(
-        sql`(${mediaSortAtExpression} < ${cursorDate} OR (${mediaSortAtExpression} = ${cursorDate} AND ${instagramMediaItems.id} < ${cursor.id}))`,
+        sql`(${mediaSortAtExpression} < ${cursorDate} OR (${mediaSortAtExpression} = ${cursorDate} AND ${instagramMediaItems.instagramMediaId} < ${cursor.id}))`,
       );
     }
   }
@@ -1213,7 +1219,10 @@ export async function listInstagramMediaByUserId(input: {
     })
     .from(instagramMediaItems)
     .where(and(...conditions))
-    .orderBy(desc(mediaSortAtExpression), desc(instagramMediaItems.id))
+    .orderBy(
+      desc(mediaSortAtExpression),
+      desc(instagramMediaItems.instagramMediaId),
+    )
     .limit(limit + 1);
 
   const hasMore = rows.length > limit;
@@ -1234,7 +1243,7 @@ export async function listInstagramMediaByUserId(input: {
 
       return encodeCursor({
         sortAt: cursorSortAt.toISOString(),
-        id: lastRow.media.id,
+        id: lastRow.media.instagramMediaId,
       });
     })(),
   };
@@ -1251,7 +1260,7 @@ export async function getInstagramMediaDetailById(input: {
         .from(instagramMediaItems)
         .where(
           and(
-            eq(instagramMediaItems.id, input.mediaId),
+            eq(instagramMediaItems.instagramMediaId, input.mediaId),
             eq(instagramMediaItems.userId, input.userId),
           ),
         )
