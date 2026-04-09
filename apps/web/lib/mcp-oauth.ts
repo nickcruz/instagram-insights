@@ -286,8 +286,8 @@ export async function getOAuthAuthorizeLoginRedirect(request: Request) {
 
   const appUrl = await getAppUrl();
   const authorizeUrl = new URL(request.url);
-  const signInUrl = new URL("/api/auth/signin/google", appUrl);
-  signInUrl.searchParams.set("callbackUrl", authorizeUrl.toString());
+  const signInUrl = new URL("/oauth/continue", appUrl);
+  signInUrl.searchParams.set("returnTo", authorizeUrl.toString());
 
   return signInUrl;
 }
