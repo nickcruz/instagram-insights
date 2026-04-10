@@ -12,6 +12,7 @@ Core rules:
 - Resolve paths relative to this skill folder.
 - Start from `./instagram-insights` so the launcher can install the latest signed CLI binaries into `./bin/` before running commands.
 - The CLI stores OAuth tokens in `./.auth/state.json` inside this installed skill folder.
+- Runtime-only skill state lives under `./.auth/`, `./.cache/`, and `./bin/`, and `./.skillignore` excludes those paths from SkillTree sync and publish.
 - Data-returning commands already default to JSON output.
 - The installed skill bootstraps the latest signed CLI binaries when `./bin/` is missing, then the downloaded CLI keeps itself updated.
 
@@ -50,7 +51,7 @@ Recommended workflow:
 3. Run `./instagram-insights setup status`.
 4. If setup reports `not_linked`, run `./instagram-insights instagram link --open`.
 5. If setup reports `not_synced` or `stale`, run `./instagram-insights sync run --wait`.
-6. Use `account overview`, `snapshot latest`, `media list`, `media get`, `sync list`, and `sync get` for analysis or debugging.
+6. Use `./instagram-insights media analyze --days 30` for the precomputed 30-day report, plus `account overview`, `snapshot latest`, `media list`, `media get`, `sync list`, and `sync get` for debugging.
 
 Supported commands:
 
@@ -61,8 +62,9 @@ Supported commands:
 - `./instagram-insights setup status --stale-after-hours 12`
 - `./instagram-insights account overview`
 - `./instagram-insights snapshot latest`
-- `./instagram-insights media list --limit 10`
+- `./instagram-insights media list --limit 10 --days 30 --flat-metrics`
 - `./instagram-insights media get <mediaId>`
+- `./instagram-insights media analyze --days 30`
 - `./instagram-insights sync list --limit 10`
 - `./instagram-insights sync get <syncRunId>`
 - `./instagram-insights sync run --wait`
