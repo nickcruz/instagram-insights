@@ -16,12 +16,23 @@ import {
 } from "@/lib/instagram-oauth";
 import { getPostHogClient } from "@/lib/posthog-server";
 
-function buildAuthCompleteUrl(request: Request, status: string, message?: string) {
+function buildAuthCompleteUrl(
+  request: Request,
+  status: string,
+  options?: {
+    message?: string;
+    username?: string | null;
+  },
+) {
   const target = new URL("/auth/complete", request.url);
   target.searchParams.set("status", status);
 
-  if (message) {
-    target.searchParams.set("message", message);
+  if (options?.message) {
+    target.searchParams.set("message", options.message);
+  }
+
+  if (options?.username) {
+    target.searchParams.set("username", options.username);
   }
 
   return target;
@@ -60,7 +71,7 @@ export async function GET(request: Request) {
       properties: { reason: "oauth_error", error },
     });
     const response = NextResponse.redirect(
-      buildAuthCompleteUrl(request, "error", error),
+      buildAuthCompleteUrl(request, "error", { message: error }),
       { status: 302 },
     );
     response.cookies.delete(INSTAGRAM_STATE_COOKIE);
@@ -106,7 +117,9 @@ export async function GET(request: Request) {
       },
     });
     const response = NextResponse.redirect(
-      buildAuthCompleteUrl(request, "linked"),
+      buildAuthCompleteUrl(request, "linked", {
+        username: profile.username,
+      }),
       { status: 302 },
     );
 
@@ -123,7 +136,7 @@ export async function GET(request: Request) {
       properties: { reason: "exchange_error", error: message },
     });
     const response = NextResponse.redirect(
-      buildAuthCompleteUrl(request, "error", message),
+      buildAuthCompleteUrl(request, "error", { message }),
       { status: 302 },
     );
 
