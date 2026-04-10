@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import "reflect-metadata";
 
 import {
@@ -11,7 +9,6 @@ import {
   program,
   requiredArg,
   usage,
-  variadicArg,
   version,
   type Command,
 } from "commander-ts";
@@ -26,6 +23,7 @@ import { normalizeAppUrl, runBrowserOAuthLogin } from "./oauth";
 import { deriveSetupStatus } from "./status";
 
 const CLI_VERSION = "1.0.0";
+const CLI_ARGS = process.argv.slice(2);
 
 type RootCommand = Command & {
   appUrl?: string;
@@ -126,13 +124,10 @@ class InstagramInsightsCli {
   @option("--no-browser", "Disable automatic browser launch")
   declare browser: boolean;
 
-  async run(@variadicArg("args") args: string[]) {
-    if (args.length === 0) {
+  async run() {
+    if (CLI_ARGS.length === 0) {
       printTopLevelHelp();
-      return;
     }
-
-    fail("Unknown command.", { args });
   }
 
   @command()
@@ -408,4 +403,3 @@ class InstagramInsightsCli {
 }
 
 new InstagramInsightsCli();
-

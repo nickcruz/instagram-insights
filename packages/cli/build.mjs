@@ -15,6 +15,7 @@ const skillOutfile = path.join(
 const sharedOptions = {
   entryPoints: [entryPoint],
   bundle: true,
+  external: ["commander", "commander-ts", "reflect-metadata"],
   format: "esm",
   platform: "node",
   target: "node20",
