@@ -153,6 +153,7 @@ async function fetchRemoteManifest(manifestUrl: string) {
     headers: {
       Accept: "application/json",
     },
+    signal: AbortSignal.timeout(5_000),
   });
 
   if (!response.ok) {
