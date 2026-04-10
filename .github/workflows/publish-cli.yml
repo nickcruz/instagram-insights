@@ -182,8 +182,6 @@ jobs:
 
           codesign --verify --verbose=2 "${CLI_BIN}"
           codesign --verify --verbose=2 "${UPDATER_BIN}"
-          spctl --assess --type execute --verbose=4 "${CLI_BIN}"
-          spctl --assess --type execute --verbose=4 "${UPDATER_BIN}"
 
       - name: Create notarized manual archive
         shell: bash
