@@ -34,6 +34,10 @@ type CheckForUpdatesOptions = {
   force: boolean;
 };
 
+function logUpdate(message: string) {
+  console.error(`[instagram-insights:update] ${message}`);
+}
+
 function parseSemver(version: string) {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version.trim());
 
@@ -149,6 +153,7 @@ function validateRemoteManifest(input: unknown): RemoteUpdateManifest | null {
 }
 
 async function fetchRemoteManifest(manifestUrl: string) {
+  logUpdate(`Fetching update manifest from ${manifestUrl}`);
   const response = await fetch(manifestUrl, {
     headers: {
       Accept: "application/json",
@@ -297,6 +302,7 @@ function resolveManagedPath(baseDir: string, relativePath: string) {
 }
 
 async function downloadManagedFile(stagingDir: string, file: RemoteUpdateFile) {
+  logUpdate(`Downloading ${file.path} from ${file.url}`);
   const response = await fetch(file.url);
 
   if (!response.ok) {
@@ -309,6 +315,8 @@ async function downloadManagedFile(stagingDir: string, file: RemoteUpdateFile) {
   if (digest !== file.sha256) {
     throw new Error(`Checksum mismatch for ${file.path}.`);
   }
+
+  logUpdate(`Verified ${file.path}`);
 
   const target = resolveManagedPath(stagingDir, file.path);
   await mkdir(path.dirname(target), { recursive: true });
@@ -383,6 +391,9 @@ export async function applyUpdate(
   const payloadPath = path.join(stagingDir, "update-payload.json");
 
   try {
+    logUpdate(
+      `Applying update ${checkResult.localVersion ?? "unversioned"} -> ${checkResult.manifest.version}`,
+    );
     await Promise.all(
       checkResult.manifest.files.map((file) => downloadManagedFile(stagingDir, file)),
     );
@@ -403,6 +414,7 @@ export async function applyUpdate(
     );
 
     await runUpdaterHelper(payloadPath);
+    logUpdate(`Applied update ${checkResult.manifest.version}`);
 
     await clearUpdateCheckCache();
     await writeUpdateCheckCache({

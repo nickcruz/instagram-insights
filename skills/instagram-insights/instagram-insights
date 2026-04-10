@@ -16,15 +16,27 @@ CURL_ARGS=(
   --silent
   --show-error
   --location
-  --connect-timeout 5
-  --max-time 20
   --retry 2
   --retry-delay 1
+)
+MANIFEST_CURL_ARGS=(
+  "${CURL_ARGS[@]}"
+  --connect-timeout 5
+  --max-time 15
+)
+DOWNLOAD_CURL_ARGS=(
+  "${CURL_ARGS[@]}"
+  --connect-timeout 10
+  --max-time 600
 )
 
 fail() {
   printf '%s\n' "$1" >&2
   exit 1
+}
+
+info() {
+  printf '%s\n' "$1" >&2
 }
 
 require_supported_host() {
@@ -47,7 +59,9 @@ download_with_checksum() {
   local expected_sha="$3"
   local actual_sha
 
-  curl "${CURL_ARGS[@]}" "$url" --output "$destination"
+  info "Downloading $(basename "$destination") from $url"
+  curl "${DOWNLOAD_CURL_ARGS[@]}" "$url" --output "$destination"
+  info "Verifying checksum for $(basename "$destination")"
   actual_sha="$(shasum -a 256 "$destination" | awk '{ print $1 }')"
   [[ "$actual_sha" == "$expected_sha" ]] || fail "Checksum mismatch while downloading $(basename "$destination")."
 }
@@ -65,12 +79,15 @@ ensure_cli_installed() {
     return
   fi
 
+  info "Bootstrapping Instagram Insights CLI into $BIN_DIR (first run downloads the signed macOS binary and may take a minute)..."
+
   local manifest_file stage_dir
   manifest_file="$(mktemp -t instagram-insights-manifest)"
   stage_dir="$(mktemp -d -t instagram-insights-bootstrap)"
   trap 'rm -f "$manifest_file"; rm -rf "$stage_dir"' EXIT
 
-  if ! curl "${CURL_ARGS[@]}" "$MANIFEST_URL" --output "$manifest_file"; then
+  info "Fetching CLI manifest from $MANIFEST_URL"
+  if ! curl "${MANIFEST_CURL_ARGS[@]}" "$MANIFEST_URL" --output "$manifest_file"; then
     rm -f "$manifest_file"
     rm -rf "$stage_dir"
     trap - EXIT
@@ -90,11 +107,14 @@ ensure_cli_installed() {
   download_with_checksum "$version_url" "$stage_dir/instagram-insights.version.json" "$version_sha"
 
   mkdir -p "$BIN_DIR"
+  info "Installing downloaded CLI files into $BIN_DIR"
   mv "$stage_dir/instagram-insights" "$CLI_BIN"
   mv "$stage_dir/instagram-insights-updater" "$UPDATER_BIN"
   mv "$stage_dir/instagram-insights.version.json" "$VERSION_FILE"
   chmod 755 "$CLI_BIN" "$UPDATER_BIN"
   chmod 644 "$VERSION_FILE"
+
+  info "Instagram Insights CLI bootstrap complete."
 
   rm -f "$manifest_file"
   rm -rf "$stage_dir"
