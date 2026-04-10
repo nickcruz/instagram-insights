@@ -166,7 +166,7 @@ export function DeveloperApiKeyManager({
       {revealedKey ? (
         <CopySnippet
           title="New Key"
-          description="This secret is only shown once. Save it in your shell as INSTAGRAM_INSIGHTS_API_KEY before installing the MCP."
+          description="This secret is only shown once. Save it in your shell as INSTAGRAM_INSIGHTS_API_KEY for compatibility scripts and direct REST access."
           value={revealedKey}
         />
       ) : null}

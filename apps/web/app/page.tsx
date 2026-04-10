@@ -47,18 +47,18 @@ export default async function HomePage({ searchParams }: HomePageProps) {
               </div>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--muted-foreground)]">
-                  Claude Desktop handoff
+                  Browser handoff
                 </p>
                 <h1 className="mt-3 max-w-3xl font-heading text-5xl leading-none md:text-7xl">
                   {isConnectorResume
-                    ? "Finish Google sign-in and jump back to Claude."
-                    : "Use this page when Claude asks you to finish Instagram Insights sign-in."}
+                    ? "Finish Google sign-in and jump back to your CLI or skill flow."
+                    : "Use this page when Instagram Insights asks you to finish Google sign-in."}
                 </h1>
               </div>
               <p className="max-w-2xl text-lg leading-8 text-[var(--muted-foreground)]">
                 {isConnectorResume
-                  ? "Claude already handled connector consent. Sign in to Instagram Insights with Google here, and we will resume the connector flow back in Claude Desktop."
-                  : "The hosted app completes the first-party Google login step for Instagram Insights, then hands control back to Claude for MCP access and later Instagram linking."}
+                  ? "The Instagram Insights skill or CLI already started the hosted OAuth flow. Sign in with Google here, and we will resume the local auth flow automatically."
+                  : "The hosted app completes the first-party Google login step for Instagram Insights, then hands control back to the installed skill or CLI for API access and later Instagram linking."}
               </p>
               <div className="flex flex-wrap gap-3">
                 <AuthControls
@@ -88,11 +88,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <div className="rounded-2xl border border-[var(--border)] bg-white/70 p-4">
                   <div className="flex items-center gap-2 font-semibold">
                     <ShieldCheck className="size-4 text-[var(--primary)]" />
-                    Claude MCP consent first
+                    OAuth handoff first
                   </div>
                   <p className="mt-2 text-[var(--muted-foreground)]">
-                    Claude handles the connector consent screen before sending
-                    you here for Google sign-in.
+                    The installed skill or CLI starts the OAuth flow before
+                    sending you here for Google sign-in.
                   </p>
                 </div>
                 <div className="rounded-2xl border border-[var(--border)] bg-white/70 p-4">
@@ -102,7 +102,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                   </div>
                   <p className="mt-2 text-[var(--muted-foreground)]">
                     Once you finish Google sign-in, the app resumes the original
-                    OAuth request and returns you to Claude Desktop.
+                    OAuth request and returns you to the waiting local client.
                   </p>
                 </div>
                 <div className="rounded-2xl border border-[var(--border)] bg-white/70 p-4">
@@ -111,7 +111,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                     Support lives on `/developers`
                   </div>
                   <p className="mt-2 text-[var(--muted-foreground)]">
-                    Use the developers page for troubleshooting, status checks,
+                    Use the developers page for troubleshooting, CLI examples,
                     and legacy API-key workflows.
                   </p>
                 </div>

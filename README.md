@@ -1,56 +1,86 @@
-# Instagram Insights Plugin
+# Instagram Insights
 
 <p align="center">
-  <a href="#claude-install"><img alt="Claude Plugin" src="https://img.shields.io/badge/Claude-Plugin-D97757?logo=anthropic&logoColor=white&style=for-the-badge"/></a>
-  <a href="#hosted-architecture"><img alt="Hosted MCP" src="https://img.shields.io/badge/MCP-Hosted%20Server-111827?style=for-the-badge"/></a>
+  <a href="#install"><img alt="Skill + CLI" src="https://img.shields.io/badge/Skill-CLI%20First-D97757?style=for-the-badge"/></a>
   <a href="./LICENSE"><img alt="License MIT" src="https://img.shields.io/badge/License-MIT-16A34A?style=for-the-badge"/></a>
 </p>
 
 <p align="center">
   <a href="./apps/web"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white&style=for-the-badge"/></a>
+  <a href="./packages/cli"><img alt="TypeScript CLI" src="https://img.shields.io/badge/TypeScript-CLI-3178C6?logo=typescript&logoColor=white&style=for-the-badge"/></a>
   <a href="./services/transcriber"><img alt="FastAPI Whisper" src="https://img.shields.io/badge/FastAPI-Whisper-009688?logo=fastapi&logoColor=white&style=for-the-badge"/></a>
 </p>
 
-Instagram Insights is a Claude-first Instagram analytics workflow built around a hosted MCP server, a thin Next.js backend, and durable sync/transcription services.
+Instagram Insights is a skill-first Instagram analytics workflow built around one installable skill, a bundled TypeScript CLI, a hosted REST API, and durable sync/transcription services.
 
 ## What This Repo Contains
 
-- A hosted web app in `apps/web` that exposes `/`, `/developers`, `/mcp`, OAuth routes, `/api/v1/*`, Instagram auth handoffs, and the minimal install/troubleshooting UI.
-- Shared packages in `packages/*` for MCP behavior, contracts, database access, and infrastructure definitions.
+- A hosted web app in `apps/web` that exposes `/`, `/developers`, OAuth routes, `/api/login`, `/api/callback`, and `/api/v1/*`.
+- A bundled CLI in `packages/cli` that authenticates with OAuth PKCE, stores tokens inside the installed skill folder, and wraps the hosted API.
+- Shared packages in `packages/*` for contracts, database access, and infrastructure definitions.
 - A transcriber service in `services/transcriber` used by the sync pipeline.
-- A Claude plugin bundle in `plugins/instagram-insights`, with the public marketplace catalog published from `kingscrosslabs/marketplace`.
+- One installable skill under `skills/instagram-insights`.
 
-## Claude Install
+## Install
 
-The primary user experience is the Claude plugin marketplace flow:
+Add the repository as a Claude marketplace and install the skill package:
 
 ```text
 /plugin marketplace add https://github.com/kingscrosslabs/marketplace.git
 /plugin install instagram-insights@kingscrosslabs-marketplace
 ```
 
-After install, run:
+After install, the bundled skill should drive the CLI:
 
-```text
-/instagram-insights:setup
+```bash
+node ./skills/instagram-insights/bin/instagram-insights.mjs auth login
+node ./skills/instagram-insights/bin/instagram-insights.mjs setup status
+node ./skills/instagram-insights/bin/instagram-insights.mjs sync run --wait
 ```
 
-Claude starts the hosted MCP OAuth flow, the app root finishes the first-party Google sign-in step, and then Claude stores its own credentials locally before using the bundled plugin skills to connect Instagram, sync, and analyze.
+## Supported CLI Commands
 
-## Hosted Architecture
+- `auth login`
+- `auth status`
+- `auth logout`
+- `setup status`
+- `account overview`
+- `snapshot latest`
+- `media list`
+- `media get <mediaId>`
+- `sync list`
+- `sync get <syncRunId>`
+- `sync run [--wait]`
+- `instagram link [--open]`
 
-- `apps/web` is the orchestration layer for:
-  - `/`
-  - `/developers`
-  - `/mcp`
-  - `/.well-known/oauth-*`
-  - `/oauth/*`
-  - `/api/login`
-  - `/api/callback`
-  - `/api/v1/*`
-- Sync runs are queued through the backend and executed via the workflow-backed sync pipeline.
-- The Whisper-compatible transcription service lives under `services/transcriber`.
-- `/developers` is the supported human-facing page for install help and troubleshooting.
+All data-returning commands default to JSON output.
+
+## Auth Model
+
+- The CLI registers a public OAuth client against `/oauth/register`.
+- The browser handoff completes Google sign-in on the hosted app.
+- The CLI receives the callback on `127.0.0.1`, exchanges the code at `/oauth/token`, and stores auth state in `skills/instagram-insights/.auth/state.json`.
+- Instagram linking still happens through the hosted `/api/login` handoff.
+
+## Hosted API
+
+The skill and CLI talk to the authenticated REST surface under `/api/v1/*`:
+
+- `GET /api/v1/account`
+- `GET /api/v1/snapshot/latest`
+- `GET /api/v1/media`
+- `GET /api/v1/media/:mediaId`
+- `GET /api/v1/sync-runs`
+- `GET /api/v1/sync-runs/:syncRunId`
+- `POST /api/v1/sync-runs`
+
+Legacy developer API keys are still supported for compatibility scripts.
+
+## MCP Deprecation
+
+- `/mcp` now returns `410 Gone`.
+- `/.well-known/oauth-protected-resource/mcp` now returns `410 Gone`.
+- The supported path is the Instagram Insights skill plus bundled CLI.
 
 ## Local Development
 
@@ -60,28 +90,21 @@ Install dependencies:
 yarn install --frozen-lockfile
 ```
 
-Set up environment variables from `.env.example` and `apps/web/.env.example`.
-
 Useful commands:
 
 ```bash
+yarn build:cli
 yarn typecheck
+yarn test:cli
 yarn test:web
 python3 -m pytest services/transcriber/tests
-yarn build
 ```
 
-For local Claude plugin development:
+The CLI bundle written into the skill lives at:
 
-```bash
-claude --plugin-dir ./plugins/instagram-insights
+```text
+skills/instagram-insights/bin/instagram-insights.mjs
 ```
-
-## Compatibility Notes
-
-- Legacy developer API keys are still supported for fallback REST and manual MCP use.
-- The repo-root legacy `skills/` content is intentionally not part of the public product surface.
-- GitHub usernames and install URLs remain `nickcruz`; human-readable author display is `Nick Reyes`.
 
 ## License
 

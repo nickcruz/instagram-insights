@@ -21,7 +21,7 @@ function getStatusCopy(status: string | undefined, message: string | undefined) 
     return {
       title: "Instagram connected",
       description:
-        "The browser handoff completed successfully. Return to Claude Desktop and rerun the setup or sync skill.",
+        "The browser handoff completed successfully. Return to the Instagram Insights skill or CLI and rerun setup or sync.",
     };
   }
 
@@ -37,7 +37,7 @@ function getStatusCopy(status: string | undefined, message: string | undefined) 
     return {
       title: "Link verification failed",
       description:
-        "The Instagram OAuth state could not be verified. Start the connect flow again from Claude, then retry the browser handoff.",
+        "The Instagram OAuth state could not be verified. Start the CLI or skill link flow again, then retry the browser handoff.",
     };
   }
 
@@ -45,7 +45,7 @@ function getStatusCopy(status: string | undefined, message: string | undefined) 
     return {
       title: "Sign-in required",
       description:
-        "Sign in with Google on the Instagram Insights handoff page first, then retry the connect flow from Claude.",
+        "Sign in with Google on the Instagram Insights handoff page first, then retry the CLI or skill flow.",
     };
   }
 

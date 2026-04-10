@@ -14,7 +14,7 @@
     "@auth/drizzle-adapter": "^1.11.1",
     "@instagram-insights/contracts": "*",
     "@instagram-insights/db": "*",
-    "@instagram-insights/mcp": "*",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@radix-ui/react-slot": "latest",
     "class-variance-authority": "latest",
     "clsx": "latest",

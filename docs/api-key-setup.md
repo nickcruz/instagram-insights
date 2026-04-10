@@ -1,8 +1,8 @@
 # API Key Setup
 
-This document explains the legacy developer API key flow for the hosted REST API and MCP.
+This document explains the legacy developer API key flow for the hosted REST API.
 
-Claude plugin users should normally use the built-in OAuth install flow instead. API keys remain available as a compatibility path for manual clients, scripts, and non-OAuth setups.
+The recommended path is the Instagram Insights skill plus bundled CLI OAuth flow. API keys remain available as a compatibility option for scripts and manual clients.
 
 ## Before you create a key
 
@@ -49,15 +49,6 @@ curl -X POST \
   https://YOUR_APP_DOMAIN/api/v1/sync-runs
 ```
 
-## Use the key with MCP
-
-If a client cannot use the hosted OAuth flow, it can still call the MCP with a bearer header:
-
-```bash
-claude mcp add --transport http instagram-insights https://project-qah0p.vercel.app/mcp \
-  --header "Authorization: Bearer $INSTAGRAM_INSIGHTS_API_KEY"
-```
-
 ## Common errors
 
 ### `401 Missing bearer token`
@@ -78,9 +69,9 @@ The sync run belongs to another user or the ID is incorrect.
 
 ## Recommendation
 
-Prefer the Claude marketplace install whenever possible:
+Prefer the skill and bundled CLI whenever possible:
 
-```text
-/plugin marketplace add https://github.com/kingscrosslabs/marketplace.git
-/plugin install instagram-insights@kingscrosslabs-marketplace
+```bash
+node ./skills/instagram-insights/bin/instagram-insights.mjs auth login
+node ./skills/instagram-insights/bin/instagram-insights.mjs setup status
 ```

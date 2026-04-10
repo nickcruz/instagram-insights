@@ -71,7 +71,7 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
       },
     ],
     notes: [
-      "The `accessToken` column is protected and is never returned by the REST API or MCP tools.",
+      "The `accessToken` column is protected and is never returned by the REST API or CLI responses.",
       "The current app model enforces one linked Instagram account per app user.",
       "The same Instagram professional account can be linked by multiple different app users; each link is isolated to its owning user.",
     ],
@@ -433,7 +433,7 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
         name: "instagramMediaId",
         type: "text",
         visibility: "public",
-        description: "Instagram media identifier returned by Meta. This is the external `id` surfaced by the REST API and MCP.",
+        description: "Instagram media identifier returned by Meta. This is the external `id` surfaced by the REST API and CLI.",
       },
       {
         name: "instagramAccountId",
@@ -634,11 +634,11 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
 export const instagramSchemaOverview: SchemaOverviewDoc = {
   title: "Instagram Insights Analytics Schema",
   description:
-    "Curated table documentation for the user-scoped Instagram analytics data exposed through the hosted REST API and MCP server.",
+    "Curated table documentation for the user-scoped Instagram analytics data exposed through the hosted REST API and Instagram Insights CLI.",
   notes: [
-    "All REST and MCP reads are scoped to the authenticated API key owner.",
+    "All REST and CLI reads are scoped to the authenticated API key owner.",
     "Auth/session tables are intentionally excluded from this schema surface.",
-    "Protected columns are documented for context but never returned in API or MCP responses.",
+    "Protected columns are documented for context but never returned in API or CLI responses.",
   ],
   tables: instagramSchemaTables.map(({ name, title, description }) => ({
     name,

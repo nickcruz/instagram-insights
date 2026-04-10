@@ -13,8 +13,7 @@
     "paths": {
       "@/*": ["./*"],
       "@instagram-insights/contracts": ["../../packages/contracts/src/index.ts"],
-      "@instagram-insights/db": ["../../packages/db/src/index.ts"],
-      "@instagram-insights/mcp": ["../../packages/mcp/src/index.ts"]
+      "@instagram-insights/db": ["../../packages/db/src/index.ts"]
     }
   },
   "include": [

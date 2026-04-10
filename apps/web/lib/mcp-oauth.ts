@@ -14,7 +14,7 @@ import { OAuthClientMetadataSchema } from "@modelcontextprotocol/sdk/shared/auth
 import { getAppUrl } from "@/lib/app-url";
 import { auth, isGoogleAuthConfigured } from "@/lib/auth";
 import { resolveBearerAuth } from "@/lib/bearer-auth";
-import { hashOpaqueSecret, MCP_TOOLS_SCOPE } from "@/lib/oauth-shared";
+import { API_BEARER_SCOPE, hashOpaqueSecret } from "@/lib/oauth-shared";
 import { buildRootHandoffPath, normalizeSameOriginReturnTo } from "@/lib/return-to";
 
 const ACCESS_TOKEN_TTL_SECONDS = 60 * 60;
@@ -108,9 +108,9 @@ export function buildProtectedResourceMetadata(request: Request) {
   return {
     resource: `${origin}/mcp`,
     authorization_servers: [origin],
-    scopes_supported: [MCP_TOOLS_SCOPE],
+    scopes_supported: [API_BEARER_SCOPE],
     bearer_methods_supported: ["header"],
-    resource_name: "Instagram Insights MCP",
+    resource_name: "Instagram Insights API",
     resource_documentation: `${origin}/developers`,
   };
 }
@@ -123,7 +123,7 @@ export function buildAuthorizationServerMetadata(request: Request) {
     authorization_endpoint: `${origin}/oauth/authorize`,
     token_endpoint: `${origin}/oauth/token`,
     registration_endpoint: `${origin}/oauth/register`,
-    scopes_supported: [MCP_TOOLS_SCOPE],
+    scopes_supported: [API_BEARER_SCOPE],
     response_types_supported: ["code"],
     grant_types_supported: ["authorization_code", "refresh_token"],
     token_endpoint_auth_methods_supported: ["none", "client_secret_post"],
@@ -147,7 +147,7 @@ export async function registerMcpOAuthClient(input: unknown) {
     tokenEndpointAuthMethod,
     grantTypes: parsed.grant_types ?? ["authorization_code", "refresh_token"],
     responseTypes: parsed.response_types ?? ["code"],
-    scope: parsed.scope ?? MCP_TOOLS_SCOPE,
+    scope: parsed.scope ?? API_BEARER_SCOPE,
     metadata: parsed as Record<string, unknown>,
   });
 
@@ -180,7 +180,7 @@ export async function createAuthorizationCodeForUser(input: {
     clientDbId: input.clientDbId,
     userId: input.userId,
     redirectUri: input.redirectUri,
-    scope: input.scope ?? MCP_TOOLS_SCOPE,
+    scope: input.scope ?? API_BEARER_SCOPE,
     resource: input.resource ?? null,
     codeChallenge: input.codeChallenge,
     codeChallengeMethod: input.codeChallengeMethod,
@@ -220,7 +220,7 @@ export async function issueOAuthTokenPair(input: {
     tokenHash: hashOpaqueSecret(accessToken),
     clientDbId: input.clientDbId,
     userId: input.userId,
-    scope: input.scope ?? MCP_TOOLS_SCOPE,
+    scope: input.scope ?? API_BEARER_SCOPE,
     resource: input.resource ?? null,
     expiresAt: new Date(Date.now() + ACCESS_TOKEN_TTL_SECONDS * 1000),
   });
@@ -229,7 +229,7 @@ export async function issueOAuthTokenPair(input: {
     tokenHash: hashOpaqueSecret(refreshToken),
     clientDbId: input.clientDbId,
     userId: input.userId,
-    scope: input.scope ?? MCP_TOOLS_SCOPE,
+    scope: input.scope ?? API_BEARER_SCOPE,
     resource: input.resource ?? null,
     expiresAt: new Date(Date.now() + REFRESH_TOKEN_TTL_SECONDS * 1000),
   });
@@ -238,7 +238,7 @@ export async function issueOAuthTokenPair(input: {
     access_token: accessToken,
     token_type: "bearer",
     expires_in: ACCESS_TOKEN_TTL_SECONDS,
-    scope: input.scope ?? MCP_TOOLS_SCOPE,
+    scope: input.scope ?? API_BEARER_SCOPE,
     refresh_token: refreshToken,
   };
 }
@@ -269,7 +269,7 @@ export async function exchangeRefreshToken(input: {
   const tokens = await issueOAuthTokenPair({
     clientDbId: tokenRecord.token.clientId,
     userId: tokenRecord.token.userId,
-    scope: tokenRecord.token.scope ?? MCP_TOOLS_SCOPE,
+    scope: tokenRecord.token.scope ?? API_BEARER_SCOPE,
     resource: tokenRecord.token.resource ?? null,
   });
 

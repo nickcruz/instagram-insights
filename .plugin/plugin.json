@@ -1,6 +1,6 @@
 {
   "name": "instagram-insights",
-  "description": "Connect your Instagram account, sync performance data, and analyze content metrics — all through Claude.",
+  "description": "Install one Instagram Insights skill with a bundled CLI for auth, sync, and analytics over the hosted REST API.",
   "version": "1.0.0",
   "author": {
     "name": "Nick Reyes"
@@ -8,7 +8,7 @@
   "homepage": "https://github.com/nickcruz/instagram-insights",
   "repository": "https://github.com/nickcruz/instagram-insights",
   "license": "MIT",
-  "keywords": ["instagram", "analytics", "creator", "social-media", "mcp"],
+  "keywords": ["instagram", "analytics", "creator", "social-media", "cli"],
   "skills": "./skills/",
   "category": "data-analysis"
 }

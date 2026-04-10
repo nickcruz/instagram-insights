@@ -3,7 +3,7 @@ import {
   isDatabaseConfigured,
   listDeveloperApiKeySummariesByUserId,
 } from "@instagram-insights/db";
-import { ArrowRight, KeyRound, LinkIcon, PlugZap } from "lucide-react";
+import { ArrowRight, KeyRound, LinkIcon, Terminal } from "lucide-react";
 import Link from "next/link";
 
 import { AuthControls } from "@/components/auth-controls";
@@ -49,9 +49,13 @@ export default async function DevelopersPage({
   const pluginMarketplace =
     "/plugin marketplace add https://github.com/kingscrosslabs/marketplace.git";
   const pluginInstall = "/plugin install instagram-insights@kingscrosslabs-marketplace";
-  const localPlugin = "claude --plugin-dir ./plugins/instagram-insights";
-  const pluginAppUrlEnv = `export INSTAGRAM_INSIGHTS_APP_URL="${appUrl}"`;
-  const oauthFallback = `claude mcp add --transport http instagram-insights ${appUrl}/mcp`;
+  const authLogin = "node ./skills/instagram-insights/bin/instagram-insights.mjs auth login";
+  const setupStatus =
+    "node ./skills/instagram-insights/bin/instagram-insights.mjs setup status";
+  const syncWait =
+    "node ./skills/instagram-insights/bin/instagram-insights.mjs sync run --wait";
+  const linkInstagram =
+    "node ./skills/instagram-insights/bin/instagram-insights.mjs instagram link --open";
   const apiKeySmokeTest = `curl -H "Authorization: Bearer $INSTAGRAM_INSIGHTS_API_KEY" \\\n  ${appUrl}/api/v1/account`;
 
   return (
@@ -61,21 +65,21 @@ export default async function DevelopersPage({
           <CardContent className="grid gap-8 p-8 md:grid-cols-[1.1fr_0.9fr] md:p-10">
             <div className="space-y-5">
               <div className="inline-flex rounded-full border border-[var(--border)] bg-[var(--secondary)] px-4 py-1.5 text-sm text-[var(--secondary-foreground)]">
-                Support and troubleshooting
+                Skill support and troubleshooting
               </div>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--muted-foreground)]">
                   Instagram Insights
                 </p>
                 <h1 className="mt-3 max-w-3xl font-heading text-5xl leading-none md:text-7xl">
-                  Support the Claude connector, verify auth, and keep the workflow healthy.
+                  Authenticate the skill, link Instagram, and inspect the hosted API from one CLI.
                 </h1>
               </div>
               <p className="max-w-2xl text-lg leading-8 text-[var(--muted-foreground)]">
-                Claude now lands users on the app root to finish the first-party
-                Google sign-in step, then resumes the MCP OAuth flow back to
-                Claude Desktop. This page is the support surface for status
-                checks, Instagram reconnects, and compatibility workflows.
+                The supported workflow is now one installable skill with a
+                bundled CLI. The browser still completes Google sign-in and the
+                Instagram linking handoff, but data access runs through the
+                hosted REST API instead of MCP.
               </p>
               <div className="flex flex-wrap gap-3">
                 <AuthControls
@@ -132,9 +136,9 @@ export default async function DevelopersPage({
         {params.legacy ? (
           <Card className="bg-white/80 backdrop-blur">
             <CardContent className="p-6 text-sm text-[var(--muted-foreground)]">
-              You were redirected from the deprecated `{params.legacy}` dashboard path.
-              Claude plugin install, troubleshooting, and the legacy API-key flow
-              now live on this page.
+              You were redirected from the deprecated `{params.legacy}` path.
+              This page now documents the skill-and-CLI workflow and keeps the
+              legacy API-key tools available for compatibility.
             </CardContent>
           </Card>
         ) : null}
@@ -142,26 +146,39 @@ export default async function DevelopersPage({
         <div className="grid gap-6 lg:grid-cols-2">
           <CopySnippet
             title="Claude Marketplace"
-            description="Add the GitHub repo as a Claude plugin marketplace."
+            description="Add the GitHub repo as a Claude marketplace."
             value={pluginMarketplace}
           />
           <CopySnippet
-            title="Plugin Install"
-            description="Install the Instagram Insights plugin from the marketplace."
+            title="Skill Install"
+            description="Install the Instagram Insights skill package from the marketplace."
             value={pluginInstall}
           />
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2">
           <CopySnippet
-            title="Plugin App URL"
-            description="Set this for local testing or self-hosting so the bundled MCP config resolves to the hosted app."
-            value={pluginAppUrlEnv}
+            title="CLI Auth Login"
+            description="Start the hosted OAuth flow and finish Google sign-in in the browser."
+            value={authLogin}
           />
           <CopySnippet
-            title="Local Plugin Dev"
-            description="Load the plugin directly from the local repo while iterating."
-            value={localPlugin}
+            title="Setup Status"
+            description="Check whether auth, Instagram linking, and sync freshness are ready."
+            value={setupStatus}
+          />
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          <CopySnippet
+            title="Sync And Wait"
+            description="Queue a sync if needed and poll until it reaches a terminal state."
+            value={syncWait}
+          />
+          <CopySnippet
+            title="Link Instagram"
+            description="Open the hosted Instagram OAuth handoff from the CLI."
+            value={linkInstagram}
           />
         </div>
 
@@ -169,12 +186,12 @@ export default async function DevelopersPage({
           <Card className="bg-white/75 backdrop-blur">
             <CardHeader>
               <div className="flex size-12 items-center justify-center rounded-2xl bg-[var(--primary)]/10 text-[var(--primary)]">
-                <PlugZap className="size-5" />
+                <Terminal className="size-5" />
               </div>
-              <CardTitle>Claude OAuth</CardTitle>
+              <CardTitle>Bundled CLI</CardTitle>
               <CardDescription>
-                Claude starts connector consent, then this app finishes the
-                Google login step before returning users to Claude Desktop.
+                The supported interface is now the skill-local
+                `instagram-insights` CLI bundled with the installable skill.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -184,10 +201,10 @@ export default async function DevelopersPage({
               <div className="flex size-12 items-center justify-center rounded-2xl bg-[var(--primary)]/10 text-[var(--primary)]">
                 <LinkIcon className="size-5" />
               </div>
-              <CardTitle>Instagram handoff</CardTitle>
+              <CardTitle>Browser handoffs</CardTitle>
               <CardDescription>
-                After connector sign-in completes on the app root, Instagram
-                linking reuses that same browser session at {appUrl}.
+                Google sign-in and Instagram linking still happen here in the
+                browser, then the CLI resumes locally with stored tokens.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -199,8 +216,8 @@ export default async function DevelopersPage({
               </div>
               <CardTitle>Legacy API keys</CardTitle>
               <CardDescription>
-                API keys are still supported for fallback REST access, but they
-                are no longer the primary install path.
+                Personal API keys remain available for compatibility scripts,
+                but they are no longer the primary product path.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -208,20 +225,19 @@ export default async function DevelopersPage({
 
         <Card className="bg-white/80 backdrop-blur">
           <CardHeader>
-            <CardTitle>Plugin Workflow</CardTitle>
+            <CardTitle>Recommended Flow</CardTitle>
             <CardDescription>
-              The connector flow now mirrors the Linear-style handoff pattern.
+              The skill should drive the CLI in this order.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 md:grid-cols-2">
             {[
-              "1. Add the GitHub repo as a Claude marketplace.",
-              "2. Install instagram-insights@kingscrosslabs-marketplace.",
-              "3. Connect instagram insights in Claude Desktop and approve Claude's MCP consent screen.",
-              "4. Finish Google sign-in on the app root, then let Claude resume automatically.",
-              "5. Run /instagram-insights:setup.",
-              "6. If prompted, open the Instagram link handoff and finish the Meta OAuth flow.",
-              "7. Let Claude trigger or poll sync runs as needed.",
+              "1. Install the Instagram Insights skill from the marketplace.",
+              "2. Run `auth login` and finish Google sign-in in the browser.",
+              "3. Run `setup status` to inspect readiness.",
+              "4. If needed, run `instagram link --open` and finish the Meta handoff.",
+              "5. Run `sync run --wait` when the account is not synced or stale.",
+              "6. Use `account overview`, `snapshot latest`, and `media` commands for analysis.",
             ].map((step) => (
               <div
                 key={step}
@@ -233,18 +249,11 @@ export default async function DevelopersPage({
           </CardContent>
         </Card>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <CopySnippet
-            title="MCP Fallback"
-            description="Manual remote MCP install if you need to debug outside the plugin flow."
-            value={oauthFallback}
-          />
-          <CopySnippet
-            title="Legacy API Key Smoke Test"
-            description="Direct REST validation for the fallback API-key path."
-            value={apiKeySmokeTest}
-          />
-        </div>
+        <CopySnippet
+          title="Legacy API Key Smoke Test"
+          description="Direct REST validation for the compatibility API-key path."
+          value={apiKeySmokeTest}
+        />
 
         {session ? (
           <DeveloperApiKeyManager

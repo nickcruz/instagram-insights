@@ -10,7 +10,11 @@ import {
   hashDeveloperApiKey,
   parseDeveloperApiKey,
 } from "@/lib/developer-api-keys";
-import { hashOpaqueSecret, MCP_TOOLS_SCOPE } from "@/lib/oauth-shared";
+import {
+  API_BEARER_SCOPE,
+  hashOpaqueSecret,
+  LEGACY_MCP_TOOLS_SCOPE,
+} from "@/lib/oauth-shared";
 
 export type BearerAuthSuccess = {
   ok: true;
@@ -40,7 +44,7 @@ export async function resolveBearerAuth(request: Request): Promise<BearerAuthRes
       ok: false,
       status: 401,
       message:
-        "Missing bearer token. Authenticate with Claude MCP OAuth or send Authorization: Bearer <api-key>.",
+        "Missing bearer token. Authenticate with the Instagram Insights CLI OAuth flow or send Authorization: Bearer <api-key>.",
     };
   }
 
@@ -127,11 +131,15 @@ export async function resolveBearerAuth(request: Request): Promise<BearerAuthRes
     .map((scope) => scope.trim())
     .filter(Boolean);
 
-  if (!scopes.includes(MCP_TOOLS_SCOPE)) {
+  if (
+    !scopes.includes(API_BEARER_SCOPE) &&
+    !scopes.includes(LEGACY_MCP_TOOLS_SCOPE)
+  ) {
     return {
       ok: false,
       status: 403,
-      message: "Access token does not include mcp:tools scope.",
+      message:
+        "Access token does not include the required Instagram Insights API scope.",
     };
   }
 
