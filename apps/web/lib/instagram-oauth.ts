@@ -73,6 +73,7 @@ export function buildInstagramAuthorizeUrl(state: string) {
   const scope = [
     "instagram_business_basic",
     "instagram_business_manage_insights",
+    "instagram_business_manage_comments",
   ].join(",");
 
   const url = new URL("https://www.instagram.com/oauth/authorize");
