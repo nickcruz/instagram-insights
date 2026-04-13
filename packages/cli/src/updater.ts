@@ -12,6 +12,7 @@ import type {
   UpdateCheckStatus,
 } from "./types";
 import { EMBEDDED_CLI_VERSION } from "./build-constants";
+import { logRuntime } from "./output";
 import { resolveSkillRoot } from "./auth-store";
 import {
   AUTO_UPDATE_TTL_MS,
@@ -36,7 +37,7 @@ type CheckForUpdatesOptions = {
 };
 
 function logUpdate(message: string) {
-  console.error(`[instagram-insights:update] ${message}`);
+  logRuntime(`update: ${message}`);
 }
 
 function parseSemver(version: string) {

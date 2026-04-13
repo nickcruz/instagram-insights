@@ -21,6 +21,7 @@ If you are in the repository root, use:
 - OAuth tokens are stored in `./.auth/state.json`.
 - Runtime-only state lives in `./.auth/` and `./.cache/`.
 - Data-returning commands print JSON by default.
+- Networked commands now emit structured JSON runtime logs on stderr by default so observers can track what the CLI is doing while stdout remains reserved for the final payload.
 
 ## Global options
 
@@ -198,6 +199,7 @@ Flags:
   Sets the freshness threshold used by the backend when deciding whether a sync is needed.
 - `--wait`
   Polls until the queued sync reaches a terminal state and then prints the final run details.
+  While waiting, the CLI narrates queue/reuse behavior, phase changes, progress counters, and heartbeat updates when the backend is still working.
 
 This is the main ingestion trigger command.
 

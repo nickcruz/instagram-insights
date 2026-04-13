@@ -19,10 +19,20 @@ import { openBrowser } from "./browser";
 import { DEFAULT_APP_URL, DEFAULT_STALE_AFTER_HOURS } from "./constants";
 import { InstagramInsightsApiClient } from "./api-client";
 import { buildMediaListSearchParams } from "./media-query";
-import { fail, printJson, printText } from "./output";
+import {
+  fail,
+  logRuntime,
+  printJson,
+  printText,
+  runWithRuntimeLogging,
+} from "./output";
 import { normalizeAppUrl, runBrowserOAuthLogin } from "./oauth";
 import { generateHtmlReport } from "./report-generator";
 import { deriveSetupStatus } from "./status";
+import {
+  logSyncRunQueued,
+  waitForSyncRun,
+} from "./sync-logging";
 import { applyUpdate, checkForUpdates } from "./updater";
 import { getCliVersion } from "./version";
 
@@ -70,23 +80,6 @@ async function runHandled(task: () => Promise<void>) {
   }
 }
 
-async function printPolledSyncRun(
-  client: InstagramInsightsApiClient,
-  syncRunId: string,
-) {
-  while (true) {
-    const detail = await client.getSyncRun(syncRunId);
-    const status = detail.syncRun?.status;
-
-    if (!status || !["queued", "running"].includes(status)) {
-      printJson(detail);
-      return;
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, 2_000));
-  }
-}
-
 function printTopLevelHelp() {
   printText(
     [
@@ -127,7 +120,7 @@ class InstagramInsightsCli {
   @option("--app-url <url>", "Use a different Instagram Insights app URL")
   declare appUrl: string;
 
-  @option("--json", "Accepted for compatibility; data commands already default to JSON")
+  @option("--json", "Legacy compatibility flag; data commands already default to JSON")
   declare json: boolean;
 
   @option("--no-browser", "Disable automatic browser launch")
@@ -146,7 +139,9 @@ class InstagramInsightsCli {
       const root = getRootOptions(this);
 
       if (action === "status") {
-        const state = await readAuthState();
+        const state = await runWithRuntimeLogging("Checking local authentication status", async () =>
+          readAuthState(),
+        );
         printJson({
           authenticated: Boolean(state.accessToken),
           appUrl: root.appUrl,
@@ -159,7 +154,9 @@ class InstagramInsightsCli {
       }
 
       if (action === "logout") {
-        await clearAuthTokens();
+        await runWithRuntimeLogging("Clearing local authentication state", async () =>
+          clearAuthTokens(),
+        );
         printJson({
           loggedOut: true,
           appUrl: root.appUrl,
@@ -168,19 +165,26 @@ class InstagramInsightsCli {
       }
 
       if (action === "login") {
-        const currentState = await readAuthState();
+        const currentState = await runWithRuntimeLogging(
+          "Loading current OAuth state",
+          async () => readAuthState(),
+        );
         const port = parseOptionalInt((this as RootCommand & { port?: string }).port, "port");
-        const nextState = await runBrowserOAuthLogin({
-          appUrl: root.appUrl,
-          browser: root.browser,
-          currentState: {
-            ...currentState,
+        const nextState = await runWithRuntimeLogging("Starting browser OAuth login", async () =>
+          runBrowserOAuthLogin({
             appUrl: root.appUrl,
-          },
-          port,
-        });
+            browser: root.browser,
+            currentState: {
+              ...currentState,
+              appUrl: root.appUrl,
+            },
+            port,
+          }),
+        );
 
-        await writeAuthState(nextState);
+        await runWithRuntimeLogging("Persisting refreshed local OAuth state", async () =>
+          writeAuthState(nextState),
+        );
         printJson({
           authenticated: true,
           appUrl: nextState.appUrl,
@@ -211,11 +215,13 @@ class InstagramInsightsCli {
           "stale-after-hours",
         ) ?? DEFAULT_STALE_AFTER_HOURS;
       const client = new InstagramInsightsApiClient(root.appUrl);
-      const overview = await client.getAccountOverview();
-      const setupStatus = deriveSetupStatus({
-        overview,
-        appUrl: root.appUrl,
-        staleAfterHours,
+      const setupStatus = await runWithRuntimeLogging("Evaluating Instagram setup status", async () => {
+        const overview = await client.getAccountOverview();
+        return deriveSetupStatus({
+          overview,
+          appUrl: root.appUrl,
+          staleAfterHours,
+        });
       });
 
       if (
@@ -233,8 +239,14 @@ class InstagramInsightsCli {
   @command()
   async ["clean-reset"](this: RootCommand) {
     await runHandled(async () => {
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
-      printJson(await client.cleanReset());
+      const root = getRootOptions(this);
+      const client = new InstagramInsightsApiClient(root.appUrl);
+      printJson(
+        await runWithRuntimeLogging(
+          "Clearing linked Instagram data while keeping the CLI logged in",
+          async () => client.cleanReset(),
+        ),
+      );
     });
   }
 
@@ -245,8 +257,13 @@ class InstagramInsightsCli {
         fail("Unsupported account action.", { action });
       }
 
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
-      printJson(await client.getAccountOverview());
+      const root = getRootOptions(this);
+      const client = new InstagramInsightsApiClient(root.appUrl);
+      printJson(
+        await runWithRuntimeLogging("Fetching account overview", async () =>
+          client.getAccountOverview(),
+        ),
+      );
     });
   }
 
@@ -257,8 +274,13 @@ class InstagramInsightsCli {
         fail("Unsupported snapshot action.", { action });
       }
 
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
-      printJson(await client.getLatestSnapshot());
+      const root = getRootOptions(this);
+      const client = new InstagramInsightsApiClient(root.appUrl);
+      printJson(
+        await runWithRuntimeLogging("Fetching the latest synced snapshot", async () =>
+          client.getLatestSnapshot(),
+        ),
+      );
     });
   }
 
@@ -275,14 +297,19 @@ class InstagramInsightsCli {
     @optionalArg("mediaId") mediaId?: string,
   ) {
     await runHandled(async () => {
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
+      const root = getRootOptions(this);
+      const client = new InstagramInsightsApiClient(root.appUrl);
 
       if (action === "get") {
         if (!mediaId) {
           fail("media get requires a mediaId.");
         }
 
-        printJson(await client.getMedia(mediaId));
+        printJson(
+          await runWithRuntimeLogging(`Fetching media item ${mediaId}`, async () =>
+            client.getMedia(mediaId),
+          ),
+        );
         return;
       }
 
@@ -307,7 +334,11 @@ class InstagramInsightsCli {
           flatMetrics: options.flatMetrics === true,
         });
 
-        printJson(await client.listMedia(searchParams));
+        printJson(
+          await runWithRuntimeLogging("Listing synced media", async () =>
+            client.listMedia(searchParams),
+          ),
+        );
         return;
       }
 
@@ -321,7 +352,12 @@ class InstagramInsightsCli {
           fail("media analyze currently supports only --days 30.", { days });
         }
 
-        printJson(await client.getReport(days));
+        printJson(
+          await runWithRuntimeLogging(
+            `Fetching the ${days}-day media analysis report`,
+            async () => client.getReport(days),
+          ),
+        );
         return;
       }
       fail("Unsupported media action.", { action });
@@ -339,7 +375,8 @@ class InstagramInsightsCli {
     @optionalArg("syncRunId") syncRunId?: string,
   ) {
     await runHandled(async () => {
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
+      const root = getRootOptions(this);
+      const client = new InstagramInsightsApiClient(root.appUrl);
 
       if (action === "list") {
         const limit = parseOptionalInt(
@@ -352,7 +389,11 @@ class InstagramInsightsCli {
           searchParams.set("limit", String(limit));
         }
 
-        printJson(await client.listSyncRuns(searchParams));
+        printJson(
+          await runWithRuntimeLogging("Listing recent sync runs", async () =>
+            client.listSyncRuns(searchParams),
+          ),
+        );
         return;
       }
 
@@ -361,7 +402,11 @@ class InstagramInsightsCli {
           fail("sync get requires a syncRunId.");
         }
 
-        printJson(await client.getSyncRun(syncRunId));
+        printJson(
+          await runWithRuntimeLogging(`Fetching sync run ${syncRunId}`, async () =>
+            client.getSyncRun(syncRunId),
+          ),
+        );
         return;
       }
 
@@ -377,22 +422,36 @@ class InstagramInsightsCli {
             parseOptionalInt(options.staleAfterHours, "stale-after-hours") ??
             DEFAULT_STALE_AFTER_HOURS,
         };
-        const result = await client.triggerSync(payload);
+        const result = await runWithRuntimeLogging("Submitting the sync request", async () =>
+          client.triggerSync(payload),
+        );
 
         if (options.wait) {
-          const queuedId =
-            "syncRunId" in result
-              ? result.syncRunId
-              : "syncRun" in result && result.syncRun && typeof result.syncRun === "object"
-                ? String((result.syncRun as { id?: string }).id ?? "")
-                : "";
+          const syncRun = "syncRun" in result ? result.syncRun : null;
+          const queuedId = "syncRunId" in result ? result.syncRunId : syncRun?.id ?? "";
+
+          logSyncRunQueued({
+            queuedNewRun: result.queuedNewRun,
+            reusedExistingRun: result.reusedExistingRun,
+            syncRun,
+            syncRunId: "syncRunId" in result ? result.syncRunId : undefined,
+            reason: "reason" in result ? result.reason : undefined,
+          });
 
           if (!queuedId) {
             printJson(result);
             return;
           }
 
-          await printPolledSyncRun(client, queuedId);
+          logRuntime(
+            "Polling sync status every 2 seconds. If nothing changes for 10 seconds, the CLI will emit a heartbeat update.",
+          );
+          printJson(
+            await waitForSyncRun({
+              client,
+              syncRunId: queuedId,
+            }),
+          );
           return;
         }
 
@@ -417,15 +476,18 @@ class InstagramInsightsCli {
         days?: string;
         output?: string;
       };
+      const root = getRootOptions(this);
       const days = parseOptionalInt(options.days, "days") ?? 30;
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
+      const client = new InstagramInsightsApiClient(root.appUrl);
 
       printJson(
-        await generateHtmlReport({
-          client,
-          days,
-          outputPath: options.output,
-        }),
+        await runWithRuntimeLogging(`Generating the ${days}-day HTML report`, async () =>
+          generateHtmlReport({
+            client,
+            days,
+            outputPath: options.output,
+          }),
+        ),
       );
     });
   }
@@ -444,7 +506,10 @@ class InstagramInsightsCli {
         root.browser && ((this as RootCommand & { open?: boolean }).open ?? true);
 
       if (shouldOpen) {
+        logRuntime("Opening the Instagram linking handoff in the browser.");
         await openBrowser(instagramLinkUrl);
+      } else {
+        logRuntime("Browser launch is disabled; printing the Instagram linking URL instead.");
       }
 
       printJson({
@@ -459,16 +524,21 @@ class InstagramInsightsCli {
   @commandOption("--force", "Reinstall the published version even when versions match")
   async update(this: RootCommand, @requiredArg("action") action: string) {
     await runHandled(async () => {
+      const root = getRootOptions(this);
       const options = this as RootCommand & {
         apply?: boolean;
         force?: boolean;
       };
       const force = options.force === true;
       const shouldApply = action === "apply" || options.apply === true;
-      const result = await checkForUpdates({
-        allowCache: false,
-        force,
-      });
+      const result = await runWithRuntimeLogging(
+        "Checking for CLI updates",
+        async () =>
+          checkForUpdates({
+            allowCache: false,
+            force,
+          }),
+      );
 
       if (action !== "check" && action !== "apply") {
         fail("Unsupported update action.", { action });
@@ -479,9 +549,11 @@ class InstagramInsightsCli {
         return;
       }
 
-      const applyResult = await applyUpdate(result, {
-        force,
-      });
+      const applyResult = await runWithRuntimeLogging("Applying the CLI update", async () =>
+        applyUpdate(result, {
+          force,
+        }),
+      );
 
       printJson({
         ...result,

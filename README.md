@@ -59,7 +59,7 @@ The CLI requires Node.js 20 or newer. After install, run the skill launcher so i
 - `update check [--apply] [--force]`
 - `update apply [--force]`
 
-All data-returning commands default to JSON output.
+All data-returning commands default to JSON output. Networked commands also emit structured JSON progress logs on stderr by default so long-running steps like `sync run --wait` explain what is happening and how long they may take.
 
 `report generate` is the static export path: it writes a self-contained HTML dashboard to disk using existing report and media data, without making any extra model API call.
 

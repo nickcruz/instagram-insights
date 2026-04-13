@@ -16,6 +16,7 @@ Core rules:
 - The CLI stores OAuth tokens in `./.auth/state.json` inside this installed skill folder.
 - Runtime-only skill state lives under `./.auth/` and `./.cache/`, and `./.skillignore` excludes those paths from SkillTree sync and publish.
 - Data-returning commands already default to JSON output.
+- Networked commands also emit structured JSON runtime logs on stderr so observers can track phases, waits, and progress while stdout stays reserved for the final payload.
 - The installed skill ships with committed MJS runtime files in `./bin/`, and the updater keeps those files refreshed over time.
 
 Preferred shortcut:
@@ -78,6 +79,7 @@ Supported commands:
 Notes:
 
 - `auth login` opens the hosted OAuth flow and completes Google sign-in through the web app before returning to the CLI loopback callback.
+- Long-running commands such as `sync run --wait` emit JSON log events on stderr for queue/reuse decisions, timing estimates, progress changes, and heartbeat updates.
 - `clean-reset` keeps the CLI authenticated, but deletes the linked Instagram account plus synced backend media/sync state so setup returns to `not_linked`.
 - `setup status --open-link` can open the Instagram handoff automatically when the account is not linked.
 - `report generate --days 30` writes a static HTML dashboard using stored report data and deterministic CLI-side heuristics. It does not require any extra model API call.

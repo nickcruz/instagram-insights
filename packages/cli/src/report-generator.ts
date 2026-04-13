@@ -2,6 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { buildMediaListSearchParams } from "./media-query";
+import { logRuntime } from "./output";
 import { renderReportHtml } from "./report-html";
 import { buildDashboardModel } from "./report-view-model";
 import type {
@@ -70,8 +71,14 @@ export async function listAllReportMedia(input: {
 }) {
   const items = new Map<string, MediaListResponse["items"][number]>();
   let cursor: string | null = null;
+  let page = 1;
 
   while (true) {
+    logRuntime("Fetching report media page...", {
+      page,
+      cursor,
+    });
+
     const searchParams = buildMediaListSearchParams({
       limit: input.limit ?? 100,
       since: input.since,
@@ -94,6 +101,7 @@ export async function listAllReportMedia(input: {
     }
 
     cursor = response.nextCursor;
+    page += 1;
   }
 
   return [...items.values()];
@@ -121,8 +129,11 @@ export async function generateHtmlReport(input: {
   const days = input.days ?? 30;
   assertSupportedReportDays(days);
 
+  logRuntime("Generating the HTML report...", { days });
+  logRuntime("Fetching the precomputed analysis report payload...");
   const reportResponse = await input.client.getReport(days);
   const report = getReadyReport(reportResponse);
+  logRuntime("Fetching media needed to enrich the HTML report...");
   const mediaItems = await listAllReportMedia({
     client: input.client,
     since: report.window.since,
@@ -132,6 +143,9 @@ export async function generateHtmlReport(input: {
     account: reportResponse.account,
     report,
     mediaItems,
+  });
+  logRuntime("Rendering report HTML in memory...", {
+    postCount: model.posts.length,
   });
   const html = renderReportHtml(model);
   const resolvedOutputPath = input.outputPath
@@ -143,6 +157,9 @@ export async function generateHtmlReport(input: {
         days,
       });
 
+  logRuntime("Writing the HTML report to disk...", {
+    outputPath: resolvedOutputPath,
+  });
   await mkdir(path.dirname(resolvedOutputPath), { recursive: true });
   await writeFile(resolvedOutputPath, `${html}\n`, "utf8");
 

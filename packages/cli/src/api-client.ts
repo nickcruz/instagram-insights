@@ -3,7 +3,7 @@ import {
   writeAuthState,
 } from "./auth-store";
 import { API_BEARER_SCOPE, DEFAULT_APP_URL } from "./constants";
-import { fail } from "./output";
+import { fail, logRuntime } from "./output";
 import { normalizeAppUrl, refreshAccessToken } from "./oauth";
 import type {
   AccountOverviewResponse,
@@ -51,6 +51,8 @@ export class InstagramInsightsApiClient {
       return state;
     }
 
+    logRuntime("Refreshing OAuth access token...");
+
     const tokens = await refreshAccessToken({
       appUrl: this.appUrl,
       clientId: state.clientId,
@@ -88,6 +90,12 @@ export class InstagramInsightsApiClient {
     allowRetry = true,
   ): Promise<T> {
     const state = await this.requireAuthenticatedState();
+    const method = (init?.method ?? "GET").toUpperCase();
+
+    logRuntime(`Calling Instagram Insights API: ${method} ${path}`, {
+      appUrl: this.appUrl,
+    });
+
     const response = await fetch(`${this.appUrl}${path}`, {
       ...init,
       headers: {
@@ -98,6 +106,8 @@ export class InstagramInsightsApiClient {
     });
 
     if (response.status === 401 && allowRetry && state.refreshToken && state.clientId) {
+      logRuntime(`Received 401 for ${method} ${path}; retrying after token refresh.`);
+
       const refreshed = await this.refreshIfNeeded({
         ...state,
         expiresAt: new Date(0).toISOString(),
@@ -125,6 +135,8 @@ export class InstagramInsightsApiClient {
         response: payload,
       });
     }
+
+    logRuntime(`Instagram Insights API completed: ${method} ${path} -> ${response.status}`);
 
     return payload as T;
   }

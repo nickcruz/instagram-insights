@@ -3,7 +3,7 @@ import http from "node:http";
 
 import { API_BEARER_SCOPE, DEFAULT_CALLBACK_PORT } from "./constants";
 import { openBrowser } from "./browser";
-import { fail } from "./output";
+import { fail, logRuntime } from "./output";
 import type {
   OAuthClientRegistration,
   OAuthTokenResponse,
@@ -30,6 +30,11 @@ export async function registerPublicClient(input: {
   appUrl: string;
   redirectUri: string;
 }) {
+  logRuntime("Registering the CLI OAuth client with the hosted app...", {
+    appUrl: input.appUrl,
+    redirectUri: input.redirectUri,
+  });
+
   const response = await fetch(`${normalizeAppUrl(input.appUrl)}/oauth/register`, {
     method: "POST",
     headers: {
@@ -68,6 +73,8 @@ export async function exchangeAuthorizationCode(input: {
   code: string;
   codeVerifier: string;
 }) {
+  logRuntime("Exchanging the OAuth authorization code for API tokens...");
+
   const formData = new URLSearchParams({
     grant_type: "authorization_code",
     client_id: input.clientId,
@@ -102,6 +109,8 @@ export async function refreshAccessToken(input: {
   clientId: string;
   refreshToken: string;
 }) {
+  logRuntime("Requesting a refreshed OAuth access token...");
+
   const formData = new URLSearchParams({
     grant_type: "refresh_token",
     client_id: input.clientId,
@@ -150,6 +159,11 @@ async function waitForCallback(input: {
   const hostname = redirectUrl.hostname;
 
   return await new Promise<CallbackResult>((resolve, reject) => {
+    logRuntime("Waiting for the browser OAuth callback on the local loopback server...", {
+      redirectUri: input.redirectUri,
+      timeoutMinutes: 10,
+    });
+
     const timeout = setTimeout(() => {
       server.close(() => undefined);
       reject(new Error("Timed out waiting for OAuth callback."));
@@ -228,6 +242,10 @@ export async function runBrowserOAuthLogin(input: {
       ? { client_id: input.currentState.clientId }
       : await registerPublicClient({ appUrl, redirectUri });
 
+  if (registration.client_id === input.currentState.clientId) {
+    logRuntime("Reusing the existing CLI OAuth client registration.");
+  }
+
   const codeVerifier = randomBase64Url(48);
   const codeChallenge = sha256Base64Url(codeVerifier);
   const state = randomBase64Url(24);
@@ -242,13 +260,20 @@ export async function runBrowserOAuthLogin(input: {
   authorizeUrl.searchParams.set("state", state);
 
   if (input.browser) {
+    logRuntime("Opening the OAuth authorization page in the browser.");
     await openBrowser(authorizeUrl.toString());
+  } else {
+    logRuntime("Browser launch is disabled; use this URL to continue the OAuth flow.", {
+      authorizeUrl: authorizeUrl.toString(),
+    });
   }
 
   const callback = await waitForCallback({
     redirectUri,
     expectedState: state,
   });
+
+  logRuntime("OAuth callback received; finalizing login.");
 
   if (callback.error) {
     fail("OAuth authorize step failed.", {

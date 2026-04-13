@@ -1,6 +1,8 @@
 import type {
   AccountOverviewResponse,
   CleanResetResponse,
+  InstagramSyncRunDetail,
+  InstagramSyncRunSummary,
   InstagramMediaListItem,
   LinkedInstagramAccountSummary,
   LatestSnapshotResponse,
@@ -16,7 +18,9 @@ import type {
 export type {
   AccountOverviewResponse,
   CleanResetResponse,
+  InstagramSyncRunDetail,
   InstagramMediaListItem,
+  InstagramSyncRunSummary,
   LinkedInstagramAccountSummary,
   LatestSnapshotResponse,
   MediaDetailResponse,
@@ -67,7 +71,7 @@ export type SyncRunTriggerResponse =
       reusedExistingRun: false;
     }
   | {
-      syncRun: Record<string, unknown>;
+      syncRun: InstagramSyncRunSummary;
       reusedExistingRun: boolean;
       queuedNewRun: false;
       reason: string;
@@ -78,7 +82,7 @@ export type SyncRunTriggerResponse =
       status: "queued";
       queuedNewRun: true;
       reusedExistingRun: false;
-      syncRun: Record<string, unknown> | null;
+      syncRun: InstagramSyncRunSummary | null;
     };
 
 export type InstalledVersionMetadata = {
