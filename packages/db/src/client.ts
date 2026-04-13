@@ -4,8 +4,8 @@ import postgres from "postgres";
 import * as schema from "./schema";
 
 declare global {
-  var __instagramInsightsSql: ReturnType<typeof postgres> | undefined;
-  var __instagramInsightsDb:
+  var __instasightsSql: ReturnType<typeof postgres> | undefined;
+  var __instasightsDb:
     | ReturnType<typeof drizzle<typeof schema>>
     | undefined;
 }
@@ -17,7 +17,7 @@ export const isDatabaseConfigured = Boolean(connectionString);
 const sqlInstance =
   connectionString === undefined
     ? null
-    : (globalThis.__instagramInsightsSql ??=
+    : (globalThis.__instasightsSql ??=
         postgres(connectionString, {
           prepare: false,
           max: 1,
@@ -26,7 +26,7 @@ const sqlInstance =
 export const db =
   sqlInstance === null
     ? null
-    : (globalThis.__instagramInsightsDb ??= drizzle(sqlInstance, { schema }));
+    : (globalThis.__instasightsDb ??= drizzle(sqlInstance, { schema }));
 
 export function getDb() {
   if (!db) {

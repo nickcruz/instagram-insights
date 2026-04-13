@@ -23,7 +23,7 @@ test("buildDefaultReportOutputPath uses the username and generated date", () => 
 
   assert.equal(
     outputPath,
-    path.resolve("/tmp/example", "instagram-insights-report-creator-account-30d-20260410.html"),
+    path.resolve("/tmp/example", "instagram-report-creator-account-30d-20260410.html"),
   );
 });
 
@@ -62,11 +62,11 @@ test("generateHtmlReport paginates media, writes HTML, and honors the default pa
   });
   const html = await readFile(result.outputPath, "utf8");
 
-  assert.match(result.outputPath, /instagram-insights-report-creator-30d-20260410\.html$/);
+  assert.match(result.outputPath, /instagram-report-creator-30d-20260410\.html$/);
   assert.equal(calls.length, 2);
   assert.equal(new URLSearchParams(calls[0]).get("flatMetrics"), "true");
   assert.equal(new URLSearchParams(calls[1]).get("cursor"), "page-2");
-  assert.match(html, /creator \| Instagram Insights/);
+  assert.match(html, /creator \| Instasights/);
   assert.match(html, /Star Post/);
 });
 

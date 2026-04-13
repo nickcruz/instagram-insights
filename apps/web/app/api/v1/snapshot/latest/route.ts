@@ -1,4 +1,4 @@
-import { getLatestSnapshotByUserId } from "@instagram-insights/db";
+import { getLatestSnapshotByUserId } from "@instasights/db";
 
 import {
   createJsonResponse,

@@ -26,7 +26,7 @@ function isExpired(expiresAt: string | null) {
   return Date.now() >= new Date(expiresAt).getTime() - 30_000;
 }
 
-export class InstagramInsightsApiClient {
+export class InstasightsApiClient {
   private appUrl: string;
 
   constructor(appUrl = DEFAULT_APP_URL) {
@@ -75,7 +75,7 @@ export class InstagramInsightsApiClient {
     const state = await this.refreshIfNeeded(await this.getAuthState());
 
     if (!state.accessToken) {
-      fail("Authentication required. Run `instagram-insights auth login` first.", {
+      fail("Authentication required. Run `instagram auth login` first.", {
         appUrl: this.appUrl,
         scope: API_BEARER_SCOPE,
       });
@@ -128,7 +128,7 @@ export class InstagramInsightsApiClient {
       | null;
 
     if (!response.ok) {
-      fail("Instagram Insights API request failed.", {
+      fail("Instasights API request failed.", {
         appUrl: this.appUrl,
         path,
         status: response.status,

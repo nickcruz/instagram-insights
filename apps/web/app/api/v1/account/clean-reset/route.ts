@@ -1,4 +1,4 @@
-import { cleanResetInstagramStateByUserId } from "@instagram-insights/db";
+import { cleanResetInstagramStateByUserId } from "@instasights/db";
 
 import {
   createJsonResponse,

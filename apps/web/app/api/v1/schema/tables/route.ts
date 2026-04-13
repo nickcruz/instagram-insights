@@ -1,7 +1,7 @@
 import {
   instagramSchemaOverview,
   instagramSchemaTables,
-} from "@instagram-insights/contracts";
+} from "@instasights/contracts";
 
 import {
   createJsonResponse,

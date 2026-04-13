@@ -632,9 +632,9 @@ export const instagramSchemaTables: SchemaTableDoc[] = [
 ];
 
 export const instagramSchemaOverview: SchemaOverviewDoc = {
-  title: "Instagram Insights Analytics Schema",
+  title: "Instasights Analytics Schema",
   description:
-    "Curated table documentation for the user-scoped Instagram analytics data exposed through the hosted REST API and Instagram Insights CLI.",
+    "Curated table documentation for the user-scoped Instagram analytics data exposed through the hosted REST API and Instasights CLI.",
   notes: [
     "All REST and CLI reads are scoped to the authenticated API key owner.",
     "Auth/session tables are intentionally excluded from this schema surface.",

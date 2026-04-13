@@ -7,7 +7,7 @@ export async function GET(request: Request) {
       error: "The MCP protected resource metadata has been deprecated.",
       status: 410,
       replacement:
-        "Use the Instagram Insights skill and bundled CLI OAuth flow instead.",
+        "Use the Instasights skill and bundled CLI OAuth flow instead.",
       requestedPath: new URL(request.url).pathname,
       developersUrl: "/developers",
     },

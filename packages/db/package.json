@@ -1,5 +1,5 @@
 {
-  "name": "@instagram-insights/db",
+  "name": "@instasights/db",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,7 +11,7 @@
     "db:push": "yarn drizzle-kit push --config ../../drizzle.config.ts"
   },
   "dependencies": {
-    "@instagram-insights/contracts": "*",
+    "@instasights/contracts": "*",
     "drizzle-orm": "^0.45.2",
     "postgres": "^3.4.9"
   },

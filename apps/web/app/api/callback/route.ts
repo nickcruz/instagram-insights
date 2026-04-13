@@ -1,6 +1,6 @@
 import {
   upsertInstagramAccount,
-} from "@instagram-insights/db";
+} from "@instasights/db";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 

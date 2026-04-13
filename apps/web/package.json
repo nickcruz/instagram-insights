@@ -1,5 +1,5 @@
 {
-  "name": "@instagram-insights/web",
+  "name": "@instasights/web",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.1",
-    "@instagram-insights/contracts": "*",
-    "@instagram-insights/db": "*",
+    "@instasights/contracts": "*",
+    "@instasights/db": "*",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@radix-ui/react-slot": "latest",
     "class-variance-authority": "latest",

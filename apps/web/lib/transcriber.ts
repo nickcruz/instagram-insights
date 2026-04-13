@@ -1,7 +1,7 @@
 import type {
   TranscriptionRequest,
   TranscriptionResponse,
-} from "@instagram-insights/contracts";
+} from "@instasights/contracts";
 
 import { getEnv, getRequiredEnv } from "@/lib/env";
 

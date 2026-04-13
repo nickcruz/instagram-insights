@@ -13,7 +13,7 @@ import type {
   MediaListResponse,
   SyncRunDetailResponse,
   SyncRunListResponse,
-} from "@instagram-insights/contracts";
+} from "@instasights/contracts";
 import { and, desc, eq, gte, isNull, lte, ne, or, sql } from "drizzle-orm";
 
 import { getDb } from "./client";

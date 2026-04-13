@@ -17,7 +17,7 @@ import process from "node:process";
 import { clearAuthTokens, readAuthState, writeAuthState } from "./auth-store";
 import { openBrowser } from "./browser";
 import { DEFAULT_APP_URL, DEFAULT_STALE_AFTER_HOURS } from "./constants";
-import { InstagramInsightsApiClient } from "./api-client";
+import { InstasightsApiClient } from "./api-client";
 import { buildMediaListSearchParams } from "./media-query";
 import {
   fail,
@@ -29,10 +29,7 @@ import {
 import { normalizeAppUrl, runBrowserOAuthLogin } from "./oauth";
 import { generateHtmlReport } from "./report-generator";
 import { deriveSetupStatus } from "./status";
-import {
-  logSyncRunQueued,
-  waitForSyncRun,
-} from "./sync-logging";
+import { logSyncRunQueued, waitForSyncRun } from "./sync-logging";
 import { applyUpdate, checkForUpdates } from "./updater";
 import { getCliVersion } from "./version";
 
@@ -83,7 +80,7 @@ async function runHandled(task: () => Promise<void>) {
 function printTopLevelHelp() {
   printText(
     [
-      "Instagram Insights CLI",
+      "Instasights CLI",
       "",
       "Commands:",
       "  auth login [--port <n>]",
@@ -114,10 +111,10 @@ function printTopLevelHelp() {
 
 @program()
 @version(CLI_VERSION)
-@description("Instagram Insights skill CLI")
+@description("Instasights skill CLI")
 @usage("[global options] <command> [subcommand]")
-class InstagramInsightsCli {
-  @option("--app-url <url>", "Use a different Instagram Insights app URL")
+class InstasightsCli {
+  @option("--app-url <url>", "Use a different Instasights app URL")
   declare appUrl: string;
 
   @option("--json", "Legacy compatibility flag; data commands already default to JSON")
@@ -214,15 +211,18 @@ class InstagramInsightsCli {
           (this as RootCommand & { staleAfterHours?: string }).staleAfterHours,
           "stale-after-hours",
         ) ?? DEFAULT_STALE_AFTER_HOURS;
-      const client = new InstagramInsightsApiClient(root.appUrl);
-      const setupStatus = await runWithRuntimeLogging("Evaluating Instagram setup status", async () => {
-        const overview = await client.getAccountOverview();
-        return deriveSetupStatus({
-          overview,
-          appUrl: root.appUrl,
-          staleAfterHours,
-        });
-      });
+      const client = new InstasightsApiClient(root.appUrl);
+      const setupStatus = await runWithRuntimeLogging(
+        "Evaluating Instagram setup status",
+        async () => {
+          const overview = await client.getAccountOverview();
+          return deriveSetupStatus({
+            overview,
+            appUrl: root.appUrl,
+            staleAfterHours,
+          });
+        },
+      );
 
       if (
         setupStatus.status === "not_linked" &&
@@ -240,7 +240,7 @@ class InstagramInsightsCli {
   async ["clean-reset"](this: RootCommand) {
     await runHandled(async () => {
       const root = getRootOptions(this);
-      const client = new InstagramInsightsApiClient(root.appUrl);
+      const client = new InstasightsApiClient(root.appUrl);
       printJson(
         await runWithRuntimeLogging(
           "Clearing linked Instagram data while keeping the CLI logged in",
@@ -258,7 +258,7 @@ class InstagramInsightsCli {
       }
 
       const root = getRootOptions(this);
-      const client = new InstagramInsightsApiClient(root.appUrl);
+      const client = new InstasightsApiClient(root.appUrl);
       printJson(
         await runWithRuntimeLogging("Fetching account overview", async () =>
           client.getAccountOverview(),
@@ -275,7 +275,7 @@ class InstagramInsightsCli {
       }
 
       const root = getRootOptions(this);
-      const client = new InstagramInsightsApiClient(root.appUrl);
+      const client = new InstasightsApiClient(root.appUrl);
       printJson(
         await runWithRuntimeLogging("Fetching the latest synced snapshot", async () =>
           client.getLatestSnapshot(),
@@ -298,7 +298,7 @@ class InstagramInsightsCli {
   ) {
     await runHandled(async () => {
       const root = getRootOptions(this);
-      const client = new InstagramInsightsApiClient(root.appUrl);
+      const client = new InstasightsApiClient(root.appUrl);
 
       if (action === "get") {
         if (!mediaId) {
@@ -376,7 +376,7 @@ class InstagramInsightsCli {
   ) {
     await runHandled(async () => {
       const root = getRootOptions(this);
-      const client = new InstagramInsightsApiClient(root.appUrl);
+      const client = new InstasightsApiClient(root.appUrl);
 
       if (action === "list") {
         const limit = parseOptionalInt(
@@ -478,7 +478,7 @@ class InstagramInsightsCli {
       };
       const root = getRootOptions(this);
       const days = parseOptionalInt(options.days, "days") ?? 30;
-      const client = new InstagramInsightsApiClient(root.appUrl);
+      const client = new InstasightsApiClient(root.appUrl);
 
       printJson(
         await runWithRuntimeLogging(`Generating the ${days}-day HTML report`, async () =>
@@ -564,5 +564,5 @@ class InstagramInsightsCli {
 }
 
 export function runCli() {
-  new InstagramInsightsCli();
+  new InstasightsCli();
 }

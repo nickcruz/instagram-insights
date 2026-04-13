@@ -8,7 +8,7 @@ import {
   getMcpOAuthClientByClientId,
   getMcpOAuthRefreshTokenByHash,
   revokeMcpOAuthRefreshToken,
-} from "@instagram-insights/db";
+} from "@instasights/db";
 import { OAuthClientMetadataSchema } from "@modelcontextprotocol/sdk/shared/auth.js";
 
 import { getAppUrl } from "@/lib/app-url";
@@ -78,7 +78,7 @@ export function createMcpUnauthorizedResponse(
       "Cache-Control": "no-store",
       "Content-Type": "application/json",
       Vary: "Authorization",
-      "WWW-Authenticate": `Bearer realm="instagram-insights-mcp", resource_metadata="${getOAuthProtectedResourceMetadataUrl(
+      "WWW-Authenticate": `Bearer realm="instasights-mcp", resource_metadata="${getOAuthProtectedResourceMetadataUrl(
         request,
       )}"`,
     },
@@ -110,7 +110,7 @@ export function buildProtectedResourceMetadata(request: Request) {
     authorization_servers: [origin],
     scopes_supported: [API_BEARER_SCOPE],
     bearer_methods_supported: ["header"],
-    resource_name: "Instagram Insights API",
+    resource_name: "Instasights API",
     resource_documentation: `${origin}/developers`,
   };
 }

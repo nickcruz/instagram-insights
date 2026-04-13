@@ -43,7 +43,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           <CardContent className="grid gap-8 p-8 md:grid-cols-[1.1fr_0.9fr] md:p-10">
             <div className="space-y-5">
               <div className="inline-flex rounded-full border border-[var(--border)] bg-[var(--secondary)] px-4 py-1.5 text-sm text-[var(--secondary-foreground)]">
-                {isConnectorResume ? "Connector sign-in" : "Instagram Insights"}
+                {isConnectorResume ? "Connector sign-in" : "Instasights"}
               </div>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--muted-foreground)]">
@@ -52,13 +52,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <h1 className="mt-3 max-w-3xl font-heading text-5xl leading-none md:text-7xl">
                   {isConnectorResume
                     ? "Finish Google sign-in and jump back to your CLI or skill flow."
-                    : "Use this page when Instagram Insights asks you to finish Google sign-in."}
+                    : "Use this page when Instasights asks you to finish Google sign-in."}
                 </h1>
               </div>
               <p className="max-w-2xl text-lg leading-8 text-[var(--muted-foreground)]">
                 {isConnectorResume
-                  ? "The Instagram Insights skill or CLI already started the hosted OAuth flow. Sign in with Google here, and we will resume the local auth flow automatically."
-                  : "The hosted app completes the first-party Google login step for Instagram Insights, then hands control back to the installed skill or CLI for API access and later Instagram linking."}
+                  ? "The Instasights skill or CLI already started the hosted OAuth flow. Sign in with Google here, and we will resume the local auth flow automatically."
+                  : "The hosted app completes the first-party Google login step for Instasights, then hands control back to the installed skill or CLI for API access and later Instagram linking."}
               </p>
               <div className="flex flex-wrap gap-3">
                 <AuthControls

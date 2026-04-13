@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "instagram-insights": {
+    "instagram": {
       "type": "http",
       "url": "https://project-qah0p.vercel.app/mcp"
     }

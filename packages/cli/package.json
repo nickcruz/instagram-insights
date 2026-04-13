@@ -1,10 +1,10 @@
 {
-  "name": "@instagram-insights/cli",
+  "name": "@instasights/cli",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "bin": {
-    "instagram-insights": "./dist/instagram-insights.mjs"
+    "instasights": "./dist/instasights.mjs"
   },
   "scripts": {
     "build": "node ./build.mjs",
@@ -12,7 +12,7 @@
     "test": "tsx --test \"src/**/*.test.ts\""
   },
   "dependencies": {
-    "@instagram-insights/contracts": "*",
+    "@instasights/contracts": "*",
     "commander": "^7.2.0",
     "commander-ts": "^0.2.0",
     "reflect-metadata": "^0.1.14"

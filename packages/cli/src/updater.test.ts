@@ -10,7 +10,7 @@ import { writeInstalledVersionMetadata } from "./version";
 
 test("committed .skillignore excludes local-only skill state", async () => {
   const skillIgnore = await readFile(
-    new URL("../../../skills/instagram-insights/.skillignore", import.meta.url),
+    new URL("../../../skills/instasights/.skillignore", import.meta.url),
     "utf8",
   );
 
@@ -25,20 +25,20 @@ function createManifestPayload(version: string, files?: Array<{ path: string; ur
     notes: "Test release",
     artifacts: {
       cli: {
-        path: "bin/instagram-insights.mjs",
-        url: "https://example.com/bin/instagram-insights.mjs",
+        path: "bin/instasights.mjs",
+        url: "https://example.com/bin/instasights.mjs",
         sha256:
           "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
       },
       updater: {
-        path: "bin/instagram-insights-updater.mjs",
-        url: "https://example.com/bin/instagram-insights-updater.mjs",
+        path: "bin/instasights-updater.mjs",
+        url: "https://example.com/bin/instasights-updater.mjs",
         sha256:
           "1123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
       },
       version: {
-        path: "bin/instagram-insights.version.json",
-        url: "https://example.com/bin/instagram-insights.version.json",
+        path: "bin/instasights.version.json",
+        url: "https://example.com/bin/instasights.version.json",
         sha256:
           "2123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
       },
@@ -46,20 +46,20 @@ function createManifestPayload(version: string, files?: Array<{ path: string; ur
     files:
       files ?? [
         {
-          path: "bin/instagram-insights.mjs",
-          url: "https://example.com/bin/instagram-insights.mjs",
+          path: "bin/instasights.mjs",
+          url: "https://example.com/bin/instasights.mjs",
           sha256:
             "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
         },
         {
-          path: "bin/instagram-insights-updater.mjs",
-          url: "https://example.com/bin/instagram-insights-updater.mjs",
+          path: "bin/instasights-updater.mjs",
+          url: "https://example.com/bin/instasights-updater.mjs",
           sha256:
             "1123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
         },
         {
-          path: "bin/instagram-insights.version.json",
-          url: "https://example.com/bin/instagram-insights.version.json",
+          path: "bin/instasights.version.json",
+          url: "https://example.com/bin/instasights.version.json",
           sha256:
             "2123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
         },
@@ -114,13 +114,13 @@ async function createManifestServer(
 }
 
 test("legacy installs are treated as older and request the latest release", async () => {
-  const originalSkillRoot = process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
-  const originalManifestUrl = process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL;
-  const tempRoot = await mkdtemp(path.join(tmpdir(), "instagram-insights-update-"));
+  const originalSkillRoot = process.env.INSTASIGHTS_SKILL_ROOT;
+  const originalManifestUrl = process.env.INSTASIGHTS_UPDATE_MANIFEST_URL;
+  const tempRoot = await mkdtemp(path.join(tmpdir(), "instasights-update-"));
   const server = await createManifestServer("1.0.1");
 
-  process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = tempRoot;
-  process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL = server.manifestUrl;
+  process.env.INSTASIGHTS_SKILL_ROOT = tempRoot;
+  process.env.INSTASIGHTS_UPDATE_MANIFEST_URL = server.manifestUrl;
 
   try {
     const result = await checkForUpdates({
@@ -135,15 +135,15 @@ test("legacy installs are treated as older and request the latest release", asyn
   } finally {
     await server.close();
     if (originalSkillRoot === undefined) {
-      delete process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
+      delete process.env.INSTASIGHTS_SKILL_ROOT;
     } else {
-      process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = originalSkillRoot;
+      process.env.INSTASIGHTS_SKILL_ROOT = originalSkillRoot;
     }
 
     if (originalManifestUrl === undefined) {
-      delete process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL;
+      delete process.env.INSTASIGHTS_UPDATE_MANIFEST_URL;
     } else {
-      process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL = originalManifestUrl;
+      process.env.INSTASIGHTS_UPDATE_MANIFEST_URL = originalManifestUrl;
     }
 
     await rm(tempRoot, { recursive: true, force: true });
@@ -151,13 +151,13 @@ test("legacy installs are treated as older and request the latest release", asyn
 });
 
 test("equal versions are current unless the caller explicitly forces a reinstall", async () => {
-  const originalSkillRoot = process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
-  const originalManifestUrl = process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL;
-  const tempRoot = await mkdtemp(path.join(tmpdir(), "instagram-insights-update-"));
+  const originalSkillRoot = process.env.INSTASIGHTS_SKILL_ROOT;
+  const originalManifestUrl = process.env.INSTASIGHTS_UPDATE_MANIFEST_URL;
+  const tempRoot = await mkdtemp(path.join(tmpdir(), "instagram-update-"));
   const server = await createManifestServer("1.0.1");
 
-  process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = tempRoot;
-  process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL = server.manifestUrl;
+  process.env.INSTASIGHTS_SKILL_ROOT = tempRoot;
+  process.env.INSTASIGHTS_UPDATE_MANIFEST_URL = server.manifestUrl;
 
   try {
     await writeInstalledVersionMetadata({
@@ -181,15 +181,15 @@ test("equal versions are current unless the caller explicitly forces a reinstall
   } finally {
     await server.close();
     if (originalSkillRoot === undefined) {
-      delete process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
+      delete process.env.INSTASIGHTS_SKILL_ROOT;
     } else {
-      process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = originalSkillRoot;
+      process.env.INSTASIGHTS_SKILL_ROOT = originalSkillRoot;
     }
 
     if (originalManifestUrl === undefined) {
-      delete process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL;
+      delete process.env.INSTASIGHTS_UPDATE_MANIFEST_URL;
     } else {
-      process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL = originalManifestUrl;
+      process.env.INSTASIGHTS_UPDATE_MANIFEST_URL = originalManifestUrl;
     }
 
     await rm(tempRoot, { recursive: true, force: true });
@@ -197,13 +197,13 @@ test("equal versions are current unless the caller explicitly forces a reinstall
 });
 
 test("fresh cache entries skip a second manifest fetch", async () => {
-  const originalSkillRoot = process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
-  const originalManifestUrl = process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL;
-  const tempRoot = await mkdtemp(path.join(tmpdir(), "instagram-insights-update-"));
+  const originalSkillRoot = process.env.INSTASIGHTS_SKILL_ROOT;
+  const originalManifestUrl = process.env.INSTASIGHTS_UPDATE_MANIFEST_URL;
+  const tempRoot = await mkdtemp(path.join(tmpdir(), "instagram-update-"));
   const server = await createManifestServer("1.0.2");
 
-  process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = tempRoot;
-  process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL = server.manifestUrl;
+  process.env.INSTASIGHTS_SKILL_ROOT = tempRoot;
+  process.env.INSTASIGHTS_UPDATE_MANIFEST_URL = server.manifestUrl;
 
   try {
     await writeFile(path.join(tempRoot, "SKILL.md"), "test skill\n", "utf8");
@@ -228,15 +228,15 @@ test("fresh cache entries skip a second manifest fetch", async () => {
   } finally {
     await server.close();
     if (originalSkillRoot === undefined) {
-      delete process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
+      delete process.env.INSTASIGHTS_SKILL_ROOT;
     } else {
-      process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = originalSkillRoot;
+      process.env.INSTASIGHTS_SKILL_ROOT = originalSkillRoot;
     }
 
     if (originalManifestUrl === undefined) {
-      delete process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL;
+      delete process.env.INSTASIGHTS_UPDATE_MANIFEST_URL;
     } else {
-      process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL = originalManifestUrl;
+      process.env.INSTASIGHTS_UPDATE_MANIFEST_URL = originalManifestUrl;
     }
 
     await rm(tempRoot, { recursive: true, force: true });
@@ -244,31 +244,31 @@ test("fresh cache entries skip a second manifest fetch", async () => {
 });
 
 test("legacy binary manifests are skipped for the bundled Node runtime", async () => {
-  const originalSkillRoot = process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
-  const originalManifestUrl = process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL;
-  const tempRoot = await mkdtemp(path.join(tmpdir(), "instagram-insights-update-"));
+  const originalSkillRoot = process.env.INSTASIGHTS_SKILL_ROOT;
+  const originalManifestUrl = process.env.INSTASIGHTS_UPDATE_MANIFEST_URL;
+  const tempRoot = await mkdtemp(path.join(tmpdir(), "instagram-update-"));
   const server = await createManifestServer("1.0.4", {
     files: [
       {
-        path: "bin/instagram-insights",
-        url: "https://example.com/bin/instagram-insights",
+        path: "bin/instasights",
+        url: "https://example.com/bin/instasights",
         sha256: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
       },
       {
-        path: "bin/instagram-insights-updater",
-        url: "https://example.com/bin/instagram-insights-updater",
+        path: "bin/instasights-updater",
+        url: "https://example.com/bin/instasights-updater",
         sha256: "1123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
       },
       {
-        path: "bin/instagram-insights.version.json",
-        url: "https://example.com/bin/instagram-insights.version.json",
+        path: "bin/instasights.version.json",
+        url: "https://example.com/bin/instasights.version.json",
         sha256: "2123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
       },
     ],
   });
 
-  process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = tempRoot;
-  process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL = server.manifestUrl;
+  process.env.INSTASIGHTS_SKILL_ROOT = tempRoot;
+  process.env.INSTASIGHTS_UPDATE_MANIFEST_URL = server.manifestUrl;
 
   try {
     await writeInstalledVersionMetadata({
@@ -293,15 +293,15 @@ test("legacy binary manifests are skipped for the bundled Node runtime", async (
   } finally {
     await server.close();
     if (originalSkillRoot === undefined) {
-      delete process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
+      delete process.env.INSTASIGHTS_SKILL_ROOT;
     } else {
-      process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = originalSkillRoot;
+      process.env.INSTASIGHTS_SKILL_ROOT = originalSkillRoot;
     }
 
     if (originalManifestUrl === undefined) {
-      delete process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL;
+      delete process.env.INSTASIGHTS_UPDATE_MANIFEST_URL;
     } else {
-      process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL = originalManifestUrl;
+      process.env.INSTASIGHTS_UPDATE_MANIFEST_URL = originalManifestUrl;
     }
 
     await rm(tempRoot, { recursive: true, force: true });

@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - "packages/cli/**"
-      - "skills/instagram-insights/**"
+      - "skills/instasights/**"
       - ".plugin/**"
       - ".claude-plugin/**"
       - "scripts/set-cli-version.mjs"
@@ -30,9 +30,9 @@ jobs:
     runs-on: macos-14
     env:
       AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
-      RELEASES_BASE_URL: ${{ vars.INSTAGRAM_INSIGHTS_CLI_RELEASES_BASE_URL }}
-      RELEASES_BUCKET: ${{ vars.INSTAGRAM_INSIGHTS_CLI_RELEASES_BUCKET }}
-      RELEASES_PREFIX: ${{ vars.INSTAGRAM_INSIGHTS_CLI_RELEASES_PREFIX || 'cli' }}
+      RELEASES_BASE_URL: ${{ vars.INSTASIGHTS_CLI_RELEASES_BASE_URL }}
+      RELEASES_BUCKET: ${{ vars.INSTASIGHTS_CLI_RELEASES_BUCKET }}
+      RELEASES_PREFIX: ${{ vars.INSTASIGHTS_CLI_RELEASES_PREFIX || 'cli' }}
       APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
       APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
       APPLE_API_KEY_CONTENT: ${{ secrets.APPLE_API_KEY_CONTENT }}
@@ -47,7 +47,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: ${{ env.AWS_REGION }}
-          role-to-assume: ${{ secrets.INSTAGRAM_INSIGHTS_CLI_AWS_ROLE_ARN }}
+          role-to-assume: ${{ secrets.INSTASIGHTS_CLI_AWS_ROLE_ARN }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -123,8 +123,8 @@ jobs:
       - name: Run CLI tests
         run: |
           yarn build:cli
-          yarn workspace @instagram-insights/cli typecheck
-          yarn workspace @instagram-insights/cli test
+          yarn workspace @instasights/cli typecheck
+          yarn workspace @instasights/cli test
 
       - name: Import Apple Developer ID certificate
         shell: bash
@@ -156,7 +156,7 @@ jobs:
             exit 1
           fi
 
-          echo "INSTAGRAM_INSIGHTS_APPLE_SIGNING_IDENTITY=${SIGNING_IDENTITY}" >> "${GITHUB_ENV}"
+          echo "INSTASIGHTS_APPLE_SIGNING_IDENTITY=${SIGNING_IDENTITY}" >> "${GITHUB_ENV}"
 
       - name: Prepare App Store Connect API key
         shell: bash
@@ -177,8 +177,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          CLI_BIN="packages/cli/dist/macos-arm64/bin/instagram-insights"
-          UPDATER_BIN="packages/cli/dist/macos-arm64/bin/instagram-insights-updater"
+          CLI_BIN="packages/cli/dist/macos-arm64/bin/instasights"
+          UPDATER_BIN="packages/cli/dist/macos-arm64/bin/instasights-updater"
 
           codesign --verify --verbose=2 "${CLI_BIN}"
           codesign --verify --verbose=2 "${UPDATER_BIN}"
@@ -189,10 +189,10 @@ jobs:
           set -euo pipefail
 
           MANUAL_ROOT="packages/cli/dist/macos-arm64/manual"
-          ZIP_PATH="packages/cli/dist/macos-arm64/instagram-insights-macos-arm64.zip"
+          ZIP_PATH="packages/cli/dist/macos-arm64/instasights-macos-arm64.zip"
 
           rm -f "${ZIP_PATH}"
-          ditto -c -k --keepParent "${MANUAL_ROOT}/instagram-insights" "${ZIP_PATH}"
+          ditto -c -k --keepParent "${MANUAL_ROOT}/instasights" "${ZIP_PATH}"
 
           xcrun notarytool submit "${ZIP_PATH}" \
             --key "${APPLE_API_KEY_PATH}" \
@@ -230,10 +230,10 @@ jobs:
               --cache-control "public, max-age=31536000, immutable"
           }
 
-          upload_file "packages/cli/dist/macos-arm64/bin/instagram-insights" "bin/instagram-insights" "application/octet-stream"
-          upload_file "packages/cli/dist/macos-arm64/bin/instagram-insights-updater" "bin/instagram-insights-updater" "application/octet-stream"
-          upload_file "packages/cli/dist/macos-arm64/bin/instagram-insights.version.json" "bin/instagram-insights.version.json" "application/json; charset=utf-8"
-          upload_file "packages/cli/dist/macos-arm64/instagram-insights-macos-arm64.zip" "manual/instagram-insights-macos-arm64.zip" "application/zip"
+          upload_file "packages/cli/dist/macos-arm64/bin/instasights" "bin/instasights" "application/octet-stream"
+          upload_file "packages/cli/dist/macos-arm64/bin/instasights-updater" "bin/instasights-updater" "application/octet-stream"
+          upload_file "packages/cli/dist/macos-arm64/bin/instasights.version.json" "bin/instasights.version.json" "application/json; charset=utf-8"
+          upload_file "packages/cli/dist/macos-arm64/instasights-macos-arm64.zip" "manual/instasights-macos-arm64.zip" "application/zip"
 
           aws s3 cp "./latest.json" "s3://${RELEASES_BUCKET}/${RELEASES_PREFIX}/latest.json" \
             --content-type "application/json; charset=utf-8" \

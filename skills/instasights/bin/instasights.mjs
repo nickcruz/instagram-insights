@@ -3284,11 +3284,11 @@ var DEFAULT_APP_URL = "https://project-qah0p.vercel.app";
 var DEFAULT_UPDATE_MANIFEST_URL = `${DEFAULT_APP_URL}/api/cli/latest`;
 var DEFAULT_STALE_AFTER_HOURS = 24;
 var DEFAULT_CALLBACK_PORT = 8787;
-var API_BEARER_SCOPE = "instagram-insights:api";
+var API_BEARER_SCOPE = "instasights:api";
 
 // src/build-constants.ts
-var EMBEDDED_CLI_VERSION = true ? "1.0.0" : process.env.INSTAGRAM_INSIGHTS_EMBEDDED_VERSION ?? "1.0.0";
-var EMBEDDED_UPDATE_MANIFEST_URL = true ? "https://project-qah0p.vercel.app/api/cli/latest" : process.env.INSTAGRAM_INSIGHTS_EMBEDDED_UPDATE_MANIFEST_URL ?? DEFAULT_UPDATE_MANIFEST_URL2;
+var EMBEDDED_CLI_VERSION = true ? "1.0.0" : process.env.INSTASIGHTS_EMBEDDED_VERSION ?? "1.0.0";
+var EMBEDDED_UPDATE_MANIFEST_URL = true ? "https://project-qah0p.vercel.app/api/cli/latest" : process.env.INSTASIGHTS_EMBEDDED_UPDATE_MANIFEST_URL ?? DEFAULT_UPDATE_MANIFEST_URL2;
 
 // src/auth-store.ts
 import { existsSync } from "node:fs";
@@ -3304,7 +3304,7 @@ function resolveFromExecutable() {
 function resolveFromWorkingTree() {
   let current = path.resolve(process.cwd());
   while (true) {
-    for (const candidate of [current, path.join(current, "skills", "instagram-insights")]) {
+    for (const candidate of [current, path.join(current, "skills", "instagram")]) {
       if (hasSkillMarker(candidate)) {
         return candidate;
       }
@@ -3317,11 +3317,11 @@ function resolveFromWorkingTree() {
   }
 }
 function resolveSkillRoot() {
-  const explicit = process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT?.trim();
+  const explicit = process.env.INSTASIGHTS_SKILL_ROOT?.trim();
   if (explicit) {
     return explicit;
   }
-  return resolveFromExecutable() ?? resolveFromWorkingTree() ?? path.resolve(process.cwd(), "skills", "instagram-insights");
+  return resolveFromExecutable() ?? resolveFromWorkingTree() ?? path.resolve(process.cwd(), "skills", "instagram");
 }
 function resolveAuthDir() {
   return path.join(resolveSkillRoot(), ".auth");
@@ -3371,25 +3371,25 @@ import { existsSync as existsSync2, readFileSync } from "node:fs";
 import { mkdir as mkdir2, readFile as readFile2, rm as rm2, writeFile as writeFile2 } from "node:fs/promises";
 import path2 from "node:path";
 var AUTO_UPDATE_TTL_MS = 12 * 60 * 60 * 1e3;
-var DISABLE_AUTO_UPDATE_ENV = "INSTAGRAM_INSIGHTS_DISABLE_AUTO_UPDATE";
-var SKIP_UPDATE_CHECK_ENV = "INSTAGRAM_INSIGHTS_SKIP_UPDATE_CHECK";
-var UPDATE_MANIFEST_URL_ENV = "INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL";
+var DISABLE_AUTO_UPDATE_ENV = "INSTASIGHTS_DISABLE_AUTO_UPDATE";
+var SKIP_UPDATE_CHECK_ENV = "INSTASIGHTS_SKIP_UPDATE_CHECK";
+var UPDATE_MANIFEST_URL_ENV = "INSTASIGHTS_UPDATE_MANIFEST_URL";
 var MANAGED_SKILL_FILES = [
-  "bin/instagram-insights.mjs",
-  "bin/instagram-insights-updater.mjs",
-  "bin/instagram-insights.version.json"
+  "bin/instasights.mjs",
+  "bin/instasights-updater.mjs",
+  "bin/instasights.version.json"
 ];
 function resolveInstalledVersionPath(skillRoot = resolveSkillRoot()) {
-  return path2.join(skillRoot, "bin", "instagram-insights.version.json");
+  return path2.join(skillRoot, "bin", "instasights.version.json");
 }
 function resolveUpdateCachePath(skillRoot = resolveSkillRoot()) {
   return path2.join(skillRoot, ".cache", "update-check.json");
 }
 function resolveSkillEntrypointPath(skillRoot = resolveSkillRoot()) {
-  return path2.join(skillRoot, "bin", "instagram-insights.mjs");
+  return path2.join(skillRoot, "bin", "instasights.mjs");
 }
 function resolveUpdaterEntrypointPath(skillRoot = resolveSkillRoot()) {
-  return path2.join(skillRoot, "bin", "instagram-insights-updater.mjs");
+  return path2.join(skillRoot, "bin", "instasights-updater.mjs");
 }
 function isManagedSkillInstall(skillRoot = resolveSkillRoot()) {
   return existsSync2(path2.join(skillRoot, "SKILL.md"));
@@ -3487,7 +3487,7 @@ function getCliVersion() {
 
 // src/updater.ts
 function logUpdate(message) {
-  console.error(`[instagram-insights:update] ${message}`);
+  console.error(`[instasights:update] ${message}`);
 }
 function parseSemver(version2) {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version2.trim());
@@ -3723,7 +3723,7 @@ async function runUpdaterHelper(payloadPath) {
   const bundledHelperPath = resolveUpdaterEntrypointPath();
   const helperCopyPath = path3.join(
     path3.dirname(payloadPath),
-    "instagram-insights-updater.run.mjs"
+    "instasights-updater.run.mjs"
   );
   await copyFile(bundledHelperPath, helperCopyPath);
   await chmod2(helperCopyPath, 493).catch(() => void 0);
@@ -3732,7 +3732,7 @@ async function runUpdaterHelper(payloadPath) {
       stdio: "inherit",
       env: {
         ...process.env,
-        INSTAGRAM_INSIGHTS_SKILL_ROOT: skillRoot
+        INSTASIGHTS_SKILL_ROOT: skillRoot
       }
     });
     child.once("error", reject);
@@ -3784,7 +3784,7 @@ async function applyUpdate(checkResult, options) {
       reason: "Already running the latest available version."
     };
   }
-  const stagingDir = await mkdtemp(path3.join(os.tmpdir(), "instagram-insights-update-"));
+  const stagingDir = await mkdtemp(path3.join(os.tmpdir(), "instagram-update-"));
   const payloadPath = path3.join(stagingDir, "update-payload.json");
   try {
     logUpdate(
@@ -3839,7 +3839,7 @@ async function relaunchCli(args) {
       stdio: "inherit",
       env: {
         ...process.env,
-        INSTAGRAM_INSIGHTS_SKILL_ROOT: skillRoot,
+        INSTASIGHTS_SKILL_ROOT: skillRoot,
         [SKIP_UPDATE_CHECK_ENV]: "1"
       }
     });
@@ -3917,7 +3917,7 @@ async function registerPublicClient(input) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      client_name: "Instagram Insights CLI",
+      client_name: "Instasights CLI",
       redirect_uris: [input.redirectUri],
       token_endpoint_auth_method: "none",
       grant_types: ["authorization_code", "refresh_token"],
@@ -3997,7 +3997,7 @@ async function waitForCallback(input) {
         [
           "<!doctype html>",
           '<html><body style="font-family: system-ui; padding: 32px;">',
-          "<h1>Instagram Insights CLI</h1>",
+          "<h1>Instasights CLI</h1>",
           error ? `<p>Authentication failed: ${error}</p>` : "<p>Authentication complete. You can return to the terminal.</p>",
           "</body></html>"
         ].join("")
@@ -4090,7 +4090,7 @@ function isExpired(expiresAt) {
   }
   return Date.now() >= new Date(expiresAt).getTime() - 3e4;
 }
-var InstagramInsightsApiClient = class {
+var InstasightsApiClient = class {
   appUrl;
   constructor(appUrl = DEFAULT_APP_URL) {
     this.appUrl = normalizeAppUrl(appUrl);
@@ -4124,7 +4124,7 @@ var InstagramInsightsApiClient = class {
   async requireAuthenticatedState() {
     const state = await this.refreshIfNeeded(await this.getAuthState());
     if (!state.accessToken) {
-      fail("Authentication required. Run `instagram-insights auth login` first.", {
+      fail("Authentication required. Run `instagram auth login` first.", {
         appUrl: this.appUrl,
         scope: API_BEARER_SCOPE
       });
@@ -4156,7 +4156,7 @@ var InstagramInsightsApiClient = class {
     }
     const payload = await response.json().catch(() => null);
     if (!response.ok) {
-      fail("Instagram Insights API request failed.", {
+      fail("Instasights API request failed.", {
         appUrl: this.appUrl,
         path: path5,
         status: response.status,
@@ -5018,7 +5018,7 @@ function buildDashboardModel(input) {
   const username = input.account?.username ?? input.report.accountSummary.username ?? "instagram-account";
   return {
     username,
-    title: `${username} | Instagram Insights`,
+    title: `${username} | Instasights`,
     windowLabel: buildWindowLabel(input.report),
     generatedAtLabel: formatDate(toDate(input.report.generatedAt) ?? /* @__PURE__ */ new Date(), {
       month: "short",
@@ -6468,12 +6468,12 @@ function assertSupportedReportDays(days) {
 function getReadyReport(response) {
   if (response.status === "not_linked") {
     throw new Error(
-      "No linked Instagram account found. Run `instagram-insights instagram link --open` first."
+      "No linked Instagram account found. Run `instagram instagram link --open` first."
     );
   }
   if (response.status === "not_synced" || !response.report) {
     throw new Error(
-      "No synced analysis report is available. Run `instagram-insights sync run --wait` first."
+      "No synced analysis report is available. Run `instagram sync run --wait` first."
     );
   }
   return response.report;
@@ -6503,7 +6503,7 @@ async function listAllReportMedia(input) {
   return [...items.values()];
 }
 function buildDefaultReportOutputPath(input) {
-  const filename = `instagram-insights-report-${slugify(input.username ?? "account")}-${input.days}d-${formatFileDate(
+  const filename = `instagram-report-${slugify(input.username ?? "account")}-${input.days}d-${formatFileDate(
     input.generatedAt
   )}.html`;
   return path4.resolve(input.cwd ?? process.cwd(), filename);
@@ -6690,7 +6690,7 @@ async function printPolledSyncRun(client, syncRunId) {
 function printTopLevelHelp() {
   printText(
     [
-      "Instagram Insights CLI",
+      "Instasights CLI",
       "",
       "Commands:",
       "  auth login [--port <n>]",
@@ -6718,7 +6718,7 @@ function printTopLevelHelp() {
     ].join("\n")
   );
 }
-var InstagramInsightsCli = class {
+var InstasightsCli = class {
   async run() {
     if (CLI_ARGS.length === 0) {
       printTopLevelHelp();
@@ -6782,7 +6782,7 @@ var InstagramInsightsCli = class {
         this.staleAfterHours,
         "stale-after-hours"
       ) ?? DEFAULT_STALE_AFTER_HOURS;
-      const client = new InstagramInsightsApiClient(root.appUrl);
+      const client = new InstasightsApiClient(root.appUrl);
       const overview = await client.getAccountOverview();
       const setupStatus = deriveSetupStatus({
         overview,
@@ -6797,7 +6797,7 @@ var InstagramInsightsCli = class {
   }
   async ["clean-reset"]() {
     await runHandled(async () => {
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
+      const client = new InstasightsApiClient(getRootOptions(this).appUrl);
       printJson(await client.cleanReset());
     });
   }
@@ -6806,7 +6806,7 @@ var InstagramInsightsCli = class {
       if (action !== "overview") {
         fail("Unsupported account action.", { action });
       }
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
+      const client = new InstasightsApiClient(getRootOptions(this).appUrl);
       printJson(await client.getAccountOverview());
     });
   }
@@ -6815,13 +6815,13 @@ var InstagramInsightsCli = class {
       if (action !== "latest") {
         fail("Unsupported snapshot action.", { action });
       }
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
+      const client = new InstasightsApiClient(getRootOptions(this).appUrl);
       printJson(await client.getLatestSnapshot());
     });
   }
   async media(action, mediaId) {
     await runHandled(async () => {
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
+      const client = new InstasightsApiClient(getRootOptions(this).appUrl);
       if (action === "get") {
         if (!mediaId) {
           fail("media get requires a mediaId.");
@@ -6860,7 +6860,7 @@ var InstagramInsightsCli = class {
   }
   async sync(action, syncRunId) {
     await runHandled(async () => {
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
+      const client = new InstasightsApiClient(getRootOptions(this).appUrl);
       if (action === "list") {
         const limit = parseOptionalInt(
           this.limit,
@@ -6909,7 +6909,7 @@ var InstagramInsightsCli = class {
       }
       const options = this;
       const days = parseOptionalInt(options.days, "days") ?? 30;
-      const client = new InstagramInsightsApiClient(getRootOptions(this).appUrl);
+      const client = new InstasightsApiClient(getRootOptions(this).appUrl);
       printJson(
         await generateHtmlReport({
           client,
@@ -6963,36 +6963,36 @@ var InstagramInsightsCli = class {
   }
 };
 __decorateClass([
-  (0, import_commander_ts.option)("--app-url <url>", "Use a different Instagram Insights app URL")
-], InstagramInsightsCli.prototype, "appUrl", 2);
+  (0, import_commander_ts.option)("--app-url <url>", "Use a different Instasights app URL")
+], InstasightsCli.prototype, "appUrl", 2);
 __decorateClass([
   (0, import_commander_ts.option)("--json", "Accepted for compatibility; data commands already default to JSON")
-], InstagramInsightsCli.prototype, "json", 2);
+], InstasightsCli.prototype, "json", 2);
 __decorateClass([
   (0, import_commander_ts.option)("--no-browser", "Disable automatic browser launch")
-], InstagramInsightsCli.prototype, "browser", 2);
+], InstasightsCli.prototype, "browser", 2);
 __decorateClass([
   (0, import_commander_ts.command)(),
   (0, import_commander_ts.commandOption)("--port <n>", "Use a specific localhost callback port"),
   __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstagramInsightsCli.prototype, "auth", 1);
+], InstasightsCli.prototype, "auth", 1);
 __decorateClass([
   (0, import_commander_ts.command)(),
   (0, import_commander_ts.commandOption)("--stale-after-hours <n>", "Freshness threshold in hours"),
   (0, import_commander_ts.commandOption)("--open-link", "Open the Instagram linking handoff when status is not_linked"),
   __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstagramInsightsCli.prototype, "setup", 1);
+], InstasightsCli.prototype, "setup", 1);
 __decorateClass([
   (0, import_commander_ts.command)()
-], InstagramInsightsCli.prototype, "clean-reset", 1);
+], InstasightsCli.prototype, "clean-reset", 1);
 __decorateClass([
   (0, import_commander_ts.command)(),
   __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstagramInsightsCli.prototype, "account", 1);
+], InstasightsCli.prototype, "account", 1);
 __decorateClass([
   (0, import_commander_ts.command)(),
   __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstagramInsightsCli.prototype, "snapshot", 1);
+], InstasightsCli.prototype, "snapshot", 1);
 __decorateClass([
   (0, import_commander_ts.command)(),
   (0, import_commander_ts.commandOption)("--limit <n>", "Maximum number of items to fetch"),
@@ -7003,7 +7003,7 @@ __decorateClass([
   (0, import_commander_ts.commandOption)("--flat-metrics", "Include stored flat metrics and analysis fields"),
   __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
   __decorateParam(1, (0, import_commander_ts.optionalArg)("mediaId"))
-], InstagramInsightsCli.prototype, "media", 1);
+], InstasightsCli.prototype, "media", 1);
 __decorateClass([
   (0, import_commander_ts.command)(),
   (0, import_commander_ts.commandOption)("--limit <n>", "Maximum number of sync runs to fetch"),
@@ -7012,32 +7012,32 @@ __decorateClass([
   (0, import_commander_ts.commandOption)("--wait", "Poll until the sync reaches a terminal state"),
   __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
   __decorateParam(1, (0, import_commander_ts.optionalArg)("syncRunId"))
-], InstagramInsightsCli.prototype, "sync", 1);
+], InstasightsCli.prototype, "sync", 1);
 __decorateClass([
   (0, import_commander_ts.command)(),
   (0, import_commander_ts.commandOption)("--days <n>", "Report window in days"),
   (0, import_commander_ts.commandOption)("--output <path>", "Write the generated HTML report to this path"),
   __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstagramInsightsCli.prototype, "report", 1);
+], InstasightsCli.prototype, "report", 1);
 __decorateClass([
   (0, import_commander_ts.command)(),
   (0, import_commander_ts.commandOption)("--open", "Open the Instagram linking handoff in the browser"),
   __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstagramInsightsCli.prototype, "instagram", 1);
+], InstasightsCli.prototype, "instagram", 1);
 __decorateClass([
   (0, import_commander_ts.command)(),
   (0, import_commander_ts.commandOption)("--apply", "Apply the update immediately after checking"),
   (0, import_commander_ts.commandOption)("--force", "Reinstall the published version even when versions match"),
   __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstagramInsightsCli.prototype, "update", 1);
-InstagramInsightsCli = __decorateClass([
+], InstasightsCli.prototype, "update", 1);
+InstasightsCli = __decorateClass([
   (0, import_commander_ts.program)(),
   (0, import_commander_ts.version)(CLI_VERSION),
-  (0, import_commander_ts.description)("Instagram Insights skill CLI"),
+  (0, import_commander_ts.description)("Instasights skill CLI"),
   (0, import_commander_ts.usage)("[global options] <command> [subcommand]")
-], InstagramInsightsCli);
+], InstasightsCli);
 function runCli() {
-  new InstagramInsightsCli();
+  new InstasightsCli();
 }
 
 // src/index.ts
@@ -7057,7 +7057,7 @@ async function main() {
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : "Unable to apply automatic updates.";
-        console.error(`[instagram-insights:update] ${message}`);
+        console.error(`[instasights:update] ${message}`);
       }
     }
   }

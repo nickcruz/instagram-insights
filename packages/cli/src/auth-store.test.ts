@@ -13,10 +13,10 @@ import {
 } from "./auth-store";
 
 test("clearAuthTokens removes the local auth directory and resets state", async () => {
-  const originalSkillRoot = process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
-  const tempRoot = await mkdtemp(path.join(tmpdir(), "instagram-insights-auth-"));
+  const originalSkillRoot = process.env.INSTASIGHTS_SKILL_ROOT;
+  const tempRoot = await mkdtemp(path.join(tmpdir(), "instagram-auth-"));
 
-  process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = tempRoot;
+  process.env.INSTASIGHTS_SKILL_ROOT = tempRoot;
 
   try {
     await writeAuthState({
@@ -45,9 +45,9 @@ test("clearAuthTokens removes the local auth directory and resets state", async 
     });
   } finally {
     if (originalSkillRoot === undefined) {
-      delete process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT;
+      delete process.env.INSTASIGHTS_SKILL_ROOT;
     } else {
-      process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT = originalSkillRoot;
+      process.env.INSTASIGHTS_SKILL_ROOT = originalSkillRoot;
     }
 
     await rm(tempRoot, { recursive: true, force: true });

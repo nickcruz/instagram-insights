@@ -32,10 +32,10 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Typecheck CLI
-        run: yarn workspace @instagram-insights/cli typecheck
+        run: yarn workspace @instasights/cli typecheck
 
       - name: Run CLI tests
-        run: yarn workspace @instagram-insights/cli test
+        run: yarn workspace @instasights/cli test
 
       - name: Install transcriber dependencies
         run: |
@@ -44,19 +44,19 @@ jobs:
           pip install --no-build-isolation -r services/transcriber/requirements.txt -r services/transcriber/requirements-dev.txt
 
       - name: Lint web app
-        run: yarn workspace @instagram-insights/web lint
+        run: yarn workspace @instasights/web lint
 
       - name: Typecheck web app
-        run: yarn workspace @instagram-insights/web typecheck
+        run: yarn workspace @instasights/web typecheck
 
       - name: Run web tests
-        run: yarn workspace @instagram-insights/web test
+        run: yarn workspace @instasights/web test
 
       - name: Run transcriber tests
         run: python -m pytest services/transcriber/tests
 
       - name: Synthesize CDK stacks
-        run: yarn workspace @instagram-insights/infra synth --context transcriberApiKey=dummy-ci-key
+        run: yarn workspace @instasights/infra synth --context transcriberApiKey=dummy-ci-key
 
       - name: Build transcriber image
         run: docker build -f services/transcriber/Dockerfile .

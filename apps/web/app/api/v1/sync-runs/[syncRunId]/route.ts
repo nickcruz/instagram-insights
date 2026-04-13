@@ -1,4 +1,4 @@
-import { getInstagramSyncRunDetailById } from "@instagram-insights/db";
+import { getInstagramSyncRunDetailById } from "@instasights/db";
 
 import {
   createJsonResponse,

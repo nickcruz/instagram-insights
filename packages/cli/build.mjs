@@ -5,21 +5,21 @@ import { fileURLToPath } from "node:url";
 
 const packageDir = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(packageDir, "../..");
-const skillRoot = path.join(projectRoot, "skills/instagram-insights");
+const skillRoot = path.join(projectRoot, "skills/instasights");
 const skillBinDir = path.join(skillRoot, "bin");
 const packageJson = JSON.parse(
   await readFile(path.join(packageDir, "package.json"), "utf8"),
 );
 const cliVersion = packageJson.version;
 const updateManifestUrl =
-  process.env.INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL?.trim() ||
+  process.env.INSTASIGHTS_UPDATE_MANIFEST_URL?.trim() ||
   "https://project-qah0p.vercel.app/api/cli/latest";
 const entryPoint = path.join(packageDir, "src/index.ts");
 const updaterEntryPoint = path.join(packageDir, "src/updater-helper-main.ts");
 const distDir = path.join(packageDir, "dist");
-const distCliOutfile = path.join(distDir, "instagram-insights.mjs");
-const distUpdaterOutfile = path.join(distDir, "instagram-insights-updater.mjs");
-const distVersionFile = path.join(distDir, "instagram-insights.version.json");
+const distCliOutfile = path.join(distDir, "instasights.mjs");
+const distUpdaterOutfile = path.join(distDir, "instasights-updater.mjs");
+const distVersionFile = path.join(distDir, "instasights.version.json");
 
 const sharedOptions = {
   bundle: true,
@@ -36,8 +36,8 @@ const sharedOptions = {
     ].join("\n"),
   },
   define: {
-    __INSTAGRAM_INSIGHTS_CLI_VERSION__: JSON.stringify(cliVersion),
-    __INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL__: JSON.stringify(updateManifestUrl),
+    __INSTASIGHTS_CLI_VERSION__: JSON.stringify(cliVersion),
+    __INSTASIGHTS_UPDATE_MANIFEST_URL__: JSON.stringify(updateManifestUrl),
   },
 };
 

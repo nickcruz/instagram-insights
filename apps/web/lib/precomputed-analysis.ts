@@ -3,7 +3,7 @@ import type {
   PrecomputedAnalysisAccountSummary,
   PrecomputedAnalysisPost,
   PrecomputedAnalysisReport,
-} from "@instagram-insights/contracts";
+} from "@instasights/contracts";
 
 export const ANALYSIS_VERSION = "v1";
 export const PRECOMPUTED_REPORT_DAYS = 30;

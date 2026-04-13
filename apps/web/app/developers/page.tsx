@@ -2,7 +2,7 @@ import {
   getAccountOverviewByUserId,
   isDatabaseConfigured,
   listDeveloperApiKeySummariesByUserId,
-} from "@instagram-insights/db";
+} from "@instasights/db";
 import { ArrowRight, KeyRound, LinkIcon, Terminal } from "lucide-react";
 import Link from "next/link";
 
@@ -48,13 +48,13 @@ export default async function DevelopersPage({
 
   const pluginMarketplace =
     "/plugin marketplace add https://github.com/kingscrosslabs/marketplace.git";
-  const pluginInstall = "/plugin install instagram-insights@kingscrosslabs-marketplace";
-  const authLogin = "./skills/instagram-insights/instagram-insights auth login";
-  const setupStatus = "./skills/instagram-insights/instagram-insights setup status";
-  const syncWait = "./skills/instagram-insights/instagram-insights sync run --wait";
+  const pluginInstall = "/plugin install instagram@kingscrosslabs-marketplace";
+  const authLogin = "./skills/instasights/instasights auth login";
+  const setupStatus = "./skills/instasights/instasights setup status";
+  const syncWait = "./skills/instasights/instasights sync run --wait";
   const linkInstagram =
-    "./skills/instagram-insights/instagram-insights instagram link --open";
-  const apiKeySmokeTest = `curl -H "Authorization: Bearer $INSTAGRAM_INSIGHTS_API_KEY" \\\n  ${appUrl}/api/v1/account`;
+    "./skills/instasights/instasights instagram link --open";
+  const apiKeySmokeTest = `curl -H "Authorization: Bearer $INSTASIGHTS_API_KEY" \\\n  ${appUrl}/api/v1/account`;
 
   return (
     <main className="min-h-screen bg-white px-6 py-10 md:px-10">
@@ -67,7 +67,7 @@ export default async function DevelopersPage({
               </div>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.28em] text-[var(--muted-foreground)]">
-                  Instagram Insights
+                  Instasights
                 </p>
                 <h1 className="mt-3 max-w-3xl font-heading text-5xl leading-none md:text-7xl">
                   Authenticate the skill, link Instagram, and inspect the hosted API from one CLI.
@@ -149,7 +149,7 @@ export default async function DevelopersPage({
           />
           <CopySnippet
             title="Skill Install"
-            description="Install the Instagram Insights skill package from the marketplace."
+            description="Install the Instasights skill package from the marketplace."
             value={pluginInstall}
           />
         </div>
@@ -189,7 +189,7 @@ export default async function DevelopersPage({
               <CardTitle>Bundled CLI</CardTitle>
               <CardDescription>
                 The supported interface is now the skill-local macOS
-                `instagram-insights` CLI bundled with the installable skill.
+                `instagram` CLI bundled with the installable skill.
               </CardDescription>
             </CardHeader>
           </Card>
@@ -230,7 +230,7 @@ export default async function DevelopersPage({
           </CardHeader>
           <CardContent className="grid gap-3 md:grid-cols-2">
             {[
-              "1. Install the Instagram Insights skill from the marketplace.",
+              "1. Install the Instasights skill from the marketplace.",
               "2. Run `auth login` and finish Google sign-in in the browser.",
               "3. Run `setup status` to inspect readiness.",
               "4. If needed, run `instagram link --open` and finish the Meta handoff.",

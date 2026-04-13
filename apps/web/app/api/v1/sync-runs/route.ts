@@ -1,6 +1,6 @@
 import {
   listInstagramSyncRunsByUserId,
-} from "@instagram-insights/db";
+} from "@instasights/db";
 
 import {
   createJsonResponse,

@@ -1,12 +1,12 @@
 {
-  "name": "instagram-insights",
-  "description": "Install one Instagram Insights skill with a bundled CLI for auth, sync, and analytics over the hosted REST API.",
+  "name": "instasights",
+  "description": "Install one Instasights skill with a bundled CLI for auth, sync, and analytics over the hosted REST API.",
   "version": "1.0.0",
   "author": {
     "name": "Nick Reyes"
   },
-  "homepage": "https://github.com/nickcruz/instagram-insights",
-  "repository": "https://github.com/nickcruz/instagram-insights",
+  "homepage": "https://github.com/nickcruz/instasights",
+  "repository": "https://github.com/nickcruz/instasights",
   "license": "MIT",
   "keywords": ["instagram", "analytics", "creator", "social-media", "cli"],
   "skills": "./skills/",

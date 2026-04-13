@@ -90,7 +90,7 @@ test("buildDashboardModel derives presentation themes and strategic sections", (
   });
 
   assert.equal(buildWindowLabel(report), "Mar 11 – Apr 10, 2026");
-  assert.equal(model.title, "creator | Instagram Insights");
+  assert.equal(model.title, "creator | Instasights");
   assert.equal(model.posts[0]?.theme, "Oversharing Our Finances");
   assert.equal(model.posts.find((post) => post.id === "post-4")?.theme, "Founder / Builder");
   assert.equal(model.starPost?.views, 18000);

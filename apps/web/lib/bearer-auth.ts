@@ -3,7 +3,7 @@ import {
   getMcpOAuthAccessTokenByHash,
   touchDeveloperApiKeyLastUsed,
   touchMcpOAuthAccessTokenLastUsed,
-} from "@instagram-insights/db";
+} from "@instasights/db";
 
 import {
   getBearerToken,
@@ -44,7 +44,7 @@ export async function resolveBearerAuth(request: Request): Promise<BearerAuthRes
       ok: false,
       status: 401,
       message:
-        "Missing bearer token. Authenticate with the Instagram Insights CLI OAuth flow or send Authorization: Bearer <api-key>.",
+        "Missing bearer token. Authenticate with the Instasights CLI OAuth flow or send Authorization: Bearer <api-key>.",
     };
   }
 
@@ -139,7 +139,7 @@ export async function resolveBearerAuth(request: Request): Promise<BearerAuthRes
       ok: false,
       status: 403,
       message:
-        "Access token does not include the required Instagram Insights API scope.",
+        "Access token does not include the required Instasights API scope.",
     };
   }
 

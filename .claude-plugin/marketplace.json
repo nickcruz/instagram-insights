@@ -1,19 +1,19 @@
 {
-  "name": "instagram-insights-plugins",
+  "name": "instasights-plugins",
   "owner": {
     "name": "Nick Reyes"
   },
   "plugins": [
     {
-      "name": "instagram-insights",
+      "name": "instasights",
       "source": "./",
-      "description": "Authenticate, sync, and inspect Instagram Insights through one installable skill with a bundled CLI.",
+      "description": "Authenticate, sync, and inspect Instasights through one installable skill with a bundled CLI.",
       "version": "1.0.0",
       "author": {
         "name": "Nick Reyes"
       },
-      "homepage": "https://github.com/nickcruz/instagram-insights",
-      "repository": "https://github.com/nickcruz/instagram-insights",
+      "homepage": "https://github.com/nickcruz/instasights",
+      "repository": "https://github.com/nickcruz/instasights",
       "license": "MIT",
       "keywords": ["instagram", "analytics", "cli", "claude-code"],
       "category": "productivity",

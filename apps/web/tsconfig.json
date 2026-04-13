@@ -12,8 +12,8 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@instagram-insights/contracts": ["../../packages/contracts/src/index.ts"],
-      "@instagram-insights/db": ["../../packages/db/src/index.ts"]
+      "@instasights/contracts": ["../../packages/contracts/src/index.ts"],
+      "@instasights/db": ["../../packages/db/src/index.ts"]
     }
   },
   "include": [

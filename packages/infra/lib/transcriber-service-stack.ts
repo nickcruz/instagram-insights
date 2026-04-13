@@ -40,11 +40,11 @@ export class TranscriberServiceStack extends Stack {
 
     const cluster = new ecs.Cluster(this, "TranscriberCluster", {
       vpc,
-      clusterName: "instagram-insights-transcriber",
+      clusterName: "instagram-transcriber",
     });
 
     const logGroup = new logs.LogGroup(this, "TranscriberLogs", {
-      logGroupName: "/ecs/instagram-insights-transcriber",
+      logGroupName: "/ecs/instagram-transcriber",
       retention: logs.RetentionDays.ONE_MONTH,
     });
 
@@ -120,7 +120,7 @@ export class TranscriberServiceStack extends Stack {
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC,
       },
-      serviceName: "instagram-insights-transcriber",
+      serviceName: "instagram-transcriber",
     });
 
     const loadBalancer = new elbv2.ApplicationLoadBalancer(
@@ -159,7 +159,7 @@ export class TranscriberServiceStack extends Stack {
     });
 
     const api = new apigwv2.HttpApi(this, "TranscriberHttpApi", {
-      apiName: "instagram-insights-transcriber",
+      apiName: "instagram-transcriber",
       createDefaultStage: true,
     });
 

@@ -1,5 +1,5 @@
 {
-  "name": "instagram-insights",
+  "name": "instasights",
   "private": true,
   "packageManager": "yarn@1.22.22",
   "workspaces": [
@@ -7,18 +7,18 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "yarn workspace @instagram-insights/web dev",
-    "build": "yarn workspace @instagram-insights/cli build && yarn workspace @instagram-insights/web build",
-    "build:cli": "yarn workspace @instagram-insights/cli build",
-    "lint": "yarn workspace @instagram-insights/web lint",
-    "typecheck": "yarn workspace @instagram-insights/cli typecheck && yarn workspace @instagram-insights/web typecheck",
+    "dev": "yarn workspace @instasights/web dev",
+    "build": "yarn workspace @instasights/cli build && yarn workspace @instasights/web build",
+    "build:cli": "yarn workspace @instasights/cli build",
+    "lint": "yarn workspace @instasights/web lint",
+    "typecheck": "yarn workspace @instasights/cli typecheck && yarn workspace @instasights/web typecheck",
     "test": "yarn test:cli && yarn test:web && yarn test:transcriber",
-    "test:cli": "yarn workspace @instagram-insights/cli test",
-    "test:web": "yarn workspace @instagram-insights/web test",
+    "test:cli": "yarn workspace @instasights/cli test",
+    "test:web": "yarn workspace @instasights/web test",
     "test:transcriber": "python3 -m pytest services/transcriber/tests",
-    "infra:synth": "yarn workspace @instagram-insights/infra synth",
-    "db:generate": "yarn workspace @instagram-insights/db db:generate",
-    "db:push": "yarn workspace @instagram-insights/db db:push"
+    "infra:synth": "yarn workspace @instasights/infra synth",
+    "db:generate": "yarn workspace @instasights/db db:generate",
+    "db:push": "yarn workspace @instasights/db db:push"
   },
   "devDependencies": {
     "esbuild": "^0.25.11",

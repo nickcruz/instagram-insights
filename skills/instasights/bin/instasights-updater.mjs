@@ -11,15 +11,15 @@ var DEFAULT_APP_URL = "https://project-qah0p.vercel.app";
 var DEFAULT_UPDATE_MANIFEST_URL = `${DEFAULT_APP_URL}/api/cli/latest`;
 
 // src/build-constants.ts
-var EMBEDDED_CLI_VERSION = true ? "1.0.0" : process.env.INSTAGRAM_INSIGHTS_EMBEDDED_VERSION ?? "1.0.0";
-var EMBEDDED_UPDATE_MANIFEST_URL = true ? "https://project-qah0p.vercel.app/api/cli/latest" : process.env.INSTAGRAM_INSIGHTS_EMBEDDED_UPDATE_MANIFEST_URL ?? DEFAULT_UPDATE_MANIFEST_URL2;
+var EMBEDDED_CLI_VERSION = true ? "1.0.0" : process.env.INSTASIGHTS_EMBEDDED_VERSION ?? "1.0.0";
+var EMBEDDED_UPDATE_MANIFEST_URL = true ? "https://project-qah0p.vercel.app/api/cli/latest" : process.env.INSTASIGHTS_EMBEDDED_UPDATE_MANIFEST_URL ?? DEFAULT_UPDATE_MANIFEST_URL2;
 
 // src/version.ts
 var AUTO_UPDATE_TTL_MS = 12 * 60 * 60 * 1e3;
 var MANAGED_SKILL_FILES = [
-  "bin/instagram-insights.mjs",
-  "bin/instagram-insights-updater.mjs",
-  "bin/instagram-insights.version.json"
+  "bin/instasights.mjs",
+  "bin/instasights-updater.mjs",
+  "bin/instasights.version.json"
 ];
 
 // src/updater-helper.ts
@@ -45,7 +45,7 @@ function resolveManagedPath(baseDir, relativePath) {
 async function applyStagedUpdate(input) {
   const versionPath = resolveManagedPath(
     input.skillRoot,
-    "bin/instagram-insights.version.json"
+    "bin/instasights.version.json"
   );
   for (const file of input.files) {
     if (!MANAGED_SKILL_FILES.includes(file.path)) {

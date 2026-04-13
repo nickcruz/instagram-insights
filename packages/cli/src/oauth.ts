@@ -41,7 +41,7 @@ export async function registerPublicClient(input: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      client_name: "Instagram Insights CLI",
+      client_name: "Instasights CLI",
       redirect_uris: [input.redirectUri],
       token_endpoint_auth_method: "none",
       grant_types: ["authorization_code", "refresh_token"],
@@ -181,7 +181,7 @@ async function waitForCallback(input: {
         [
           "<!doctype html>",
           "<html><body style=\"font-family: system-ui; padding: 32px;\">",
-          "<h1>Instagram Insights CLI</h1>",
+          "<h1>Instasights CLI</h1>",
           error
             ? `<p>Authentication failed: ${error}</p>`
             : "<p>Authentication complete. You can return to the terminal.</p>",

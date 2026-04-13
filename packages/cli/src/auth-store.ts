@@ -18,7 +18,7 @@ function resolveFromWorkingTree() {
   let current = path.resolve(process.cwd());
 
   while (true) {
-    for (const candidate of [current, path.join(current, "skills", "instagram-insights")]) {
+    for (const candidate of [current, path.join(current, "skills", "instagram")]) {
       if (hasSkillMarker(candidate)) {
         return candidate;
       }
@@ -34,7 +34,7 @@ function resolveFromWorkingTree() {
 }
 
 export function resolveSkillRoot() {
-  const explicit = process.env.INSTAGRAM_INSIGHTS_SKILL_ROOT?.trim();
+  const explicit = process.env.INSTASIGHTS_SKILL_ROOT?.trim();
 
   if (explicit) {
     return explicit;
@@ -43,7 +43,7 @@ export function resolveSkillRoot() {
   return (
     resolveFromExecutable() ??
     resolveFromWorkingTree() ??
-    path.resolve(process.cwd(), "skills", "instagram-insights")
+    path.resolve(process.cwd(), "skills", "instagram")
   );
 }
 

@@ -22,7 +22,7 @@ export function normalizeSameOriginReturnTo(
 }
 
 export function buildRootHandoffPath(returnTo?: string | null) {
-  const url = new URL("/", "https://instagram-insights.invalid");
+  const url = new URL("/", "https://instagram.invalid");
 
   if (returnTo) {
     url.searchParams.set("returnTo", returnTo);

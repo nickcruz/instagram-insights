@@ -7,8 +7,8 @@ import test from "node:test";
 import { applyStagedUpdate } from "./updater-helper";
 
 test("applyStagedUpdate copies managed files and preserves auth state", async () => {
-  const skillRoot = await mkdtemp(path.join(tmpdir(), "instagram-insights-skill-"));
-  const stagingDir = await mkdtemp(path.join(tmpdir(), "instagram-insights-stage-"));
+  const skillRoot = await mkdtemp(path.join(tmpdir(), "instagram-skill-"));
+  const stagingDir = await mkdtemp(path.join(tmpdir(), "instagram-stage-"));
 
   try {
     await mkdir(path.join(skillRoot, ".auth"), { recursive: true });
@@ -17,17 +17,17 @@ test("applyStagedUpdate copies managed files and preserves auth state", async ()
 
     await writeFile(path.join(skillRoot, ".auth", "state.json"), '{"token":"keep"}\n', "utf8");
     await writeFile(
-      path.join(stagingDir, "bin", "instagram-insights.mjs"),
+      path.join(stagingDir, "bin", "instasights.mjs"),
       "new cli\n",
       "utf8",
     );
     await writeFile(
-      path.join(stagingDir, "bin", "instagram-insights-updater.mjs"),
+      path.join(stagingDir, "bin", "instasights-updater.mjs"),
       "new helper\n",
       "utf8",
     );
     await writeFile(
-      path.join(stagingDir, "bin", "instagram-insights.version.json"),
+      path.join(stagingDir, "bin", "instasights.version.json"),
       '{ "version": "1.0.2", "installedAt": null }\n',
       "utf8",
     );
@@ -37,19 +37,19 @@ test("applyStagedUpdate copies managed files and preserves auth state", async ()
       stagingDir,
       version: "1.0.2",
       files: [
-        { path: "bin/instagram-insights.mjs" },
-        { path: "bin/instagram-insights-updater.mjs" },
-        { path: "bin/instagram-insights.version.json" },
+        { path: "bin/instasights.mjs" },
+        { path: "bin/instasights-updater.mjs" },
+        { path: "bin/instasights.version.json" },
       ],
     });
 
     assert.equal(
-      await readFile(path.join(skillRoot, "bin", "instagram-insights.mjs"), "utf8"),
+      await readFile(path.join(skillRoot, "bin", "instasights.mjs"), "utf8"),
       "new cli\n",
     );
     assert.equal(
       await readFile(
-        path.join(skillRoot, "bin", "instagram-insights-updater.mjs"),
+        path.join(skillRoot, "bin", "instasights-updater.mjs"),
         "utf8",
       ),
       "new helper\n",
@@ -60,7 +60,7 @@ test("applyStagedUpdate copies managed files and preserves auth state", async ()
     );
 
     const versionFile = JSON.parse(
-      await readFile(path.join(skillRoot, "bin", "instagram-insights.version.json"), "utf8"),
+      await readFile(path.join(skillRoot, "bin", "instasights.version.json"), "utf8"),
     ) as { version: string; installedAt: string | null };
 
     assert.equal(versionFile.version, "1.0.2");
@@ -73,8 +73,8 @@ test("applyStagedUpdate copies managed files and preserves auth state", async ()
 });
 
 test("applyStagedUpdate rejects unmanaged file paths", async () => {
-  const skillRoot = await mkdtemp(path.join(tmpdir(), "instagram-insights-skill-"));
-  const stagingDir = await mkdtemp(path.join(tmpdir(), "instagram-insights-stage-"));
+  const skillRoot = await mkdtemp(path.join(tmpdir(), "instagram-skill-"));
+  const stagingDir = await mkdtemp(path.join(tmpdir(), "instagram-stage-"));
 
   try {
     await assert.rejects(

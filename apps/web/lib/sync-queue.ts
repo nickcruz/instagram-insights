@@ -6,7 +6,7 @@ import {
   markInstagramSyncRunFailed,
   serializeSyncRunSummary,
   updateInstagramSyncRunProgress,
-} from "@instagram-insights/db";
+} from "@instasights/db";
 import { start } from "workflow/api";
 
 import { instagramFullSyncWorkflow } from "@/workflows/instagram-full-sync";

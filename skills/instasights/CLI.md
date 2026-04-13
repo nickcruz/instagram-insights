@@ -1,17 +1,17 @@
-# Instagram Insights CLI
+# Instasights CLI
 
-This document explains the bundled `instagram-insights` CLI in more detail than the quick command list in the main skill.
+This document explains the bundled `instasights` CLI in more detail than the quick command list in the main skill.
 
 Run the launcher from this skill directory so it can verify Node and execute the bundled MJS runtime:
 
 ```bash
-./instagram-insights
+./instasights
 ```
 
 If you are in the repository root, use:
 
 ```bash
-./skills/instagram-insights/instagram-insights
+./skills/instasights/instasights
 ```
 
 ## Global behavior
@@ -69,7 +69,7 @@ Use this when you want to re-authenticate from scratch.
 
 ### `setup status [--stale-after-hours <n>] [--open-link]`
 
-Checks the overall readiness of the connected Instagram Insights workflow.
+Checks the overall readiness of the connected Instasights workflow.
 
 This is the best “what should I do next?” command. It inspects:
 
@@ -245,36 +245,36 @@ Use this when you want to refresh the managed MJS runtime without waiting for th
 ### First-time setup
 
 ```bash
-./instagram-insights auth login
-./instagram-insights setup status
-./instagram-insights instagram link --open
-./instagram-insights sync run --wait
+./instasights auth login
+./instasights setup status
+./instasights instagram link --open
+./instasights sync run --wait
 ```
 
 ### Check whether the account is ready for analysis
 
 ```bash
-./instagram-insights setup status --stale-after-hours 12
+./instasights setup status --stale-after-hours 12
 ```
 
 ### Inspect recent content
 
 ```bash
-./instagram-insights media list --limit 10 --days 30 --flat-metrics
-./instagram-insights media get <mediaId>
+./instasights media list --limit 10 --days 30 --flat-metrics
+./instasights media get <mediaId>
 ```
 
 ### Force fresh data before analysis
 
 ```bash
-./instagram-insights sync run --force --wait
-./instagram-insights snapshot latest
-./instagram-insights media analyze --days 30
+./instasights sync run --force --wait
+./instasights snapshot latest
+./instasights media analyze --days 30
 ```
 
 ### Generate an HTML dashboard report
 
 ```bash
-./instagram-insights report generate --days 30
-./instagram-insights report generate --days 30 --output ./output/instagram-insights-report.html
+./instasights report generate --days 30
+./instasights report generate --days 30 --output ./output/instasights-report.html
 ```

@@ -17,7 +17,7 @@ async def lifespan(_: FastAPI):
     yield
 
 
-app = FastAPI(title="Instagram Insights Offline Transcriber", lifespan=lifespan)
+app = FastAPI(title="Instasights Offline Transcriber", lifespan=lifespan)
 
 
 @app.get("/health", response_model=HealthResponse)

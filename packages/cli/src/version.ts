@@ -13,18 +13,18 @@ import type {
 } from "./types";
 
 export const AUTO_UPDATE_TTL_MS = 12 * 60 * 60 * 1_000;
-export const DISABLE_AUTO_UPDATE_ENV = "INSTAGRAM_INSIGHTS_DISABLE_AUTO_UPDATE";
-export const SKIP_UPDATE_CHECK_ENV = "INSTAGRAM_INSIGHTS_SKIP_UPDATE_CHECK";
-export const UPDATE_MANIFEST_URL_ENV = "INSTAGRAM_INSIGHTS_UPDATE_MANIFEST_URL";
+export const DISABLE_AUTO_UPDATE_ENV = "INSTASIGHTS_DISABLE_AUTO_UPDATE";
+export const SKIP_UPDATE_CHECK_ENV = "INSTASIGHTS_SKIP_UPDATE_CHECK";
+export const UPDATE_MANIFEST_URL_ENV = "INSTASIGHTS_UPDATE_MANIFEST_URL";
 
 export const MANAGED_SKILL_FILES = [
-  "bin/instagram-insights.mjs",
-  "bin/instagram-insights-updater.mjs",
-  "bin/instagram-insights.version.json",
+  "bin/instasights.mjs",
+  "bin/instasights-updater.mjs",
+  "bin/instasights.version.json",
 ] as const;
 
 export function resolveInstalledVersionPath(skillRoot = resolveSkillRoot()) {
-  return path.join(skillRoot, "bin", "instagram-insights.version.json");
+  return path.join(skillRoot, "bin", "instasights.version.json");
 }
 
 export function resolveUpdateCachePath(skillRoot = resolveSkillRoot()) {
@@ -32,11 +32,11 @@ export function resolveUpdateCachePath(skillRoot = resolveSkillRoot()) {
 }
 
 export function resolveSkillEntrypointPath(skillRoot = resolveSkillRoot()) {
-  return path.join(skillRoot, "bin", "instagram-insights.mjs");
+  return path.join(skillRoot, "bin", "instasights.mjs");
 }
 
 export function resolveUpdaterEntrypointPath(skillRoot = resolveSkillRoot()) {
-  return path.join(skillRoot, "bin", "instagram-insights-updater.mjs");
+  return path.join(skillRoot, "bin", "instasights-updater.mjs");
 }
 
 export function isManagedSkillInstall(skillRoot = resolveSkillRoot()) {

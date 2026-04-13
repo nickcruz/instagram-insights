@@ -2,7 +2,7 @@
 
 This document is retained as a deprecation note.
 
-The hosted MCP deployment path has been retired in favor of the Instagram Insights skill plus bundled CLI.
+The hosted MCP deployment path has been retired in favor of the Instasights skill plus bundled CLI.
 
 ## Current status
 
@@ -13,7 +13,7 @@ The hosted MCP deployment path has been retired in favor of the Instagram Insigh
 
 ## Replacement workflow
 
-1. Install the Instagram Insights skill from the marketplace
+1. Install the Instasights skill from the marketplace
 2. Run `auth login`
 3. Run `setup status`
 4. Run `instagram link --open` if the account is not linked

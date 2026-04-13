@@ -1,4 +1,4 @@
-import { revokeDeveloperApiKey } from "@instagram-insights/db";
+import { revokeDeveloperApiKey } from "@instasights/db";
 
 import { auth } from "@/lib/auth";
 import { createJsonResponse } from "@/lib/developer-api-auth";

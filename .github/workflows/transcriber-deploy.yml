@@ -32,10 +32,10 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Typecheck CLI
-        run: yarn workspace @instagram-insights/cli typecheck
+        run: yarn workspace @instasights/cli typecheck
 
       - name: Run CLI tests
-        run: yarn workspace @instagram-insights/cli test
+        run: yarn workspace @instasights/cli test
 
       - name: Install transcriber dependencies
         run: |
@@ -44,19 +44,19 @@ jobs:
           pip install --no-build-isolation -r services/transcriber/requirements.txt -r services/transcriber/requirements-dev.txt
 
       - name: Lint web app
-        run: yarn workspace @instagram-insights/web lint
+        run: yarn workspace @instasights/web lint
 
       - name: Typecheck web app
-        run: yarn workspace @instagram-insights/web typecheck
+        run: yarn workspace @instasights/web typecheck
 
       - name: Run web tests
-        run: yarn workspace @instagram-insights/web test
+        run: yarn workspace @instasights/web test
 
       - name: Run transcriber tests
         run: python -m pytest services/transcriber/tests
 
       - name: Synthesize CDK stacks
-        run: yarn workspace @instagram-insights/infra synth --context transcriberApiKey=dummy-ci-key
+        run: yarn workspace @instasights/infra synth --context transcriberApiKey=dummy-ci-key
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -66,10 +66,10 @@ jobs:
 
       - name: Deploy bootstrap stack
         run: |
-          yarn workspace @instagram-insights/infra cdk deploy \
+          yarn workspace @instasights/infra cdk deploy \
             --require-approval never \
             --outputs-file "${CDK_OUTPUTS_FILE}" \
-            InstagramInsightsTranscriberBootstrap
+            InstasightsTranscriberBootstrap
 
       - name: Read ECR repository URI
         id: bootstrap
@@ -81,7 +81,7 @@ jobs:
           with open(os.environ["CDK_OUTPUTS_FILE"], "r", encoding="utf-8") as handle:
               outputs = json.load(handle)
 
-          repository_uri = outputs["InstagramInsightsTranscriberBootstrap"]["RepositoryUri"]
+          repository_uri = outputs["InstasightsTranscriberBootstrap"]["RepositoryUri"]
 
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
               handle.write(f"repository_uri={repository_uri}\n")
@@ -103,12 +103,12 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
           TRANSCRIBER_API_KEY: ${{ secrets.TRANSCRIBER_API_KEY }}
         run: |
-          yarn workspace @instagram-insights/infra cdk deploy \
+          yarn workspace @instasights/infra cdk deploy \
             --require-approval never \
             --outputs-file "${CDK_OUTPUTS_FILE}" \
             --context imageTag="${IMAGE_TAG}" \
             --context transcriberApiKey="${TRANSCRIBER_API_KEY}" \
-            InstagramInsightsTranscriberService
+            InstasightsTranscriberService
 
       - name: Read API endpoint
         id: service
@@ -120,7 +120,7 @@ jobs:
           with open(os.environ["CDK_OUTPUTS_FILE"], "r", encoding="utf-8") as handle:
               outputs = json.load(handle)
 
-          api_base_url = outputs["InstagramInsightsTranscriberService"]["ApiBaseUrl"]
+          api_base_url = outputs["InstasightsTranscriberService"]["ApiBaseUrl"]
 
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
               handle.write(f"api_base_url={api_base_url}\n")

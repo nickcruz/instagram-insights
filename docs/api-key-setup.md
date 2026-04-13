@@ -2,7 +2,7 @@
 
 This document explains the legacy developer API key flow for the hosted REST API.
 
-The recommended path is the Instagram Insights skill plus bundled CLI OAuth flow. API keys remain available as a compatibility option for scripts and manual clients.
+The recommended path is the Instasights skill plus bundled CLI OAuth flow. API keys remain available as a compatibility option for scripts and manual clients.
 
 ## Before you create a key
 
@@ -27,7 +27,7 @@ Copy the key immediately. The full secret is only shown once.
 Recommended shell setup:
 
 ```bash
-export INSTAGRAM_INSIGHTS_API_KEY="paste-the-key-from-the-developers-page"
+export INSTASIGHTS_API_KEY="paste-the-key-from-the-developers-page"
 ```
 
 ## Use the key with REST
@@ -35,7 +35,7 @@ export INSTAGRAM_INSIGHTS_API_KEY="paste-the-key-from-the-developers-page"
 Example:
 
 ```bash
-curl -H "Authorization: Bearer $INSTAGRAM_INSIGHTS_API_KEY" \
+curl -H "Authorization: Bearer $INSTASIGHTS_API_KEY" \
   https://YOUR_APP_DOMAIN/api/v1/account
 ```
 
@@ -43,7 +43,7 @@ Queue a sync:
 
 ```bash
 curl -X POST \
-  -H "Authorization: Bearer $INSTAGRAM_INSIGHTS_API_KEY" \
+  -H "Authorization: Bearer $INSTASIGHTS_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"force":false,"staleAfterHours":12}' \
   https://YOUR_APP_DOMAIN/api/v1/sync-runs
@@ -72,6 +72,6 @@ The sync run belongs to another user or the ID is incorrect.
 Prefer the skill and bundled CLI whenever possible:
 
 ```bash
-./skills/instagram-insights/instagram-insights auth login
-./skills/instagram-insights/instagram-insights setup status
+./skills/instasights/instasights auth login
+./skills/instasights/instasights setup status
 ```

@@ -21,7 +21,7 @@ async function main() {
       } catch (error) {
         const message =
           error instanceof Error ? error.message : "Unable to apply automatic updates.";
-        console.error(`[instagram-insights:update] ${message}`);
+        console.error(`[instasights:update] ${message}`);
       }
     }
   }

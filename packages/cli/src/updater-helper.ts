@@ -43,7 +43,7 @@ function resolveManagedPath(baseDir: string, relativePath: string) {
 export async function applyStagedUpdate(input: ApplyStagedUpdateInput) {
   const versionPath = resolveManagedPath(
     input.skillRoot,
-    "bin/instagram-insights.version.json",
+    "bin/instasights.version.json",
   );
 
   for (const file of input.files) {

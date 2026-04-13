@@ -1,4 +1,4 @@
-import { consumeMcpOAuthAuthorizationCode, getMcpOAuthClientByClientId } from "@instagram-insights/db";
+import { consumeMcpOAuthAuthorizationCode, getMcpOAuthClientByClientId } from "@instasights/db";
 
 import {
   exchangeRefreshToken,

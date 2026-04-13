@@ -107,7 +107,7 @@ class LocalWhisperTranscriptionService:
 
     def _download_media(self, media_url: str, destination: Path) -> None:
         bytes_written = 0
-        headers = {"user-agent": "instagram-insights-transcriber/1.0"}
+        headers = {"user-agent": "instagram-transcriber/1.0"}
         timeout = httpx.Timeout(self._settings.request_timeout_seconds)
 
         try:

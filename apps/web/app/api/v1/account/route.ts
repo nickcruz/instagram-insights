@@ -1,4 +1,4 @@
-import { getAccountOverviewByUserId } from "@instagram-insights/db";
+import { getAccountOverviewByUserId } from "@instasights/db";
 
 import {
   createJsonResponse,

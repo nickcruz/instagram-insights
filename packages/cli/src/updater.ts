@@ -364,7 +364,7 @@ async function runUpdaterHelper(payloadPath: string) {
   const bundledHelperPath = resolveUpdaterEntrypointPath();
   const helperCopyPath = path.join(
     path.dirname(payloadPath),
-    "instagram-insights-updater.run.mjs",
+    "instasights-updater.run.mjs",
   );
   await copyFile(bundledHelperPath, helperCopyPath);
   await chmod(helperCopyPath, 0o755).catch(() => undefined);
@@ -374,7 +374,7 @@ async function runUpdaterHelper(payloadPath: string) {
       stdio: "inherit",
       env: {
         ...process.env,
-        INSTAGRAM_INSIGHTS_SKILL_ROOT: skillRoot,
+        INSTASIGHTS_SKILL_ROOT: skillRoot,
       },
     });
 
@@ -440,7 +440,7 @@ export async function applyUpdate(
     };
   }
 
-  const stagingDir = await mkdtemp(path.join(os.tmpdir(), "instagram-insights-update-"));
+  const stagingDir = await mkdtemp(path.join(os.tmpdir(), "instasights-update-"));
   const payloadPath = path.join(stagingDir, "update-payload.json");
 
   try {
@@ -500,7 +500,7 @@ export async function relaunchCli(args: string[]) {
       stdio: "inherit",
       env: {
         ...process.env,
-        INSTAGRAM_INSIGHTS_SKILL_ROOT: skillRoot,
+        INSTASIGHTS_SKILL_ROOT: skillRoot,
         [SKIP_UPDATE_CHECK_ENV]: "1",
       },
     });

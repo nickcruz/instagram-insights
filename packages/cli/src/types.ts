@@ -13,7 +13,7 @@ import type {
   SetupStatusResponse,
   SyncRunDetailResponse,
   SyncRunListResponse,
-} from "@instagram-insights/contracts";
+} from "@instasights/contracts";
 
 export type {
   AccountOverviewResponse,

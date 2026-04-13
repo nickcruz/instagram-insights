@@ -12,8 +12,8 @@ import {
   persistInstagramSnapshotAnalysisReport,
   persistInstagramSyncResult,
   updateInstagramSyncRunProgress,
-} from "@instagram-insights/db";
-import type { TranscriptionResponse } from "@instagram-insights/contracts";
+} from "@instasights/db";
+import type { TranscriptionResponse } from "@instasights/contracts";
 
 import {
   chunkMediaCatalog,

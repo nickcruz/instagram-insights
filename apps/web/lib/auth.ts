@@ -1,5 +1,5 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { authSchema, getDb, isDatabaseConfigured } from "@instagram-insights/db";
+import { authSchema, getDb, isDatabaseConfigured } from "@instasights/db";
 import type { DefaultSession, NextAuthOptions } from "next-auth";
 import { getServerSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";

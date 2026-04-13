@@ -2,7 +2,7 @@ import {
   createDeveloperApiKey,
   getInstagramAccountByUserId,
   listDeveloperApiKeySummariesByUserId,
-} from "@instagram-insights/db";
+} from "@instasights/db";
 
 import { auth } from "@/lib/auth";
 import { createJsonResponse } from "@/lib/developer-api-auth";

@@ -1,4 +1,4 @@
-import type { SetupStatusResponse } from "@instagram-insights/contracts";
+import type { SetupStatusResponse } from "@instasights/contracts";
 
 import type { AccountOverviewResponse } from "./types";
 

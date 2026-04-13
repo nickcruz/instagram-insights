@@ -11,7 +11,7 @@ function createBearerChallenge(message: string, status = 401) {
     headers: {
       ...JSON_HEADERS,
       "Content-Type": "application/json",
-      "WWW-Authenticate": 'Bearer realm="instagram-insights"',
+      "WWW-Authenticate": 'Bearer realm="instasights"',
     },
   });
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { DeveloperApiKeySummary } from "@instagram-insights/contracts";
+import type { DeveloperApiKeySummary } from "@instasights/contracts";
 import posthog from "posthog-js";
 
 import { Button } from "@/components/ui/button";
@@ -166,7 +166,7 @@ export function DeveloperApiKeyManager({
       {revealedKey ? (
         <CopySnippet
           title="New Key"
-          description="This secret is only shown once. Save it in your shell as INSTAGRAM_INSIGHTS_API_KEY for compatibility scripts and direct REST access."
+          description="This secret is only shown once. Save it in your shell as INSTASIGHTS_API_KEY for compatibility scripts and direct REST access."
           value={revealedKey}
         />
       ) : null}

@@ -5,18 +5,18 @@ import { resolve, posix } from "node:path";
 const MANAGED_SKILL_FILES = [
   {
     key: "cli",
-    artifactPath: "instagram-insights.mjs",
-    remotePath: "bin/instagram-insights.mjs",
+    artifactPath: "instasights.mjs",
+    remotePath: "bin/instasights.mjs",
   },
   {
     key: "updater",
-    artifactPath: "instagram-insights-updater.mjs",
-    remotePath: "bin/instagram-insights-updater.mjs",
+    artifactPath: "instasights-updater.mjs",
+    remotePath: "bin/instasights-updater.mjs",
   },
   {
     key: "version",
-    artifactPath: "instagram-insights.version.json",
-    remotePath: "bin/instagram-insights.version.json",
+    artifactPath: "instasights.version.json",
+    remotePath: "bin/instasights.version.json",
   },
 ];
 

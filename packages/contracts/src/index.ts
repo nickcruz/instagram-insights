@@ -1,4 +1,4 @@
-export * from "./instagram";
+export * from "./instasights";
 export * from "./schema-docs";
 export * from "./transcriber";
 

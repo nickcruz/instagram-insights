@@ -1,4 +1,4 @@
-import { listInstagramMediaByUserId } from "@instagram-insights/db";
+import { listInstagramMediaByUserId } from "@instasights/db";
 
 import {
   createJsonResponse,

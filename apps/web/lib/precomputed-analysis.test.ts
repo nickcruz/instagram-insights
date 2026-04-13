@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import type { InstagramMediaDetail } from "@instagram-insights/contracts";
+import type { InstagramMediaDetail } from "@instasights/contracts";
 
 import {
   ANALYSIS_VERSION,

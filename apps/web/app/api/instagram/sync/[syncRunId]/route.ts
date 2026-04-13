@@ -1,7 +1,7 @@
 import {
   getInstagramSyncRunById,
   isDatabaseConfigured,
-} from "@instagram-insights/db";
+} from "@instasights/db";
 import { NextResponse } from "next/server";
 
 import { auth } from "@/lib/auth";

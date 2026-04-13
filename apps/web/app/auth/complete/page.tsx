@@ -26,7 +26,7 @@ function getStatusCopy(
     return {
       title: "Instagram connected",
       description:
-        "The browser handoff completed successfully. You can close this page and return to the Instagram Insights skill or CLI.",
+        "The browser handoff completed successfully. You can close this page and return to the Instasights skill or CLI.",
       connectedUsername: username ? `@${username}` : null,
     };
   }
@@ -53,7 +53,7 @@ function getStatusCopy(
     return {
       title: "Sign-in required",
       description:
-        "Sign in with Google on the Instagram Insights handoff page first, then retry the CLI or skill flow.",
+        "Sign in with Google on the Instasights handoff page first, then retry the CLI or skill flow.",
       connectedUsername: null,
     };
   }

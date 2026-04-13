@@ -1,6 +1,6 @@
 # MCP Deprecation
 
-The hosted Instagram Insights MCP has been deprecated.
+The hosted Instasights MCP has been deprecated.
 
 ## Deprecated endpoints
 
@@ -11,14 +11,14 @@ Both now return `410 Gone`.
 
 ## Supported replacement
 
-Use the Instagram Insights skill and bundled CLI instead:
+Use the Instasights skill and bundled CLI instead:
 
 ```bash
-./skills/instagram-insights/instagram-insights auth login
-./skills/instagram-insights/instagram-insights setup status
-./skills/instagram-insights/instagram-insights sync run --wait
+./skills/instasights/instasights auth login
+./skills/instasights/instasights setup status
+./skills/instasights/instasights sync run --wait
 ```
 
 The CLI talks directly to `/api/v1/*` and authenticates through `/oauth/*`.
 
-On a fresh install, start from `./skills/instagram-insights/instagram-insights` so the skill can verify Node.js 20+ and run the bundled MJS CLI from `./bin/`.
+On a fresh install, start from `./skills/instasights/instasights` so the skill can verify Node.js 20+ and run the bundled MJS CLI from `./bin/`.

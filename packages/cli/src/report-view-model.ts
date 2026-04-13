@@ -1191,7 +1191,7 @@ export function buildDashboardModel(input: {
 
   return {
     username,
-    title: `${username} | Instagram Insights`,
+    title: `${username} | Instasights`,
     windowLabel: buildWindowLabel(input.report),
     generatedAtLabel: formatDate(toDate(input.report.generatedAt) ?? new Date(), {
       month: "short",

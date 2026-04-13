@@ -6,14 +6,14 @@ import { logRuntime } from "./output";
 import { renderReportHtml } from "./report-html";
 import { buildDashboardModel } from "./report-view-model";
 import type {
-  InstagramInsightsApiClient,
+  InstasightsApiClient,
 } from "./api-client";
 import type {
   MediaListResponse,
   ReportResponse,
 } from "./types";
 
-export type ReportClient = Pick<InstagramInsightsApiClient, "getReport" | "listMedia">;
+export type ReportClient = Pick<InstasightsApiClient, "getReport" | "listMedia">;
 
 function slugify(value: string) {
   const slug = value
@@ -50,13 +50,13 @@ export function assertSupportedReportDays(days: number) {
 export function getReadyReport(response: ReportResponse) {
   if (response.status === "not_linked") {
     throw new Error(
-      "No linked Instagram account found. Run `instagram-insights instagram link --open` first.",
+      "No linked Instagram account found. Run `instagram instagram link --open` first.",
     );
   }
 
   if (response.status === "not_synced" || !response.report) {
     throw new Error(
-      "No synced analysis report is available. Run `instagram-insights sync run --wait` first.",
+      "No synced analysis report is available. Run `instagram sync run --wait` first.",
     );
   }
 
@@ -113,7 +113,7 @@ export function buildDefaultReportOutputPath(input: {
   generatedAt: string;
   days: number;
 }) {
-  const filename = `instagram-insights-report-${slugify(input.username ?? "account")}-${input.days}d-${formatFileDate(
+  const filename = `instagram-report-${slugify(input.username ?? "account")}-${input.days}d-${formatFileDate(
     input.generatedAt,
   )}.html`;
 

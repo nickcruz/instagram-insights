@@ -4,7 +4,7 @@ const DEPRECATION_PAYLOAD = {
   error: "The hosted MCP endpoint has been deprecated.",
   status: 410,
   replacement:
-    "Install the Instagram Insights skill and use the bundled CLI instead.",
+    "Install the Instasights skill and use the bundled CLI instead.",
   developersUrl: "/developers",
 };
 
