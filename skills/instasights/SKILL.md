@@ -39,7 +39,7 @@ node ./bin/instasights.mjs
 
 That entrypoint is committed with the skill and refreshed by `yarn build:cli` during development.
 
-Manual update commands:
+Manual update commands
 
 ```bash
 ./instasights update check
@@ -47,7 +47,7 @@ Manual update commands:
 ./instasights update check --apply --force
 ```
 
-Recommended workflow:
+### Recommended workflow
 
 1. Run `./instasights auth status`.
 2. If not authenticated, run `./instasights auth login`.
@@ -58,7 +58,7 @@ Recommended workflow:
 7. Use `./instasights report generate --days 30` when you want a self-contained HTML dashboard export.
 8. Use `account overview`, `snapshot latest`, `media list`, `media get`, `sync list`, and `sync get` for debugging.
 
-Supported commands:
+### Supported commands
 
 - `./instasights auth login`
 - `./instasights auth status`
