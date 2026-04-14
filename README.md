@@ -2,13 +2,13 @@
 
 <p align="center">
   <a href="#install"><img alt="Skill + CLI" src="https://img.shields.io/badge/Skill-CLI%20First-D97757?style=for-the-badge"/></a>
-  <a href="./LICENSE"><img alt="License MIT" src="https://img.shields.io/badge/License-MIT-16A34A?style=for-the-badge"/></a>
+  <a href="https://kingscrosslabs.com/instasights" target="_blank" rel="noreferrer"><img alt="King's Cross Labs - Instasights" src="https://img.shields.io/badge/Website-kingscrosslabs.com-16A34A?style=for-the-badge"/></a>
 </p>
 
 <p align="center">
   <a href="./apps/web"><img alt="Next.js 16" src="https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white&style=for-the-badge"/></a>
-  <a href="./packages/cli"><img alt="TypeScript CLI" src="https://img.shields.io/badge/TypeScript-CLI-3178C6?logo=typescript&logoColor=white&style=for-the-badge"/></a>
   <a href="./services/transcriber"><img alt="FastAPI Whisper" src="https://img.shields.io/badge/FastAPI-Whisper-009688?logo=fastapi&logoColor=white&style=for-the-badge"/></a>
+  <a href="./LICENSE"><img alt="License MIT" src="https://img.shields.io/badge/License-MIT-16A34A?style=for-the-badge"/></a>
 </p>
 
 Instasights is a skill-first Instagram analytics workflow built around one installable skill, a bundled Node-powered CLI, a hosted REST API, and durable sync/transcription services.
