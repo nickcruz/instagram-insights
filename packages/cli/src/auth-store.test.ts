@@ -36,7 +36,7 @@ test("clearAuthTokens removes the local auth directory and resets state", async 
     const state = await readAuthState();
 
     assert.deepEqual(state, {
-      appUrl: "https://project-qah0p.vercel.app",
+      appUrl: "https://instasights.kingscrosslabs.com",
       clientId: null,
       redirectUri: null,
       accessToken: null,

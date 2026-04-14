@@ -13,7 +13,7 @@ const packageJson = JSON.parse(
 const cliVersion = packageJson.version;
 const updateManifestUrl =
   process.env.INSTASIGHTS_UPDATE_MANIFEST_URL?.trim() ||
-  "https://project-qah0p.vercel.app/api/cli/latest";
+  "https://instasights.kingscrosslabs.com/api/cli/latest";
 const entryPoint = path.join(packageDir, "src/index.ts");
 const updaterEntryPoint = path.join(packageDir, "src/updater-helper-main.ts");
 const distDir = path.join(packageDir, "dist");

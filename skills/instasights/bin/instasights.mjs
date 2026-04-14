@@ -7,48 +7,76 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
-  get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
-}) : x)(function(x) {
+var __require = /* @__PURE__ */ ((x) =>
+  typeof require !== "undefined"
+    ? require
+    : typeof Proxy !== "undefined"
+      ? new Proxy(x, {
+          get: (a, b) => (typeof require !== "undefined" ? require : a)[b],
+        })
+      : x)(function (x) {
   if (typeof require !== "undefined") return require.apply(this, arguments);
   throw Error('Dynamic require of "' + x + '" is not supported');
 });
-var __commonJS = (cb, mod) => function __require2() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
-};
+var __commonJS = (cb, mod) =>
+  function __require2() {
+    return (
+      mod ||
+        (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod),
+      mod.exports
+    );
+  };
 var __copyProps = (to, from, except, desc) => {
-  if (from && typeof from === "object" || typeof from === "function") {
+  if ((from && typeof from === "object") || typeof from === "function") {
     for (let key of __getOwnPropNames(from))
       if (!__hasOwnProp.call(to, key) && key !== except)
-        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+        __defProp(to, key, {
+          get: () => from[key],
+          enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable,
+        });
   }
   return to;
 };
-var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
-  // If the importer is in node compatibility mode or this is not an ESM
-  // file that has been converted to a CommonJS file using a Babel-
-  // compatible transform (i.e. "__esModule" has not been set), then set
-  // "default" to the CommonJS "module.exports" for node compatibility.
-  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
-  mod
-));
+var __toESM = (mod, isNodeMode, target) => (
+  (target = mod != null ? __create(__getProtoOf(mod)) : {}),
+  __copyProps(
+    // If the importer is in node compatibility mode or this is not an ESM
+    // file that has been converted to a CommonJS file using a Babel-
+    // compatible transform (i.e. "__esModule" has not been set), then set
+    // "default" to the CommonJS "module.exports" for node compatibility.
+    isNodeMode || !mod || !mod.__esModule
+      ? __defProp(target, "default", { value: mod, enumerable: true })
+      : target,
+    mod,
+  )
+);
 var __decorateClass = (decorators, target, key, kind) => {
-  var result = kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
+  var result =
+    kind > 1 ? void 0 : kind ? __getOwnPropDesc(target, key) : target;
   for (var i = decorators.length - 1, decorator; i >= 0; i--)
-    if (decorator = decorators[i])
-      result = (kind ? decorator(target, key, result) : decorator(result)) || result;
+    if ((decorator = decorators[i]))
+      result =
+        (kind ? decorator(target, key, result) : decorator(result)) || result;
   if (kind && result) __defProp(target, key, result);
   return result;
 };
-var __decorateParam = (index, decorator) => (target, key) => decorator(target, key, index);
+var __decorateParam = (index, decorator) => (target, key) =>
+  decorator(target, key, index);
 
 // ../../node_modules/reflect-metadata/Reflect.js
 var require_Reflect = __commonJS({
   "../../node_modules/reflect-metadata/Reflect.js"() {
     var Reflect2;
-    (function(Reflect3) {
-      (function(factory) {
-        var root = typeof global === "object" ? global : typeof self === "object" ? self : typeof this === "object" ? this : Function("return this;")();
+    (function (Reflect3) {
+      (function (factory) {
+        var root =
+          typeof global === "object"
+            ? global
+            : typeof self === "object"
+              ? self
+              : typeof this === "object"
+                ? this
+                : Function("return this;")();
         var exporter = makeExporter(Reflect3);
         if (typeof root.Reflect === "undefined") {
           root.Reflect = Reflect3;
@@ -57,157 +85,196 @@ var require_Reflect = __commonJS({
         }
         factory(exporter);
         function makeExporter(target, previous) {
-          return function(key, value) {
+          return function (key, value) {
             if (typeof target[key] !== "function") {
-              Object.defineProperty(target, key, { configurable: true, writable: true, value });
+              Object.defineProperty(target, key, {
+                configurable: true,
+                writable: true,
+                value,
+              });
             }
-            if (previous)
-              previous(key, value);
+            if (previous) previous(key, value);
           };
         }
-      })(function(exporter) {
+      })(function (exporter) {
         var hasOwn = Object.prototype.hasOwnProperty;
         var supportsSymbol = typeof Symbol === "function";
-        var toPrimitiveSymbol = supportsSymbol && typeof Symbol.toPrimitive !== "undefined" ? Symbol.toPrimitive : "@@toPrimitive";
-        var iteratorSymbol = supportsSymbol && typeof Symbol.iterator !== "undefined" ? Symbol.iterator : "@@iterator";
+        var toPrimitiveSymbol =
+          supportsSymbol && typeof Symbol.toPrimitive !== "undefined"
+            ? Symbol.toPrimitive
+            : "@@toPrimitive";
+        var iteratorSymbol =
+          supportsSymbol && typeof Symbol.iterator !== "undefined"
+            ? Symbol.iterator
+            : "@@iterator";
         var supportsCreate = typeof Object.create === "function";
         var supportsProto = { __proto__: [] } instanceof Array;
         var downLevel = !supportsCreate && !supportsProto;
         var HashMap = {
           // create an object in dictionary mode (a.k.a. "slow" mode in v8)
-          create: supportsCreate ? function() {
-            return MakeDictionary(/* @__PURE__ */ Object.create(null));
-          } : supportsProto ? function() {
-            return MakeDictionary({ __proto__: null });
-          } : function() {
-            return MakeDictionary({});
-          },
-          has: downLevel ? function(map, key) {
-            return hasOwn.call(map, key);
-          } : function(map, key) {
-            return key in map;
-          },
-          get: downLevel ? function(map, key) {
-            return hasOwn.call(map, key) ? map[key] : void 0;
-          } : function(map, key) {
-            return map[key];
-          }
+          create: supportsCreate
+            ? function () {
+                return MakeDictionary(/* @__PURE__ */ Object.create(null));
+              }
+            : supportsProto
+              ? function () {
+                  return MakeDictionary({ __proto__: null });
+                }
+              : function () {
+                  return MakeDictionary({});
+                },
+          has: downLevel
+            ? function (map, key) {
+                return hasOwn.call(map, key);
+              }
+            : function (map, key) {
+                return key in map;
+              },
+          get: downLevel
+            ? function (map, key) {
+                return hasOwn.call(map, key) ? map[key] : void 0;
+              }
+            : function (map, key) {
+                return map[key];
+              },
         };
         var functionPrototype = Object.getPrototypeOf(Function);
-        var usePolyfill = typeof process === "object" && process["env"] && process["env"]["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
-        var _Map = !usePolyfill && typeof Map === "function" && typeof Map.prototype.entries === "function" ? Map : CreateMapPolyfill();
-        var _Set = !usePolyfill && typeof Set === "function" && typeof Set.prototype.entries === "function" ? Set : CreateSetPolyfill();
-        var _WeakMap = !usePolyfill && typeof WeakMap === "function" ? WeakMap : CreateWeakMapPolyfill();
+        var usePolyfill =
+          typeof process === "object" &&
+          process["env"] &&
+          process["env"]["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
+        var _Map =
+          !usePolyfill &&
+          typeof Map === "function" &&
+          typeof Map.prototype.entries === "function"
+            ? Map
+            : CreateMapPolyfill();
+        var _Set =
+          !usePolyfill &&
+          typeof Set === "function" &&
+          typeof Set.prototype.entries === "function"
+            ? Set
+            : CreateSetPolyfill();
+        var _WeakMap =
+          !usePolyfill && typeof WeakMap === "function"
+            ? WeakMap
+            : CreateWeakMapPolyfill();
         var Metadata = new _WeakMap();
         function decorate(decorators, target, propertyKey, attributes) {
           if (!IsUndefined(propertyKey)) {
-            if (!IsArray(decorators))
+            if (!IsArray(decorators)) throw new TypeError();
+            if (!IsObject(target)) throw new TypeError();
+            if (
+              !IsObject(attributes) &&
+              !IsUndefined(attributes) &&
+              !IsNull(attributes)
+            )
               throw new TypeError();
-            if (!IsObject(target))
-              throw new TypeError();
-            if (!IsObject(attributes) && !IsUndefined(attributes) && !IsNull(attributes))
-              throw new TypeError();
-            if (IsNull(attributes))
-              attributes = void 0;
+            if (IsNull(attributes)) attributes = void 0;
             propertyKey = ToPropertyKey(propertyKey);
-            return DecorateProperty(decorators, target, propertyKey, attributes);
+            return DecorateProperty(
+              decorators,
+              target,
+              propertyKey,
+              attributes,
+            );
           } else {
-            if (!IsArray(decorators))
-              throw new TypeError();
-            if (!IsConstructor(target))
-              throw new TypeError();
+            if (!IsArray(decorators)) throw new TypeError();
+            if (!IsConstructor(target)) throw new TypeError();
             return DecorateConstructor(decorators, target);
           }
         }
         exporter("decorate", decorate);
         function metadata(metadataKey, metadataValue) {
           function decorator(target, propertyKey) {
-            if (!IsObject(target))
-              throw new TypeError();
+            if (!IsObject(target)) throw new TypeError();
             if (!IsUndefined(propertyKey) && !IsPropertyKey(propertyKey))
               throw new TypeError();
-            OrdinaryDefineOwnMetadata(metadataKey, metadataValue, target, propertyKey);
+            OrdinaryDefineOwnMetadata(
+              metadataKey,
+              metadataValue,
+              target,
+              propertyKey,
+            );
           }
           return decorator;
         }
         exporter("metadata", metadata);
-        function defineMetadata(metadataKey, metadataValue, target, propertyKey) {
-          if (!IsObject(target))
-            throw new TypeError();
+        function defineMetadata(
+          metadataKey,
+          metadataValue,
+          target,
+          propertyKey,
+        ) {
+          if (!IsObject(target)) throw new TypeError();
           if (!IsUndefined(propertyKey))
             propertyKey = ToPropertyKey(propertyKey);
-          return OrdinaryDefineOwnMetadata(metadataKey, metadataValue, target, propertyKey);
+          return OrdinaryDefineOwnMetadata(
+            metadataKey,
+            metadataValue,
+            target,
+            propertyKey,
+          );
         }
         exporter("defineMetadata", defineMetadata);
         function hasMetadata(metadataKey, target, propertyKey) {
-          if (!IsObject(target))
-            throw new TypeError();
+          if (!IsObject(target)) throw new TypeError();
           if (!IsUndefined(propertyKey))
             propertyKey = ToPropertyKey(propertyKey);
           return OrdinaryHasMetadata(metadataKey, target, propertyKey);
         }
         exporter("hasMetadata", hasMetadata);
         function hasOwnMetadata(metadataKey, target, propertyKey) {
-          if (!IsObject(target))
-            throw new TypeError();
+          if (!IsObject(target)) throw new TypeError();
           if (!IsUndefined(propertyKey))
             propertyKey = ToPropertyKey(propertyKey);
           return OrdinaryHasOwnMetadata(metadataKey, target, propertyKey);
         }
         exporter("hasOwnMetadata", hasOwnMetadata);
         function getMetadata(metadataKey, target, propertyKey) {
-          if (!IsObject(target))
-            throw new TypeError();
+          if (!IsObject(target)) throw new TypeError();
           if (!IsUndefined(propertyKey))
             propertyKey = ToPropertyKey(propertyKey);
           return OrdinaryGetMetadata(metadataKey, target, propertyKey);
         }
         exporter("getMetadata", getMetadata);
         function getOwnMetadata(metadataKey, target, propertyKey) {
-          if (!IsObject(target))
-            throw new TypeError();
+          if (!IsObject(target)) throw new TypeError();
           if (!IsUndefined(propertyKey))
             propertyKey = ToPropertyKey(propertyKey);
           return OrdinaryGetOwnMetadata(metadataKey, target, propertyKey);
         }
         exporter("getOwnMetadata", getOwnMetadata);
         function getMetadataKeys(target, propertyKey) {
-          if (!IsObject(target))
-            throw new TypeError();
+          if (!IsObject(target)) throw new TypeError();
           if (!IsUndefined(propertyKey))
             propertyKey = ToPropertyKey(propertyKey);
           return OrdinaryMetadataKeys(target, propertyKey);
         }
         exporter("getMetadataKeys", getMetadataKeys);
         function getOwnMetadataKeys(target, propertyKey) {
-          if (!IsObject(target))
-            throw new TypeError();
+          if (!IsObject(target)) throw new TypeError();
           if (!IsUndefined(propertyKey))
             propertyKey = ToPropertyKey(propertyKey);
           return OrdinaryOwnMetadataKeys(target, propertyKey);
         }
         exporter("getOwnMetadataKeys", getOwnMetadataKeys);
         function deleteMetadata(metadataKey, target, propertyKey) {
-          if (!IsObject(target))
-            throw new TypeError();
+          if (!IsObject(target)) throw new TypeError();
           if (!IsUndefined(propertyKey))
             propertyKey = ToPropertyKey(propertyKey);
           var metadataMap = GetOrCreateMetadataMap(
             target,
             propertyKey,
             /*Create*/
-            false
+            false,
           );
-          if (IsUndefined(metadataMap))
-            return false;
-          if (!metadataMap.delete(metadataKey))
-            return false;
-          if (metadataMap.size > 0)
-            return true;
+          if (IsUndefined(metadataMap)) return false;
+          if (!metadataMap.delete(metadataKey)) return false;
+          if (metadataMap.size > 0) return true;
           var targetMetadata = Metadata.get(target);
           targetMetadata.delete(propertyKey);
-          if (targetMetadata.size > 0)
-            return true;
+          if (targetMetadata.size > 0) return true;
           Metadata.delete(target);
           return true;
         }
@@ -217,8 +284,7 @@ var require_Reflect = __commonJS({
             var decorator = decorators[i];
             var decorated = decorator(target);
             if (!IsUndefined(decorated) && !IsNull(decorated)) {
-              if (!IsConstructor(decorated))
-                throw new TypeError();
+              if (!IsConstructor(decorated)) throw new TypeError();
               target = decorated;
             }
           }
@@ -229,8 +295,7 @@ var require_Reflect = __commonJS({
             var decorator = decorators[i];
             var decorated = decorator(target, propertyKey, descriptor);
             if (!IsUndefined(decorated) && !IsNull(decorated)) {
-              if (!IsObject(decorated))
-                throw new TypeError();
+              if (!IsObject(decorated)) throw new TypeError();
               descriptor = decorated;
             }
           }
@@ -239,15 +304,13 @@ var require_Reflect = __commonJS({
         function GetOrCreateMetadataMap(O, P, Create) {
           var targetMetadata = Metadata.get(O);
           if (IsUndefined(targetMetadata)) {
-            if (!Create)
-              return void 0;
+            if (!Create) return void 0;
             targetMetadata = new _Map();
             Metadata.set(O, targetMetadata);
           }
           var metadataMap = targetMetadata.get(P);
           if (IsUndefined(metadataMap)) {
-            if (!Create)
-              return void 0;
+            if (!Create) return void 0;
             metadataMap = new _Map();
             targetMetadata.set(P, metadataMap);
           }
@@ -255,8 +318,7 @@ var require_Reflect = __commonJS({
         }
         function OrdinaryHasMetadata(MetadataKey, O, P) {
           var hasOwn2 = OrdinaryHasOwnMetadata(MetadataKey, O, P);
-          if (hasOwn2)
-            return true;
+          if (hasOwn2) return true;
           var parent = OrdinaryGetPrototypeOf(O);
           if (!IsNull(parent))
             return OrdinaryHasMetadata(MetadataKey, parent, P);
@@ -267,16 +329,14 @@ var require_Reflect = __commonJS({
             O,
             P,
             /*Create*/
-            false
+            false,
           );
-          if (IsUndefined(metadataMap))
-            return false;
+          if (IsUndefined(metadataMap)) return false;
           return ToBoolean(metadataMap.has(MetadataKey));
         }
         function OrdinaryGetMetadata(MetadataKey, O, P) {
           var hasOwn2 = OrdinaryHasOwnMetadata(MetadataKey, O, P);
-          if (hasOwn2)
-            return OrdinaryGetOwnMetadata(MetadataKey, O, P);
+          if (hasOwn2) return OrdinaryGetOwnMetadata(MetadataKey, O, P);
           var parent = OrdinaryGetPrototypeOf(O);
           if (!IsNull(parent))
             return OrdinaryGetMetadata(MetadataKey, parent, P);
@@ -287,10 +347,9 @@ var require_Reflect = __commonJS({
             O,
             P,
             /*Create*/
-            false
+            false,
           );
-          if (IsUndefined(metadataMap))
-            return void 0;
+          if (IsUndefined(metadataMap)) return void 0;
           return metadataMap.get(MetadataKey);
         }
         function OrdinaryDefineOwnMetadata(MetadataKey, MetadataValue, O, P) {
@@ -298,20 +357,17 @@ var require_Reflect = __commonJS({
             O,
             P,
             /*Create*/
-            true
+            true,
           );
           metadataMap.set(MetadataKey, MetadataValue);
         }
         function OrdinaryMetadataKeys(O, P) {
           var ownKeys = OrdinaryOwnMetadataKeys(O, P);
           var parent = OrdinaryGetPrototypeOf(O);
-          if (parent === null)
-            return ownKeys;
+          if (parent === null) return ownKeys;
           var parentKeys = OrdinaryMetadataKeys(parent, P);
-          if (parentKeys.length <= 0)
-            return ownKeys;
-          if (ownKeys.length <= 0)
-            return parentKeys;
+          if (parentKeys.length <= 0) return ownKeys;
+          if (ownKeys.length <= 0) return parentKeys;
           var set = new _Set();
           var keys = [];
           for (var _i = 0, ownKeys_1 = ownKeys; _i < ownKeys_1.length; _i++) {
@@ -322,7 +378,11 @@ var require_Reflect = __commonJS({
               keys.push(key);
             }
           }
-          for (var _a = 0, parentKeys_1 = parentKeys; _a < parentKeys_1.length; _a++) {
+          for (
+            var _a = 0, parentKeys_1 = parentKeys;
+            _a < parentKeys_1.length;
+            _a++
+          ) {
             var key = parentKeys_1[_a];
             var hasKey = set.has(key);
             if (!hasKey) {
@@ -338,10 +398,9 @@ var require_Reflect = __commonJS({
             O,
             P,
             /*Create*/
-            false
+            false,
           );
-          if (IsUndefined(metadataMap))
-            return keys;
+          if (IsUndefined(metadataMap)) return keys;
           var keysObj = metadataMap.keys();
           var iterator = GetIterator(keysObj);
           var k = 0;
@@ -365,8 +424,7 @@ var require_Reflect = __commonJS({
           }
         }
         function Type(x) {
-          if (x === null)
-            return 1;
+          if (x === null) return 1;
           switch (typeof x) {
             case "undefined":
               return 0;
@@ -411,42 +469,45 @@ var require_Reflect = __commonJS({
             case 5:
               return input;
           }
-          var hint = PreferredType === 3 ? "string" : PreferredType === 5 ? "number" : "default";
+          var hint =
+            PreferredType === 3
+              ? "string"
+              : PreferredType === 5
+                ? "number"
+                : "default";
           var exoticToPrim = GetMethod(input, toPrimitiveSymbol);
           if (exoticToPrim !== void 0) {
             var result = exoticToPrim.call(input, hint);
-            if (IsObject(result))
-              throw new TypeError();
+            if (IsObject(result)) throw new TypeError();
             return result;
           }
-          return OrdinaryToPrimitive(input, hint === "default" ? "number" : hint);
+          return OrdinaryToPrimitive(
+            input,
+            hint === "default" ? "number" : hint,
+          );
         }
         function OrdinaryToPrimitive(O, hint) {
           if (hint === "string") {
             var toString_1 = O.toString;
             if (IsCallable(toString_1)) {
               var result = toString_1.call(O);
-              if (!IsObject(result))
-                return result;
+              if (!IsObject(result)) return result;
             }
             var valueOf = O.valueOf;
             if (IsCallable(valueOf)) {
               var result = valueOf.call(O);
-              if (!IsObject(result))
-                return result;
+              if (!IsObject(result)) return result;
             }
           } else {
             var valueOf = O.valueOf;
             if (IsCallable(valueOf)) {
               var result = valueOf.call(O);
-              if (!IsObject(result))
-                return result;
+              if (!IsObject(result)) return result;
             }
             var toString_2 = O.toString;
             if (IsCallable(toString_2)) {
               var result = toString_2.call(O);
-              if (!IsObject(result))
-                return result;
+              if (!IsObject(result)) return result;
             }
           }
           throw new TypeError();
@@ -460,15 +521,18 @@ var require_Reflect = __commonJS({
         function ToPropertyKey(argument) {
           var key = ToPrimitive(
             argument,
-            3
+            3,
             /* String */
           );
-          if (IsSymbol(key))
-            return key;
+          if (IsSymbol(key)) return key;
           return ToString(key);
         }
         function IsArray(argument) {
-          return Array.isArray ? Array.isArray(argument) : argument instanceof Object ? argument instanceof Array : Object.prototype.toString.call(argument) === "[object Array]";
+          return Array.isArray
+            ? Array.isArray(argument)
+            : argument instanceof Object
+              ? argument instanceof Array
+              : Object.prototype.toString.call(argument) === "[object Array]";
         }
         function IsCallable(argument) {
           return typeof argument === "function";
@@ -488,19 +552,15 @@ var require_Reflect = __commonJS({
         }
         function GetMethod(V, P) {
           var func = V[P];
-          if (func === void 0 || func === null)
-            return void 0;
-          if (!IsCallable(func))
-            throw new TypeError();
+          if (func === void 0 || func === null) return void 0;
+          if (!IsCallable(func)) throw new TypeError();
           return func;
         }
         function GetIterator(obj) {
           var method = GetMethod(obj, iteratorSymbol);
-          if (!IsCallable(method))
-            throw new TypeError();
+          if (!IsCallable(method)) throw new TypeError();
           var iterator = method.call(obj);
-          if (!IsObject(iterator))
-            throw new TypeError();
+          if (!IsObject(iterator)) throw new TypeError();
           return iterator;
         }
         function IteratorValue(iterResult) {
@@ -512,48 +572,46 @@ var require_Reflect = __commonJS({
         }
         function IteratorClose(iterator) {
           var f = iterator["return"];
-          if (f)
-            f.call(iterator);
+          if (f) f.call(iterator);
         }
         function OrdinaryGetPrototypeOf(O) {
           var proto = Object.getPrototypeOf(O);
-          if (typeof O !== "function" || O === functionPrototype)
-            return proto;
-          if (proto !== functionPrototype)
-            return proto;
+          if (typeof O !== "function" || O === functionPrototype) return proto;
+          if (proto !== functionPrototype) return proto;
           var prototype = O.prototype;
           var prototypeProto = prototype && Object.getPrototypeOf(prototype);
           if (prototypeProto == null || prototypeProto === Object.prototype)
             return proto;
           var constructor = prototypeProto.constructor;
-          if (typeof constructor !== "function")
-            return proto;
-          if (constructor === O)
-            return proto;
+          if (typeof constructor !== "function") return proto;
+          if (constructor === O) return proto;
           return constructor;
         }
         function CreateMapPolyfill() {
           var cacheSentinel = {};
           var arraySentinel = [];
-          var MapIterator = (
+          var MapIterator =
             /** @class */
-            (function() {
+            (function () {
               function MapIterator2(keys, values, selector) {
                 this._index = 0;
                 this._keys = keys;
                 this._values = values;
                 this._selector = selector;
               }
-              MapIterator2.prototype["@@iterator"] = function() {
+              MapIterator2.prototype["@@iterator"] = function () {
                 return this;
               };
-              MapIterator2.prototype[iteratorSymbol] = function() {
+              MapIterator2.prototype[iteratorSymbol] = function () {
                 return this;
               };
-              MapIterator2.prototype.next = function() {
+              MapIterator2.prototype.next = function () {
                 var index = this._index;
                 if (index >= 0 && index < this._keys.length) {
-                  var result = this._selector(this._keys[index], this._values[index]);
+                  var result = this._selector(
+                    this._keys[index],
+                    this._values[index],
+                  );
                   if (index + 1 >= this._keys.length) {
                     this._index = -1;
                     this._keys = arraySentinel;
@@ -565,7 +623,7 @@ var require_Reflect = __commonJS({
                 }
                 return { value: void 0, done: true };
               };
-              MapIterator2.prototype.throw = function(error) {
+              MapIterator2.prototype.throw = function (error) {
                 if (this._index >= 0) {
                   this._index = -1;
                   this._keys = arraySentinel;
@@ -573,7 +631,7 @@ var require_Reflect = __commonJS({
                 }
                 throw error;
               };
-              MapIterator2.prototype.return = function(value) {
+              MapIterator2.prototype.return = function (value) {
                 if (this._index >= 0) {
                   this._index = -1;
                   this._keys = arraySentinel;
@@ -582,11 +640,10 @@ var require_Reflect = __commonJS({
                 return { value, done: true };
               };
               return MapIterator2;
-            })()
-          );
+            })();
           return (
             /** @class */
-            (function() {
+            (function () {
               function Map2() {
                 this._keys = [];
                 this._values = [];
@@ -594,41 +651,43 @@ var require_Reflect = __commonJS({
                 this._cacheIndex = -2;
               }
               Object.defineProperty(Map2.prototype, "size", {
-                get: function() {
+                get: function () {
                   return this._keys.length;
                 },
                 enumerable: true,
-                configurable: true
+                configurable: true,
               });
-              Map2.prototype.has = function(key) {
-                return this._find(
-                  key,
-                  /*insert*/
-                  false
-                ) >= 0;
+              Map2.prototype.has = function (key) {
+                return (
+                  this._find(
+                    key,
+                    /*insert*/
+                    false,
+                  ) >= 0
+                );
               };
-              Map2.prototype.get = function(key) {
+              Map2.prototype.get = function (key) {
                 var index = this._find(
                   key,
                   /*insert*/
-                  false
+                  false,
                 );
                 return index >= 0 ? this._values[index] : void 0;
               };
-              Map2.prototype.set = function(key, value) {
+              Map2.prototype.set = function (key, value) {
                 var index = this._find(
                   key,
                   /*insert*/
-                  true
+                  true,
                 );
                 this._values[index] = value;
                 return this;
               };
-              Map2.prototype.delete = function(key) {
+              Map2.prototype.delete = function (key) {
                 var index = this._find(
                   key,
                   /*insert*/
-                  false
+                  false,
                 );
                 if (index >= 0) {
                   var size = this._keys.length;
@@ -646,30 +705,30 @@ var require_Reflect = __commonJS({
                 }
                 return false;
               };
-              Map2.prototype.clear = function() {
+              Map2.prototype.clear = function () {
                 this._keys.length = 0;
                 this._values.length = 0;
                 this._cacheKey = cacheSentinel;
                 this._cacheIndex = -2;
               };
-              Map2.prototype.keys = function() {
+              Map2.prototype.keys = function () {
                 return new MapIterator(this._keys, this._values, getKey);
               };
-              Map2.prototype.values = function() {
+              Map2.prototype.values = function () {
                 return new MapIterator(this._keys, this._values, getValue);
               };
-              Map2.prototype.entries = function() {
+              Map2.prototype.entries = function () {
                 return new MapIterator(this._keys, this._values, getEntry);
               };
-              Map2.prototype["@@iterator"] = function() {
+              Map2.prototype["@@iterator"] = function () {
                 return this.entries();
               };
-              Map2.prototype[iteratorSymbol] = function() {
+              Map2.prototype[iteratorSymbol] = function () {
                 return this.entries();
               };
-              Map2.prototype._find = function(key, insert) {
+              Map2.prototype._find = function (key, insert) {
                 if (this._cacheKey !== key) {
-                  this._cacheIndex = this._keys.indexOf(this._cacheKey = key);
+                  this._cacheIndex = this._keys.indexOf((this._cacheKey = key));
                 }
                 if (this._cacheIndex < 0 && insert) {
                   this._cacheIndex = this._keys.length;
@@ -694,42 +753,42 @@ var require_Reflect = __commonJS({
         function CreateSetPolyfill() {
           return (
             /** @class */
-            (function() {
+            (function () {
               function Set2() {
                 this._map = new _Map();
               }
               Object.defineProperty(Set2.prototype, "size", {
-                get: function() {
+                get: function () {
                   return this._map.size;
                 },
                 enumerable: true,
-                configurable: true
+                configurable: true,
               });
-              Set2.prototype.has = function(value) {
+              Set2.prototype.has = function (value) {
                 return this._map.has(value);
               };
-              Set2.prototype.add = function(value) {
-                return this._map.set(value, value), this;
+              Set2.prototype.add = function (value) {
+                return (this._map.set(value, value), this);
               };
-              Set2.prototype.delete = function(value) {
+              Set2.prototype.delete = function (value) {
                 return this._map.delete(value);
               };
-              Set2.prototype.clear = function() {
+              Set2.prototype.clear = function () {
                 this._map.clear();
               };
-              Set2.prototype.keys = function() {
+              Set2.prototype.keys = function () {
                 return this._map.keys();
               };
-              Set2.prototype.values = function() {
+              Set2.prototype.values = function () {
                 return this._map.values();
               };
-              Set2.prototype.entries = function() {
+              Set2.prototype.entries = function () {
                 return this._map.entries();
               };
-              Set2.prototype["@@iterator"] = function() {
+              Set2.prototype["@@iterator"] = function () {
                 return this.keys();
               };
-              Set2.prototype[iteratorSymbol] = function() {
+              Set2.prototype[iteratorSymbol] = function () {
                 return this.keys();
               };
               return Set2;
@@ -742,44 +801,46 @@ var require_Reflect = __commonJS({
           var rootKey = CreateUniqueKey();
           return (
             /** @class */
-            (function() {
+            (function () {
               function WeakMap2() {
                 this._key = CreateUniqueKey();
               }
-              WeakMap2.prototype.has = function(target) {
+              WeakMap2.prototype.has = function (target) {
                 var table = GetOrCreateWeakMapTable(
                   target,
                   /*create*/
-                  false
+                  false,
                 );
                 return table !== void 0 ? HashMap.has(table, this._key) : false;
               };
-              WeakMap2.prototype.get = function(target) {
+              WeakMap2.prototype.get = function (target) {
                 var table = GetOrCreateWeakMapTable(
                   target,
                   /*create*/
-                  false
+                  false,
                 );
-                return table !== void 0 ? HashMap.get(table, this._key) : void 0;
+                return table !== void 0
+                  ? HashMap.get(table, this._key)
+                  : void 0;
               };
-              WeakMap2.prototype.set = function(target, value) {
+              WeakMap2.prototype.set = function (target, value) {
                 var table = GetOrCreateWeakMapTable(
                   target,
                   /*create*/
-                  true
+                  true,
                 );
                 table[this._key] = value;
                 return this;
               };
-              WeakMap2.prototype.delete = function(target) {
+              WeakMap2.prototype.delete = function (target) {
                 var table = GetOrCreateWeakMapTable(
                   target,
                   /*create*/
-                  false
+                  false,
                 );
                 return table !== void 0 ? delete table[this._key] : false;
               };
-              WeakMap2.prototype.clear = function() {
+              WeakMap2.prototype.clear = function () {
                 this._key = CreateUniqueKey();
               };
               return WeakMap2;
@@ -787,23 +848,23 @@ var require_Reflect = __commonJS({
           );
           function CreateUniqueKey() {
             var key;
-            do
-              key = "@@WeakMap@@" + CreateUUID();
+            do key = "@@WeakMap@@" + CreateUUID();
             while (HashMap.has(keys, key));
             keys[key] = true;
             return key;
           }
           function GetOrCreateWeakMapTable(target, create) {
             if (!hasOwn.call(target, rootKey)) {
-              if (!create)
-                return void 0;
-              Object.defineProperty(target, rootKey, { value: HashMap.create() });
+              if (!create) return void 0;
+              Object.defineProperty(target, rootKey, {
+                value: HashMap.create(),
+              });
             }
             return target[rootKey];
           }
           function FillRandomBytes(buffer, size) {
             for (var i = 0; i < size; ++i)
-              buffer[i] = Math.random() * 255 | 0;
+              buffer[i] = (Math.random() * 255) | 0;
             return buffer;
           }
           function GenRandomBytes(size) {
@@ -818,15 +879,13 @@ var require_Reflect = __commonJS({
           }
           function CreateUUID() {
             var data = GenRandomBytes(UUID_SIZE);
-            data[6] = data[6] & 79 | 64;
-            data[8] = data[8] & 191 | 128;
+            data[6] = (data[6] & 79) | 64;
+            data[8] = (data[8] & 191) | 128;
             var result = "";
             for (var offset = 0; offset < UUID_SIZE; ++offset) {
               var byte = data[offset];
-              if (offset === 4 || offset === 6 || offset === 8)
-                result += "-";
-              if (byte < 16)
-                result += "0";
+              if (offset === 4 || offset === 6 || offset === 8) result += "-";
+              if (byte < 16) result += "0";
               result += byte.toString(16).toLowerCase();
             }
             return result;
@@ -839,7 +898,7 @@ var require_Reflect = __commonJS({
         }
       });
     })(Reflect2 || (Reflect2 = {}));
-  }
+  },
 });
 
 // ../../node_modules/commander/index.js
@@ -885,14 +944,24 @@ var require_commander = __commonJS({
        */
       visibleOptions(cmd) {
         const visibleOptions = cmd.options.filter((option2) => !option2.hidden);
-        const showShortHelpFlag = cmd._hasHelpOption && cmd._helpShortFlag && !cmd._findOption(cmd._helpShortFlag);
-        const showLongHelpFlag = cmd._hasHelpOption && !cmd._findOption(cmd._helpLongFlag);
+        const showShortHelpFlag =
+          cmd._hasHelpOption &&
+          cmd._helpShortFlag &&
+          !cmd._findOption(cmd._helpShortFlag);
+        const showLongHelpFlag =
+          cmd._hasHelpOption && !cmd._findOption(cmd._helpLongFlag);
         if (showShortHelpFlag || showLongHelpFlag) {
           let helpOption;
           if (!showShortHelpFlag) {
-            helpOption = cmd.createOption(cmd._helpLongFlag, cmd._helpDescription);
+            helpOption = cmd.createOption(
+              cmd._helpLongFlag,
+              cmd._helpDescription,
+            );
           } else if (!showLongHelpFlag) {
-            helpOption = cmd.createOption(cmd._helpShortFlag, cmd._helpDescription);
+            helpOption = cmd.createOption(
+              cmd._helpShortFlag,
+              cmd._helpDescription,
+            );
           } else {
             helpOption = cmd.createOption(cmd._helpFlags, cmd._helpDescription);
           }
@@ -900,7 +969,9 @@ var require_commander = __commonJS({
         }
         if (this.sortOptions) {
           const getSortKey = (option2) => {
-            return option2.short ? option2.short.replace(/^-/, "") : option2.long.replace(/^--/, "");
+            return option2.short
+              ? option2.short.replace(/^-/, "")
+              : option2.long.replace(/^--/, "");
           };
           visibleOptions.sort((a, b) => {
             return getSortKey(a).localeCompare(getSortKey(b));
@@ -917,7 +988,10 @@ var require_commander = __commonJS({
       visibleArguments(cmd) {
         if (cmd._argsDescription && cmd._args.length) {
           return cmd._args.map((argument) => {
-            return { term: argument.name, description: cmd._argsDescription[argument.name] || "" };
+            return {
+              term: argument.name,
+              description: cmd._argsDescription[argument.name] || "",
+            };
           }, 0);
         }
         return [];
@@ -929,9 +1003,15 @@ var require_commander = __commonJS({
        * @returns {string}
        */
       subcommandTerm(cmd) {
-        const args = cmd._args.map((arg) => humanReadableArgName(arg)).join(" ");
-        return cmd._name + (cmd._aliases[0] ? "|" + cmd._aliases[0] : "") + (cmd.options.length ? " [options]" : "") + // simplistic check for non-help option
-        (args ? " " + args : "");
+        const args = cmd._args
+          .map((arg) => humanReadableArgName(arg))
+          .join(" ");
+        return (
+          cmd._name +
+          (cmd._aliases[0] ? "|" + cmd._aliases[0] : "") +
+          (cmd.options.length ? " [options]" : "") + // simplistic check for non-help option
+          (args ? " " + args : "")
+        );
       }
       /**
        * Get the option term to show in the list of options.
@@ -990,7 +1070,11 @@ var require_commander = __commonJS({
           cmdName = cmdName + "|" + cmd._aliases[0];
         }
         let parentCmdNames = "";
-        for (let parentCmd = cmd.parent; parentCmd; parentCmd = parentCmd.parent) {
+        for (
+          let parentCmd = cmd.parent;
+          parentCmd;
+          parentCmd = parentCmd.parent
+        ) {
           parentCmdNames = parentCmd.name() + " " + parentCmdNames;
         }
         return parentCmdNames + cmdName + " " + cmd.usage();
@@ -1027,11 +1111,13 @@ var require_commander = __commonJS({
         if (option2.argChoices) {
           extraInfo.push(
             // use stringify to match the display of the default value
-            `choices: ${option2.argChoices.map((choice) => JSON.stringify(choice)).join(", ")}`
+            `choices: ${option2.argChoices.map((choice) => JSON.stringify(choice)).join(", ")}`,
           );
         }
         if (option2.defaultValue !== void 0) {
-          extraInfo.push(`default: ${option2.defaultValueDescription || JSON.stringify(option2.defaultValue)}`);
+          extraInfo.push(
+            `default: ${option2.defaultValueDescription || JSON.stringify(option2.defaultValue)}`,
+          );
         }
         if (extraInfo.length > 0) {
           return `${option2.description} (${extraInfo.join(", ")})`;
@@ -1053,13 +1139,18 @@ var require_commander = __commonJS({
         function formatItem(term, description2) {
           if (description2) {
             const fullText = `${term.padEnd(termWidth + itemSeparatorWidth)}${description2}`;
-            return helper.wrap(fullText, helpWidth - itemIndentWidth, termWidth + itemSeparatorWidth);
+            return helper.wrap(
+              fullText,
+              helpWidth - itemIndentWidth,
+              termWidth + itemSeparatorWidth,
+            );
           }
           return term;
         }
-        ;
         function formatList(textArray) {
-          return textArray.join("\n").replace(/^/gm, " ".repeat(itemIndentWidth));
+          return textArray
+            .join("\n")
+            .replace(/^/gm, " ".repeat(itemIndentWidth));
         }
         let output = [`Usage: ${helper.commandUsage(cmd)}`, ""];
         const commandDescription = helper.commandDescription(cmd);
@@ -1073,13 +1164,19 @@ var require_commander = __commonJS({
           output = output.concat(["Arguments:", formatList(argumentList), ""]);
         }
         const optionList = helper.visibleOptions(cmd).map((option2) => {
-          return formatItem(helper.optionTerm(option2), helper.optionDescription(option2));
+          return formatItem(
+            helper.optionTerm(option2),
+            helper.optionDescription(option2),
+          );
         });
         if (optionList.length > 0) {
           output = output.concat(["Options:", formatList(optionList), ""]);
         }
         const commandList = helper.visibleCommands(cmd).map((cmd2) => {
-          return formatItem(helper.subcommandTerm(cmd2), helper.subcommandDescription(cmd2));
+          return formatItem(
+            helper.subcommandTerm(cmd2),
+            helper.subcommandDescription(cmd2),
+          );
         });
         if (commandList.length > 0) {
           output = output.concat(["Commands:", formatList(commandList), ""]);
@@ -1097,7 +1194,7 @@ var require_commander = __commonJS({
         return Math.max(
           helper.longestOptionTermLength(cmd, helper),
           helper.longestSubcommandTermLength(cmd, helper),
-          helper.longestArgumentTermLength(cmd, helper)
+          helper.longestArgumentTermLength(cmd, helper),
         );
       }
       /**
@@ -1118,14 +1215,24 @@ var require_commander = __commonJS({
         const leadingStr = str.substr(0, indent);
         const columnText = str.substr(indent);
         const indentString = " ".repeat(indent);
-        const regex = new RegExp(".{1," + (columnWidth - 1) + "}([\\s\u200B]|$)|[^\\s\u200B]+?([\\s\u200B]|$)", "g");
+        const regex = new RegExp(
+          ".{1," +
+            (columnWidth - 1) +
+            "}([\\s\u200B]|$)|[^\\s\u200B]+?([\\s\u200B]|$)",
+          "g",
+        );
         const lines = columnText.match(regex) || [];
-        return leadingStr + lines.map((line, i) => {
-          if (line.slice(-1) === "\n") {
-            line = line.slice(0, line.length - 1);
-          }
-          return (i > 0 ? indentString : "") + line.trimRight();
-        }).join("\n");
+        return (
+          leadingStr +
+          lines
+            .map((line, i) => {
+              if (line.slice(-1) === "\n") {
+                line = line.slice(0, line.length - 1);
+              }
+              return (i > 0 ? indentString : "") + line.trimRight();
+            })
+            .join("\n")
+        );
       }
     };
     var Option = class {
@@ -1216,7 +1323,9 @@ var require_commander = __commonJS({
         this.argChoices = values;
         this.parseArg = (arg, previous) => {
           if (!values.includes(arg)) {
-            throw new InvalidOptionArgumentError(`Allowed choices are ${values.join(", ")}.`);
+            throw new InvalidOptionArgumentError(
+              `Allowed choices are ${values.join(", ")}.`,
+            );
           }
           if (this.variadic) {
             return this._concatValue(arg, previous);
@@ -1320,9 +1429,11 @@ var require_commander = __commonJS({
         this._outputConfiguration = {
           writeOut: (str) => process.stdout.write(str),
           writeErr: (str) => process.stderr.write(str),
-          getOutHelpWidth: () => process.stdout.isTTY ? process.stdout.columns : void 0,
-          getErrHelpWidth: () => process.stderr.isTTY ? process.stderr.columns : void 0,
-          outputError: (str, write) => write(str)
+          getOutHelpWidth: () =>
+            process.stdout.isTTY ? process.stdout.columns : void 0,
+          getErrHelpWidth: () =>
+            process.stderr.isTTY ? process.stderr.columns : void 0,
+          outputError: (str, write) => write(str),
         };
         this._hidden = false;
         this._hasHelpOption = true;
@@ -1465,11 +1576,14 @@ var require_commander = __commonJS({
        * @return {Command} `this` command for chaining
        */
       addCommand(cmd, opts) {
-        if (!cmd._name) throw new Error("Command passed to .addCommand() must have a name");
+        if (!cmd._name)
+          throw new Error("Command passed to .addCommand() must have a name");
         function checkExplicitNames(commandArray) {
           commandArray.forEach((cmd2) => {
             if (cmd2._executableHandler && !cmd2._executableFile) {
-              throw new Error(`Must specify executableFile for deeply nested executable: ${cmd2.name()}`);
+              throw new Error(
+                `Must specify executableFile for deeply nested executable: ${cmd2.name()}`,
+              );
             }
             checkExplicitNames(cmd2.commands);
           });
@@ -1506,7 +1620,8 @@ var require_commander = __commonJS({
             this._helpCommandName = enableOrNameAndArgs.split(" ")[0];
             this._helpCommandnameAndArgs = enableOrNameAndArgs;
           }
-          this._helpCommandDescription = description2 || this._helpCommandDescription;
+          this._helpCommandDescription =
+            description2 || this._helpCommandDescription;
         }
         return this;
       }
@@ -1516,7 +1631,11 @@ var require_commander = __commonJS({
        */
       _hasImplicitHelpCommand() {
         if (this._addImplicitHelpCommand === void 0) {
-          return this.commands.length && !this._actionHandler && !this._findCommand("help");
+          return (
+            this.commands.length &&
+            !this._actionHandler &&
+            !this._findCommand("help")
+          );
         }
         return this._addImplicitHelpCommand;
       }
@@ -1535,7 +1654,7 @@ var require_commander = __commonJS({
           const argDetails = {
             required: false,
             name: "",
-            variadic: false
+            variadic: false,
           };
           switch (arg[0]) {
             case "<":
@@ -1546,7 +1665,10 @@ var require_commander = __commonJS({
               argDetails.name = arg.slice(1, -1);
               break;
           }
-          if (argDetails.name.length > 3 && argDetails.name.slice(-3) === "...") {
+          if (
+            argDetails.name.length > 3 &&
+            argDetails.name.slice(-3) === "..."
+          ) {
             argDetails.variadic = true;
             argDetails.name = argDetails.name.slice(0, -3);
           }
@@ -1556,7 +1678,9 @@ var require_commander = __commonJS({
         });
         this._args.forEach((arg, i) => {
           if (arg.variadic && i < this._args.length - 1) {
-            throw new Error(`only the last argument can be variadic '${arg.name}'`);
+            throw new Error(
+              `only the last argument can be variadic '${arg.name}'`,
+            );
           }
         });
         return this;
@@ -1653,10 +1777,17 @@ var require_commander = __commonJS({
         const oname = option2.name();
         const name = option2.attributeName();
         let defaultValue = option2.defaultValue;
-        if (option2.negate || option2.optional || option2.required || typeof defaultValue === "boolean") {
+        if (
+          option2.negate ||
+          option2.optional ||
+          option2.required ||
+          typeof defaultValue === "boolean"
+        ) {
           if (option2.negate) {
             const positiveLongFlag = option2.long.replace(/^--no-/, "--");
-            defaultValue = this._findOption(positiveLongFlag) ? this._getOptionValue(name) : true;
+            defaultValue = this._findOption(positiveLongFlag)
+              ? this._getOptionValue(name)
+              : true;
           }
           if (defaultValue !== void 0) {
             this._setOptionValue(name, defaultValue);
@@ -1667,7 +1798,10 @@ var require_commander = __commonJS({
           const oldValue = this._getOptionValue(name);
           if (val !== null && option2.parseArg) {
             try {
-              val = option2.parseArg(val, oldValue === void 0 ? defaultValue : oldValue);
+              val = option2.parseArg(
+                val,
+                oldValue === void 0 ? defaultValue : oldValue,
+              );
             } catch (err) {
               if (err.code === "commander.invalidOptionArgument") {
                 const message = `error: option '${option2.flags}' argument '${val}' is invalid. ${err.message}`;
@@ -1678,9 +1812,15 @@ var require_commander = __commonJS({
           } else if (val !== null && option2.variadic) {
             val = option2._concatValue(val, oldValue);
           }
-          if (typeof oldValue === "boolean" || typeof oldValue === "undefined") {
+          if (
+            typeof oldValue === "boolean" ||
+            typeof oldValue === "undefined"
+          ) {
             if (val == null) {
-              this._setOptionValue(name, option2.negate ? false : defaultValue || true);
+              this._setOptionValue(
+                name,
+                option2.negate ? false : defaultValue || true,
+              );
             } else {
               this._setOptionValue(name, val);
             }
@@ -1766,19 +1906,25 @@ var require_commander = __commonJS({
         return this._optionEx({}, flags, description2, fn, defaultValue);
       }
       /**
-      * Add a required option which must have a value after parsing. This usually means
-      * the option must be specified on the command line. (Otherwise the same as .option().)
-      *
-      * The `flags` string contains the short and/or long flags, separated by comma, a pipe or space.
-      *
-      * @param {string} flags
-      * @param {string} [description]
-      * @param {Function|*} [fn] - custom option processing function or default value
-      * @param {*} [defaultValue]
-      * @return {Command} `this` command for chaining
-      */
+       * Add a required option which must have a value after parsing. This usually means
+       * the option must be specified on the command line. (Otherwise the same as .option().)
+       *
+       * The `flags` string contains the short and/or long flags, separated by comma, a pipe or space.
+       *
+       * @param {string} flags
+       * @param {string} [description]
+       * @param {Function|*} [fn] - custom option processing function or default value
+       * @param {*} [defaultValue]
+       * @return {Command} `this` command for chaining
+       */
       requiredOption(flags, description2, fn, defaultValue) {
-        return this._optionEx({ mandatory: true }, flags, description2, fn, defaultValue);
+        return this._optionEx(
+          { mandatory: true },
+          flags,
+          description2,
+          fn,
+          defaultValue,
+        );
       }
       /**
        * Alter parsing of short flags with optional values.
@@ -1837,22 +1983,30 @@ var require_commander = __commonJS({
        */
       passThroughOptions(passThrough = true) {
         this._passThroughOptions = !!passThrough;
-        if (!!this.parent && passThrough && !this.parent._enablePositionalOptions) {
-          throw new Error("passThroughOptions can not be used without turning on enablePositionalOptions for parent command(s)");
+        if (
+          !!this.parent &&
+          passThrough &&
+          !this.parent._enablePositionalOptions
+        ) {
+          throw new Error(
+            "passThroughOptions can not be used without turning on enablePositionalOptions for parent command(s)",
+          );
         }
         return this;
       }
       /**
-        * Whether to store option values as properties on command object,
-        * or store separately (specify false). In both cases the option values can be accessed using .opts().
-        *
-        * @param {boolean} [storeAsProperties=true]
-        * @return {Command} `this` command for chaining
-        */
+       * Whether to store option values as properties on command object,
+       * or store separately (specify false). In both cases the option values can be accessed using .opts().
+       *
+       * @param {boolean} [storeAsProperties=true]
+       * @return {Command} `this` command for chaining
+       */
       storeOptionsAsProperties(storeAsProperties = true) {
         this._storeOptionsAsProperties = !!storeAsProperties;
         if (this.options.length) {
-          throw new Error("call .storeOptionsAsProperties() before adding options");
+          throw new Error(
+            "call .storeOptionsAsProperties() before adding options",
+          );
         }
         return this;
       }
@@ -1902,7 +2056,9 @@ var require_commander = __commonJS({
        */
       parse(argv, parseOptions) {
         if (argv !== void 0 && !Array.isArray(argv)) {
-          throw new Error("first parameter to parse must be array or undefined");
+          throw new Error(
+            "first parameter to parse must be array or undefined",
+          );
         }
         parseOptions = parseOptions || {};
         if (argv === void 0) {
@@ -1931,12 +2087,17 @@ var require_commander = __commonJS({
             userArgs = argv.slice(0);
             break;
           default:
-            throw new Error(`unexpected parse option { from: '${parseOptions.from}' }`);
+            throw new Error(
+              `unexpected parse option { from: '${parseOptions.from}' }`,
+            );
         }
         if (!this._scriptPath && __require.main) {
           this._scriptPath = __require.main.filename;
         }
-        this._name = this._name || this._scriptPath && path5.basename(this._scriptPath, path5.extname(this._scriptPath));
+        this._name =
+          this._name ||
+          (this._scriptPath &&
+            path5.basename(this._scriptPath, path5.extname(this._scriptPath)));
         this._parseCommand([], userArgs);
         return this;
       }
@@ -1984,7 +2145,10 @@ var require_commander = __commonJS({
         } catch (e) {
           baseDir = ".";
         }
-        let bin = path5.basename(scriptPath, path5.extname(scriptPath)) + "-" + subcommand._name;
+        let bin =
+          path5.basename(scriptPath, path5.extname(scriptPath)) +
+          "-" +
+          subcommand._name;
         if (subcommand._executableFile) {
           bin = subcommand._executableFile;
         }
@@ -2004,14 +2168,18 @@ var require_commander = __commonJS({
           if (launchWithNode) {
             args.unshift(bin);
             args = incrementNodeInspectorPort(process.execArgv).concat(args);
-            proc = childProcess.spawn(process.argv[0], args, { stdio: "inherit" });
+            proc = childProcess.spawn(process.argv[0], args, {
+              stdio: "inherit",
+            });
           } else {
             proc = childProcess.spawn(bin, args, { stdio: "inherit" });
           }
         } else {
           args.unshift(bin);
           args = incrementNodeInspectorPort(process.execArgv).concat(args);
-          proc = childProcess.spawn(process.execPath, args, { stdio: "inherit" });
+          proc = childProcess.spawn(process.execPath, args, {
+            stdio: "inherit",
+          });
         }
         const signals = ["SIGUSR1", "SIGUSR2", "SIGTERM", "SIGINT", "SIGHUP"];
         signals.forEach((signal) => {
@@ -2026,7 +2194,13 @@ var require_commander = __commonJS({
           proc.on("close", process.exit.bind(process));
         } else {
           proc.on("close", () => {
-            exitCallback(new CommanderError(process.exitCode || 0, "commander.executeSubCommandAsync", "(close)"));
+            exitCallback(
+              new CommanderError(
+                process.exitCode || 0,
+                "commander.executeSubCommandAsync",
+                "(close)",
+              ),
+            );
           });
         }
         proc.on("error", (err) => {
@@ -2041,7 +2215,11 @@ var require_commander = __commonJS({
           if (!exitCallback) {
             process.exit(1);
           } else {
-            const wrappedError = new CommanderError(1, "commander.executeSubCommandAsync", "(error)");
+            const wrappedError = new CommanderError(
+              1,
+              "commander.executeSubCommandAsync",
+              "(error)",
+            );
             wrappedError.nestedError = err;
             exitCallback(wrappedError);
           }
@@ -2072,7 +2250,10 @@ var require_commander = __commonJS({
         this.args = operands.concat(unknown);
         if (operands && this._findCommand(operands[0])) {
           this._dispatchSubcommand(operands[0], operands.slice(1), unknown);
-        } else if (this._hasImplicitHelpCommand() && operands[0] === this._helpCommandName) {
+        } else if (
+          this._hasImplicitHelpCommand() &&
+          operands[0] === this._helpCommandName
+        ) {
           if (operands.length === 1) {
             this.help();
           } else {
@@ -2082,7 +2263,12 @@ var require_commander = __commonJS({
           outputHelpIfRequested(this, unknown);
           this._dispatchSubcommand(this._defaultCommandName, operands, unknown);
         } else {
-          if (this.commands.length && this.args.length === 0 && !this._actionHandler && !this._defaultCommandName) {
+          if (
+            this.commands.length &&
+            this.args.length === 0 &&
+            !this._actionHandler &&
+            !this._defaultCommandName
+          ) {
             this.help({ error: true });
           }
           outputHelpIfRequested(this, parsed.unknown);
@@ -2136,7 +2322,9 @@ var require_commander = __commonJS({
        */
       _findCommand(name) {
         if (!name) return void 0;
-        return this.commands.find((cmd) => cmd._name === name || cmd._aliases.includes(name));
+        return this.commands.find(
+          (cmd) => cmd._name === name || cmd._aliases.includes(name),
+        );
       }
       /**
        * Return an option matching `arg` if any.
@@ -2157,7 +2345,10 @@ var require_commander = __commonJS({
       _checkForMissingMandatoryOptions() {
         for (let cmd = this; cmd; cmd = cmd.parent) {
           cmd.options.forEach((anOption) => {
-            if (anOption.mandatory && cmd._getOptionValue(anOption.attributeName()) === void 0) {
+            if (
+              anOption.mandatory &&
+              cmd._getOptionValue(anOption.attributeName()) === void 0
+            ) {
               cmd.missingMandatoryOptionValue(anOption);
             }
           });
@@ -2222,7 +2413,10 @@ var require_commander = __commonJS({
           if (arg.length > 2 && arg[0] === "-" && arg[1] !== "-") {
             const option2 = this._findOption(`-${arg[1]}`);
             if (option2) {
-              if (option2.required || option2.optional && this._combineFlagAndOptionalValue) {
+              if (
+                option2.required ||
+                (option2.optional && this._combineFlagAndOptionalValue)
+              ) {
                 this.emit(`option:${option2.name()}`, arg.slice(2));
               } else {
                 this.emit(`option:${option2.name()}`);
@@ -2242,12 +2436,19 @@ var require_commander = __commonJS({
           if (maybeOption(arg)) {
             dest = unknown;
           }
-          if ((this._enablePositionalOptions || this._passThroughOptions) && operands.length === 0 && unknown.length === 0) {
+          if (
+            (this._enablePositionalOptions || this._passThroughOptions) &&
+            operands.length === 0 &&
+            unknown.length === 0
+          ) {
             if (this._findCommand(arg)) {
               operands.push(arg);
               if (args.length > 0) unknown.push(...args);
               break;
-            } else if (arg === this._helpCommandName && this._hasImplicitHelpCommand()) {
+            } else if (
+              arg === this._helpCommandName &&
+              this._hasImplicitHelpCommand()
+            ) {
               operands.push(arg);
               if (args.length > 0) operands.push(...args);
               break;
@@ -2277,7 +2478,8 @@ var require_commander = __commonJS({
           const len = this.options.length;
           for (let i = 0; i < len; i++) {
             const key = this.options[i].attributeName();
-            result[key] = key === this._versionOptionName ? this._version : this[key];
+            result[key] =
+              key === this._versionOptionName ? this._version : this[key];
           }
           return result;
         }
@@ -2289,8 +2491,11 @@ var require_commander = __commonJS({
        * @api private
        */
       _displayError(exitCode, code, message) {
-        this._outputConfiguration.outputError(`${message}
-`, this._outputConfiguration.writeErr);
+        this._outputConfiguration.outputError(
+          `${message}
+`,
+          this._outputConfiguration.writeErr,
+        );
         this._exit(exitCode, code, message);
       }
       /**
@@ -2355,11 +2560,19 @@ var require_commander = __commonJS({
        */
       unknownCommand() {
         const partCommands = [this.name()];
-        for (let parentCmd = this.parent; parentCmd; parentCmd = parentCmd.parent) {
+        for (
+          let parentCmd = this.parent;
+          parentCmd;
+          parentCmd = parentCmd.parent
+        ) {
           partCommands.unshift(parentCmd.name());
         }
         const fullCommand = partCommands.join(" ");
-        const message = `error: unknown command '${this.args[0]}'.` + (this._hasHelpOption ? ` See '${fullCommand} ${this._helpLongFlag}'.` : "");
+        const message =
+          `error: unknown command '${this.args[0]}'.` +
+          (this._hasHelpOption
+            ? ` See '${fullCommand} ${this._helpLongFlag}'.`
+            : "");
         this._displayError(1, "commander.unknownCommand", message);
       }
       /**
@@ -2398,7 +2611,8 @@ var require_commander = __commonJS({
        * @return {string|Command}
        */
       description(str, argsDescription) {
-        if (str === void 0 && argsDescription === void 0) return this._description;
+        if (str === void 0 && argsDescription === void 0)
+          return this._description;
         this._description = str;
         this._argsDescription = argsDescription;
         return this;
@@ -2414,10 +2628,14 @@ var require_commander = __commonJS({
       alias(alias) {
         if (alias === void 0) return this._aliases[0];
         let command2 = this;
-        if (this.commands.length !== 0 && this.commands[this.commands.length - 1]._executableHandler) {
+        if (
+          this.commands.length !== 0 &&
+          this.commands[this.commands.length - 1]._executableHandler
+        ) {
           command2 = this.commands[this.commands.length - 1];
         }
-        if (alias === command2._name) throw new Error("Command alias can't be the same as its name");
+        if (alias === command2._name)
+          throw new Error("Command alias can't be the same as its name");
         command2._aliases.push(alias);
         return this;
       }
@@ -2446,11 +2664,13 @@ var require_commander = __commonJS({
           const args = this._args.map((arg) => {
             return humanReadableArgName(arg);
           });
-          return [].concat(
-            this.options.length || this._hasHelpOption ? "[options]" : [],
-            this.commands.length ? "[command]" : [],
-            this._args.length ? args : []
-          ).join(" ");
+          return []
+            .concat(
+              this.options.length || this._hasHelpOption ? "[options]" : [],
+              this.commands.length ? "[command]" : [],
+              this._args.length ? args : [],
+            )
+            .join(" ");
         }
         this._usage = str;
         return this;
@@ -2475,7 +2695,10 @@ var require_commander = __commonJS({
       helpInformation(contextOptions) {
         const helper = this.createHelp();
         if (helper.helpWidth === void 0) {
-          helper.helpWidth = contextOptions && contextOptions.error ? this._outputConfiguration.getErrHelpWidth() : this._outputConfiguration.getOutHelpWidth();
+          helper.helpWidth =
+            contextOptions && contextOptions.error
+              ? this._outputConfiguration.getErrHelpWidth()
+              : this._outputConfiguration.getOutHelpWidth();
         }
         return helper.formatHelp(this, helper);
       }
@@ -2515,19 +2738,29 @@ var require_commander = __commonJS({
           groupListeners.push(command2);
           command2 = command2.parent;
         }
-        groupListeners.slice().reverse().forEach((command3) => command3.emit("beforeAllHelp", context));
+        groupListeners
+          .slice()
+          .reverse()
+          .forEach((command3) => command3.emit("beforeAllHelp", context));
         this.emit("beforeHelp", context);
         let helpInformation = this.helpInformation(context);
         if (deprecatedCallback) {
           helpInformation = deprecatedCallback(helpInformation);
-          if (typeof helpInformation !== "string" && !Buffer.isBuffer(helpInformation)) {
-            throw new Error("outputHelp callback must return a string or a Buffer");
+          if (
+            typeof helpInformation !== "string" &&
+            !Buffer.isBuffer(helpInformation)
+          ) {
+            throw new Error(
+              "outputHelp callback must return a string or a Buffer",
+            );
           }
         }
         context.write(helpInformation);
         this.emit(this._helpLongFlag);
         this.emit("afterHelp", context);
-        groupListeners.forEach((command3) => command3.emit("afterAllHelp", context));
+        groupListeners.forEach((command3) =>
+          command3.emit("afterAllHelp", context),
+        );
       }
       /**
        * You can pass in flags and a description to override the help
@@ -2560,7 +2793,12 @@ var require_commander = __commonJS({
       help(contextOptions) {
         this.outputHelp(contextOptions);
         let exitCode = process.exitCode || 0;
-        if (exitCode === 0 && contextOptions && typeof contextOptions !== "function" && contextOptions.error) {
+        if (
+          exitCode === 0 &&
+          contextOptions &&
+          typeof contextOptions !== "function" &&
+          contextOptions.error
+        ) {
           exitCode = 1;
         }
         this._exit(exitCode, "commander.help", "(outputHelp)");
@@ -2610,7 +2848,11 @@ Expecting one of '${allowedValues.join("', '")}'`);
       });
     }
     function outputHelpIfRequested(cmd, args) {
-      const helpOption = cmd._hasHelpOption && args.find((arg) => arg === cmd._helpLongFlag || arg === cmd._helpShortFlag);
+      const helpOption =
+        cmd._hasHelpOption &&
+        args.find(
+          (arg) => arg === cmd._helpLongFlag || arg === cmd._helpShortFlag,
+        );
       if (helpOption) {
         cmd.outputHelp();
         cmd._exit(0, "commander.helpDisplayed", "(outputHelp)");
@@ -2624,7 +2866,8 @@ Expecting one of '${allowedValues.join("', '")}'`);
       let shortFlag;
       let longFlag;
       const flagParts = flags.split(/[ |,]+/);
-      if (flagParts.length > 1 && !/^[[<]/.test(flagParts[1])) shortFlag = flagParts.shift();
+      if (flagParts.length > 1 && !/^[[<]/.test(flagParts[1]))
+        shortFlag = flagParts.shift();
       longFlag = flagParts.shift();
       if (!shortFlag && /^-[^-]$/.test(longFlag)) {
         shortFlag = longFlag;
@@ -2643,14 +2886,19 @@ Expecting one of '${allowedValues.join("', '")}'`);
         let match;
         if ((match = arg.match(/^(--inspect(-brk)?)$/)) !== null) {
           debugOption = match[1];
-        } else if ((match = arg.match(/^(--inspect(-brk|-port)?)=([^:]+)$/)) !== null) {
+        } else if (
+          (match = arg.match(/^(--inspect(-brk|-port)?)=([^:]+)$/)) !== null
+        ) {
           debugOption = match[1];
           if (/^\d+$/.test(match[3])) {
             debugPort = match[3];
           } else {
             debugHost = match[3];
           }
-        } else if ((match = arg.match(/^(--inspect(-brk|-port)?)=([^:]+):(\d+)$/)) !== null) {
+        } else if (
+          (match = arg.match(/^(--inspect(-brk|-port)?)=([^:]+):(\d+)$/)) !==
+          null
+        ) {
           debugOption = match[1];
           debugHost = match[3];
           debugPort = match[4];
@@ -2661,7 +2909,7 @@ Expecting one of '${allowedValues.join("', '")}'`);
         return arg;
       });
     }
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/metadata.js
@@ -2669,18 +2917,25 @@ var require_metadata = __commonJS({
   "../../node_modules/commander-ts/dist/metadata.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.SubcommandMetadata = exports.ProgramMetadata = exports.OptionsMetadata = exports.CommandOptionsMetadata = exports.ArgsMetadata = void 0;
+    exports.SubcommandMetadata =
+      exports.ProgramMetadata =
+      exports.OptionsMetadata =
+      exports.CommandOptionsMetadata =
+      exports.ArgsMetadata =
+        void 0;
     exports.ArgsMetadata = Symbol("ArgsMetadata");
     exports.CommandOptionsMetadata = Symbol("CommandOptionsMetadata");
     exports.OptionsMetadata = Symbol("OptionsMetadata");
     exports.ProgramMetadata = Symbol("ProgramMetadata");
     exports.SubcommandMetadata = Symbol("SubcommandMetadata");
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/action.decorator.js
 var require_action_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/action.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/action.decorator.js"(
+    exports,
+  ) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.action = void 0;
@@ -2691,12 +2946,14 @@ var require_action_decorator = __commonJS({
       };
     }
     exports.action = action;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/alias.decorator.js
 var require_alias_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/alias.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/alias.decorator.js"(
+    exports,
+  ) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.alias = void 0;
@@ -2707,7 +2964,7 @@ var require_alias_decorator = __commonJS({
       };
     }
     exports.alias = alias;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/models/arg.model.js
@@ -2715,7 +2972,11 @@ var require_arg_model = __commonJS({
   "../../node_modules/commander-ts/dist/models/arg.model.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.VariadicArg = exports.RequiredArg = exports.OptionalArg = exports.CommandArg = void 0;
+    exports.VariadicArg =
+      exports.RequiredArg =
+      exports.OptionalArg =
+      exports.CommandArg =
+        void 0;
     var CommandArg = class {
       constructor(name, index) {
         this.name = name;
@@ -2744,7 +3005,7 @@ var require_arg_model = __commonJS({
       }
     };
     exports.VariadicArg = VariadicArg;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/models/option.model.js
@@ -2760,29 +3021,43 @@ var require_option_model = __commonJS({
       }
     };
     exports.Option = Option;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/models/index.js
 var require_models = __commonJS({
   "../../node_modules/commander-ts/dist/models/index.js"(exports) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
-    }) : (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      o[k2] = m[k];
-    }));
-    var __exportStar = exports && exports.__exportStar || function(m, exports2) {
-      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
-    };
+    var __createBinding =
+      (exports && exports.__createBinding) ||
+      (Object.create
+        ? function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            Object.defineProperty(o, k2, {
+              enumerable: true,
+              get: function () {
+                return m[k];
+              },
+            });
+          }
+        : function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            o[k2] = m[k];
+          });
+    var __exportStar =
+      (exports && exports.__exportStar) ||
+      function (m, exports2) {
+        for (var p in m)
+          if (
+            p !== "default" &&
+            !Object.prototype.hasOwnProperty.call(exports2, p)
+          )
+            __createBinding(exports2, m, p);
+      };
     Object.defineProperty(exports, "__esModule", { value: true });
     __exportStar(require_arg_model(), exports);
     __exportStar(require_option_model(), exports);
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/utils/decorateIfNot.js
@@ -2799,28 +3074,42 @@ var require_decorateIfNot = __commonJS({
       return Reflect.getMetadata(metadataKey, target, propertyKey);
     }
     exports.decorateIfNot = decorateIfNot;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/utils/index.js
 var require_utils = __commonJS({
   "../../node_modules/commander-ts/dist/utils/index.js"(exports) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
-    }) : (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      o[k2] = m[k];
-    }));
-    var __exportStar = exports && exports.__exportStar || function(m, exports2) {
-      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
-    };
+    var __createBinding =
+      (exports && exports.__createBinding) ||
+      (Object.create
+        ? function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            Object.defineProperty(o, k2, {
+              enumerable: true,
+              get: function () {
+                return m[k];
+              },
+            });
+          }
+        : function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            o[k2] = m[k];
+          });
+    var __exportStar =
+      (exports && exports.__exportStar) ||
+      function (m, exports2) {
+        for (var p in m)
+          if (
+            p !== "default" &&
+            !Object.prototype.hasOwnProperty.call(exports2, p)
+          )
+            __createBinding(exports2, m, p);
+      };
     Object.defineProperty(exports, "__esModule", { value: true });
     __exportStar(require_decorateIfNot(), exports);
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/arg.decorator.js
@@ -2834,31 +3123,48 @@ var require_arg_decorator = __commonJS({
     var utils_1 = require_utils();
     function optionalArg2(name) {
       return (target, propertyKey, parameterIndex) => {
-        const args = (0, utils_1.decorateIfNot)(metadata_1.ArgsMetadata, [], target, propertyKey);
+        const args = (0, utils_1.decorateIfNot)(
+          metadata_1.ArgsMetadata,
+          [],
+          target,
+          propertyKey,
+        );
         args.unshift(new models_1.OptionalArg(name, parameterIndex));
       };
     }
     exports.optionalArg = optionalArg2;
     function requiredArg2(name) {
       return (target, propertyKey, parameterIndex) => {
-        const args = (0, utils_1.decorateIfNot)(metadata_1.ArgsMetadata, [], target, propertyKey);
+        const args = (0, utils_1.decorateIfNot)(
+          metadata_1.ArgsMetadata,
+          [],
+          target,
+          propertyKey,
+        );
         args.unshift(new models_1.RequiredArg(name, parameterIndex));
       };
     }
     exports.requiredArg = requiredArg2;
     function variadicArg(name) {
       return (target, propertyKey, parameterIndex) => {
-        const args = (0, utils_1.decorateIfNot)(metadata_1.ArgsMetadata, [], target, propertyKey);
+        const args = (0, utils_1.decorateIfNot)(
+          metadata_1.ArgsMetadata,
+          [],
+          target,
+          propertyKey,
+        );
         args.unshift(new models_1.VariadicArg(name, parameterIndex));
       };
     }
     exports.variadicArg = variadicArg;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/arguments.decorator.js
 var require_arguments_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/arguments.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/arguments.decorator.js"(
+    exports,
+  ) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.args = void 0;
@@ -2869,27 +3175,38 @@ var require_arguments_decorator = __commonJS({
       };
     }
     exports.args = args;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/command-option.decorator.js
 var require_command_option_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/command-option.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/command-option.decorator.js"(
+    exports,
+  ) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.commandOption = void 0;
     var metadata_1 = require_metadata();
     var utils_1 = require_utils();
     function commandOption2(...args) {
-      return ((target, propertyKey, descriptor) => {
+      return (target, propertyKey, descriptor) => {
         args[0] = args[0] || `--${String(propertyKey)}`;
-        (0, utils_1.decorateIfNot)(metadata_1.CommandOptionsMetadata, [], target, propertyKey);
-        const options = Reflect.getMetadata(metadata_1.CommandOptionsMetadata, target, propertyKey);
+        (0, utils_1.decorateIfNot)(
+          metadata_1.CommandOptionsMetadata,
+          [],
+          target,
+          propertyKey,
+        );
+        const options = Reflect.getMetadata(
+          metadata_1.CommandOptionsMetadata,
+          target,
+          propertyKey,
+        );
         options.push(args);
-      });
+      };
     }
     exports.commandOption = commandOption2;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/helpers/init-commander.js
@@ -2902,12 +3219,15 @@ var require_init_commander = __commonJS({
     var metadata_1 = require_metadata();
     function initCommander(target) {
       if (!Reflect.hasMetadata(metadata_1.ProgramMetadata, target)) {
-        const decorator = Reflect.metadata(metadata_1.ProgramMetadata, commander);
+        const decorator = Reflect.metadata(
+          metadata_1.ProgramMetadata,
+          commander,
+        );
         Reflect.decorate([decorator], target);
       }
     }
     exports.initCommander = initCommander;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/helpers/inject-args.js
@@ -2920,11 +3240,17 @@ var require_inject_args = __commonJS({
     var index_1 = require_models();
     function injectArgs(program2, target, propertyKey) {
       if (Reflect.hasMetadata(metadata_1.ArgsMetadata, target, propertyKey)) {
-        const args = Reflect.getMetadata(metadata_1.ArgsMetadata, target, propertyKey);
+        const args = Reflect.getMetadata(
+          metadata_1.ArgsMetadata,
+          target,
+          propertyKey,
+        );
         const predicate = (arg) => arg instanceof index_1.VariadicArg;
         const variadic = args.find(predicate);
         if (variadic && args.findIndex(predicate) !== args.length - 1) {
-          throw new TypeError(`Variadic argument must be specified last the argument list of the ${String(propertyKey)}() function.`);
+          throw new TypeError(
+            `Variadic argument must be specified last the argument list of the ${String(propertyKey)}() function.`,
+          );
         }
         const argv = [];
         let index = 0;
@@ -2940,7 +3266,7 @@ var require_inject_args = __commonJS({
       }
     }
     exports.injectArgs = injectArgs;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/helpers/prepare-command.js
@@ -2954,15 +3280,24 @@ var require_prepare_command = __commonJS({
     function prepareCommand(target, propertyKey) {
       let argList = "";
       if (Reflect.hasMetadata(metadata_1.ArgsMetadata, target, propertyKey)) {
-        const args = Reflect.getMetadata(metadata_1.ArgsMetadata, target, propertyKey);
+        const args = Reflect.getMetadata(
+          metadata_1.ArgsMetadata,
+          target,
+          propertyKey,
+        );
         const predicate = (arg) => arg instanceof index_1.VariadicArg;
         const variadic = args.find(predicate);
         if (variadic && args.findIndex(predicate) !== args.length - 1) {
-          throw new TypeError(`Variadic argument must be specified last the argument list of the ${String(propertyKey)}() function.`);
+          throw new TypeError(
+            `Variadic argument must be specified last the argument list of the ${String(propertyKey)}() function.`,
+          );
         }
-        argList = args.map((arg) => {
-          return arg.toString();
-        }).join(" ").replace(/^(.)/, "$1");
+        argList = args
+          .map((arg) => {
+            return arg.toString();
+          })
+          .join(" ")
+          .replace(/^(.)/, "$1");
       }
       return `${argList}`;
     }
@@ -2972,63 +3307,85 @@ var require_prepare_command = __commonJS({
       return `${String(propertyKey)} ${argList}`;
     }
     exports.prepareSubcommand = prepareSubcommand;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/helpers/index.js
 var require_helpers = __commonJS({
   "../../node_modules/commander-ts/dist/helpers/index.js"(exports) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
-    }) : (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      o[k2] = m[k];
-    }));
-    var __exportStar = exports && exports.__exportStar || function(m, exports2) {
-      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
-    };
+    var __createBinding =
+      (exports && exports.__createBinding) ||
+      (Object.create
+        ? function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            Object.defineProperty(o, k2, {
+              enumerable: true,
+              get: function () {
+                return m[k];
+              },
+            });
+          }
+        : function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            o[k2] = m[k];
+          });
+    var __exportStar =
+      (exports && exports.__exportStar) ||
+      function (m, exports2) {
+        for (var p in m)
+          if (
+            p !== "default" &&
+            !Object.prototype.hasOwnProperty.call(exports2, p)
+          )
+            __createBinding(exports2, m, p);
+      };
     Object.defineProperty(exports, "__esModule", { value: true });
     __exportStar(require_init_commander(), exports);
     __exportStar(require_inject_args(), exports);
     __exportStar(require_prepare_command(), exports);
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/command.decorator.js
 var require_command_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/command.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/command.decorator.js"(
+    exports,
+  ) {
     "use strict";
-    var __awaiter = exports && exports.__awaiter || function(thisArg, _arguments, P, generator) {
-      function adopt(value) {
-        return value instanceof P ? value : new P(function(resolve) {
-          resolve(value);
+    var __awaiter =
+      (exports && exports.__awaiter) ||
+      function (thisArg, _arguments, P, generator) {
+        function adopt(value) {
+          return value instanceof P
+            ? value
+            : new P(function (resolve) {
+                resolve(value);
+              });
+        }
+        return new (P || (P = Promise))(function (resolve, reject) {
+          function fulfilled(value) {
+            try {
+              step(generator.next(value));
+            } catch (e) {
+              reject(e);
+            }
+          }
+          function rejected(value) {
+            try {
+              step(generator["throw"](value));
+            } catch (e) {
+              reject(e);
+            }
+          }
+          function step(result) {
+            result.done
+              ? resolve(result.value)
+              : adopt(result.value).then(fulfilled, rejected);
+          }
+          step((generator = generator.apply(thisArg, _arguments || [])).next());
         });
-      }
-      return new (P || (P = Promise))(function(resolve, reject) {
-        function fulfilled(value) {
-          try {
-            step(generator.next(value));
-          } catch (e) {
-            reject(e);
-          }
-        }
-        function rejected(value) {
-          try {
-            step(generator["throw"](value));
-          } catch (e) {
-            reject(e);
-          }
-        }
-        function step(result) {
-          result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-        }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-      });
-    };
+      };
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.command = void 0;
     var commander = require_commander();
@@ -3039,27 +3396,39 @@ var require_command_decorator = __commonJS({
         try {
           const cmd = (0, helpers_1.prepareSubcommand)(target, propertyKey);
           let chain = commander.command(cmd);
-          if (Reflect.hasMetadata(metadata_1.CommandOptionsMetadata, target, propertyKey)) {
-            const options = Reflect.getMetadata(metadata_1.CommandOptionsMetadata, target, propertyKey);
+          if (
+            Reflect.hasMetadata(
+              metadata_1.CommandOptionsMetadata,
+              target,
+              propertyKey,
+            )
+          ) {
+            const options = Reflect.getMetadata(
+              metadata_1.CommandOptionsMetadata,
+              target,
+              propertyKey,
+            );
             chain = options.reduce((prev, opt) => {
               const [arg1, arg2, arg3, arg4] = opt;
               return chain.option(arg1, arg2, arg3, arg4);
             }, chain);
           }
-          chain.action((...args) => __awaiter(this, void 0, void 0, function* () {
-            const context = args[args.length - 1];
-            const cmdArgs = args.slice(0, args.length - 1);
-            try {
-              const result = target[propertyKey].apply(context, cmdArgs);
-              if (result instanceof Promise) {
-                yield result;
+          chain.action((...args) =>
+            __awaiter(this, void 0, void 0, function* () {
+              const context = args[args.length - 1];
+              const cmdArgs = args.slice(0, args.length - 1);
+              try {
+                const result = target[propertyKey].apply(context, cmdArgs);
+                if (result instanceof Promise) {
+                  yield result;
+                }
+              } catch (_a) {
+                process.exit(1);
+              } finally {
+                process.exit(0);
               }
-            } catch (_a) {
-              process.exit(1);
-            } finally {
-              process.exit(0);
-            }
-          }));
+            }),
+          );
         } catch (e) {
           console.error(e.message);
           process.exit(1);
@@ -3067,12 +3436,14 @@ var require_command_decorator = __commonJS({
       };
     }
     exports.command = command2;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/description.decorator.js
 var require_description_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/description.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/description.decorator.js"(
+    exports,
+  ) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.description = void 0;
@@ -3083,7 +3454,7 @@ var require_description_decorator = __commonJS({
       };
     }
     exports.description = description2;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/on.decorator.js
@@ -3099,12 +3470,14 @@ var require_on_decorator = __commonJS({
       };
     }
     exports.on = on;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/option.decorator.js
 var require_option_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/option.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/option.decorator.js"(
+    exports,
+  ) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.option = void 0;
@@ -3112,20 +3485,31 @@ var require_option_decorator = __commonJS({
     var models_1 = require_models();
     var utils_1 = require_utils();
     function option2(...args) {
-      return ((target, propertyKey) => {
+      return (target, propertyKey) => {
         args[0] = args[0] || `--${String(propertyKey)}`;
-        (0, utils_1.decorateIfNot)(metadata_1.OptionsMetadata, [], target, propertyKey);
-        const options = Reflect.getMetadata(metadata_1.OptionsMetadata, target, propertyKey);
+        (0, utils_1.decorateIfNot)(
+          metadata_1.OptionsMetadata,
+          [],
+          target,
+          propertyKey,
+        );
+        const options = Reflect.getMetadata(
+          metadata_1.OptionsMetadata,
+          target,
+          propertyKey,
+        );
         options.push(new models_1.Option(propertyKey, args));
-      });
+      };
     }
     exports.option = option2;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/program.decorator.js
 var require_program_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/program.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/program.decorator.js"(
+    exports,
+  ) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.program = void 0;
@@ -3138,7 +3522,7 @@ var require_program_decorator = __commonJS({
       if (instances > 1) {
         throw new Error("Only one instance of @program is permitted.");
       }
-      return function(constructor) {
+      return function (constructor) {
         const mixin = class extends constructor {
           constructor(...args) {
             super(...args);
@@ -3152,7 +3536,11 @@ var require_program_decorator = __commonJS({
             }
             const options = Object.keys(this).reduce((list, prop) => {
               if (Reflect.hasMetadata(metadata_1.OptionsMetadata, this, prop)) {
-                const metadata = Reflect.getMetadata(metadata_1.OptionsMetadata, this, prop);
+                const metadata = Reflect.getMetadata(
+                  metadata_1.OptionsMetadata,
+                  this,
+                  prop,
+                );
                 list.push(metadata);
               }
               return list;
@@ -3162,7 +3550,10 @@ var require_program_decorator = __commonJS({
             }, commander);
             commander.parse(process.argv);
             if (this.run) {
-              this.run.apply(commander, (0, helpers_1.injectArgs)(commander, this, "run"));
+              this.run.apply(
+                commander,
+                (0, helpers_1.injectArgs)(commander, this, "run"),
+              );
             }
           }
         };
@@ -3171,12 +3562,14 @@ var require_program_decorator = __commonJS({
       };
     }
     exports.program = program2;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/usage.decorator.js
 var require_usage_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/usage.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/usage.decorator.js"(
+    exports,
+  ) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.usage = void 0;
@@ -3187,12 +3580,14 @@ var require_usage_decorator = __commonJS({
       };
     }
     exports.usage = usage2;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/version.decorator.js
 var require_version_decorator = __commonJS({
-  "../../node_modules/commander-ts/dist/decorators/version.decorator.js"(exports) {
+  "../../node_modules/commander-ts/dist/decorators/version.decorator.js"(
+    exports,
+  ) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.version = void 0;
@@ -3201,30 +3596,47 @@ var require_version_decorator = __commonJS({
     function version2(text) {
       return (target) => {
         (0, helpers_1.initCommander)(target);
-        const program2 = Reflect.getMetadata(metadata_1.ProgramMetadata, target);
+        const program2 = Reflect.getMetadata(
+          metadata_1.ProgramMetadata,
+          target,
+        );
         program2.version(text);
       };
     }
     exports.version = version2;
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/decorators/index.js
 var require_decorators = __commonJS({
   "../../node_modules/commander-ts/dist/decorators/index.js"(exports) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
-    }) : (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      o[k2] = m[k];
-    }));
-    var __exportStar = exports && exports.__exportStar || function(m, exports2) {
-      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
-    };
+    var __createBinding =
+      (exports && exports.__createBinding) ||
+      (Object.create
+        ? function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            Object.defineProperty(o, k2, {
+              enumerable: true,
+              get: function () {
+                return m[k];
+              },
+            });
+          }
+        : function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            o[k2] = m[k];
+          });
+    var __exportStar =
+      (exports && exports.__exportStar) ||
+      function (m, exports2) {
+        for (var p in m)
+          if (
+            p !== "default" &&
+            !Object.prototype.hasOwnProperty.call(exports2, p)
+          )
+            __createBinding(exports2, m, p);
+      };
     Object.defineProperty(exports, "__esModule", { value: true });
     __exportStar(require_metadata(), exports);
     __exportStar(require_action_decorator(), exports);
@@ -3239,56 +3651,88 @@ var require_decorators = __commonJS({
     __exportStar(require_program_decorator(), exports);
     __exportStar(require_usage_decorator(), exports);
     __exportStar(require_version_decorator(), exports);
-  }
+  },
 });
 
 // ../../node_modules/commander-ts/dist/index.js
 var require_dist = __commonJS({
   "../../node_modules/commander-ts/dist/index.js"(exports) {
     "use strict";
-    var __createBinding = exports && exports.__createBinding || (Object.create ? (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      Object.defineProperty(o, k2, { enumerable: true, get: function() {
-        return m[k];
-      } });
-    }) : (function(o, m, k, k2) {
-      if (k2 === void 0) k2 = k;
-      o[k2] = m[k];
-    }));
-    var __exportStar = exports && exports.__exportStar || function(m, exports2) {
-      for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports2, p)) __createBinding(exports2, m, p);
-    };
+    var __createBinding =
+      (exports && exports.__createBinding) ||
+      (Object.create
+        ? function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            Object.defineProperty(o, k2, {
+              enumerable: true,
+              get: function () {
+                return m[k];
+              },
+            });
+          }
+        : function (o, m, k, k2) {
+            if (k2 === void 0) k2 = k;
+            o[k2] = m[k];
+          });
+    var __exportStar =
+      (exports && exports.__exportStar) ||
+      function (m, exports2) {
+        for (var p in m)
+          if (
+            p !== "default" &&
+            !Object.prototype.hasOwnProperty.call(exports2, p)
+          )
+            __createBinding(exports2, m, p);
+      };
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.Option = exports.Command = void 0;
     require_Reflect();
     var commander_1 = require_commander();
-    Object.defineProperty(exports, "Command", { enumerable: true, get: function() {
-      return commander_1.Command;
-    } });
-    Object.defineProperty(exports, "Option", { enumerable: true, get: function() {
-      return commander_1.Option;
-    } });
+    Object.defineProperty(exports, "Command", {
+      enumerable: true,
+      get: function () {
+        return commander_1.Command;
+      },
+    });
+    Object.defineProperty(exports, "Option", {
+      enumerable: true,
+      get: function () {
+        return commander_1.Option;
+      },
+    });
     __exportStar(require_decorators(), exports);
-  }
+  },
 });
 
 // src/updater.ts
 import crypto2 from "node:crypto";
-import { chmod as chmod2, copyFile, mkdir as mkdir3, mkdtemp, rm as rm3, writeFile as writeFile3 } from "node:fs/promises";
+import {
+  chmod as chmod2,
+  copyFile,
+  mkdir as mkdir3,
+  mkdtemp,
+  rm as rm3,
+  writeFile as writeFile3,
+} from "node:fs/promises";
 import os from "node:os";
 import path3 from "node:path";
 import { spawn } from "node:child_process";
 
 // src/constants.ts
-var DEFAULT_APP_URL = "https://project-qah0p.vercel.app";
+var DEFAULT_APP_URL = "https://instasights.kingscrosslabs.com";
 var DEFAULT_UPDATE_MANIFEST_URL = `${DEFAULT_APP_URL}/api/cli/latest`;
 var DEFAULT_STALE_AFTER_HOURS = 24;
 var DEFAULT_CALLBACK_PORT = 8787;
 var API_BEARER_SCOPE = "instasights:api";
 
 // src/build-constants.ts
-var EMBEDDED_CLI_VERSION = true ? "1.0.0" : process.env.INSTASIGHTS_EMBEDDED_VERSION ?? "1.0.0";
-var EMBEDDED_UPDATE_MANIFEST_URL = true ? "https://project-qah0p.vercel.app/api/cli/latest" : process.env.INSTASIGHTS_EMBEDDED_UPDATE_MANIFEST_URL ?? DEFAULT_UPDATE_MANIFEST_URL2;
+var EMBEDDED_CLI_VERSION = true
+  ? "1.0.0"
+  : (process.env.INSTASIGHTS_EMBEDDED_VERSION ?? "1.0.0");
+var EMBEDDED_UPDATE_MANIFEST_URL = true
+  ? "https://instasights.kingscrosslabs.com/api/cli/latest"
+  : (process.env.INSTASIGHTS_EMBEDDED_UPDATE_MANIFEST_URL ??
+    DEFAULT_UPDATE_MANIFEST_URL2);
 
 // src/output.ts
 function printJsonLine(data) {
@@ -3304,7 +3748,7 @@ function logRuntime(message, details) {
   printJsonLine({
     event: "runtime_log",
     message,
-    ...details ?? {}
+    ...(details ?? {}),
   });
 }
 async function runWithRuntimeLogging(message, task) {
@@ -3322,7 +3766,7 @@ function fail(message, details) {
   printJsonLine({
     event: "error",
     error: message,
-    ...details ?? {}
+    ...(details ?? {}),
   });
   process.exit(1);
 }
@@ -3341,7 +3785,10 @@ function resolveFromExecutable() {
 function resolveFromWorkingTree() {
   let current = path.resolve(process.cwd());
   while (true) {
-    for (const candidate of [current, path.join(current, "skills", "instagram")]) {
+    for (const candidate of [
+      current,
+      path.join(current, "skills", "instagram"),
+    ]) {
       if (hasSkillMarker(candidate)) {
         return candidate;
       }
@@ -3358,7 +3805,11 @@ function resolveSkillRoot() {
   if (explicit) {
     return explicit;
   }
-  return resolveFromExecutable() ?? resolveFromWorkingTree() ?? path.resolve(process.cwd(), "skills", "instagram");
+  return (
+    resolveFromExecutable() ??
+    resolveFromWorkingTree() ??
+    path.resolve(process.cwd(), "skills", "instagram")
+  );
 }
 function resolveAuthDir() {
   return path.join(resolveSkillRoot(), ".auth");
@@ -3373,7 +3824,7 @@ function createEmptyState(appUrl = DEFAULT_APP_URL) {
     redirectUri: null,
     accessToken: null,
     refreshToken: null,
-    expiresAt: null
+    expiresAt: null,
   };
 }
 async function readAuthState() {
@@ -3382,7 +3833,7 @@ async function readAuthState() {
     const parsed = JSON.parse(raw);
     return {
       ...createEmptyState(parsed.appUrl ?? DEFAULT_APP_URL),
-      ...parsed
+      ...parsed,
     };
   } catch (error) {
     if (error.code === "ENOENT") {
@@ -3405,7 +3856,12 @@ async function clearAuthTokens() {
 
 // src/version.ts
 import { existsSync as existsSync2, readFileSync } from "node:fs";
-import { mkdir as mkdir2, readFile as readFile2, rm as rm2, writeFile as writeFile2 } from "node:fs/promises";
+import {
+  mkdir as mkdir2,
+  readFile as readFile2,
+  rm as rm2,
+  writeFile as writeFile2,
+} from "node:fs/promises";
 import path2 from "node:path";
 var AUTO_UPDATE_TTL_MS = 12 * 60 * 60 * 1e3;
 var DISABLE_AUTO_UPDATE_ENV = "INSTASIGHTS_DISABLE_AUTO_UPDATE";
@@ -3414,7 +3870,7 @@ var UPDATE_MANIFEST_URL_ENV = "INSTASIGHTS_UPDATE_MANIFEST_URL";
 var MANAGED_SKILL_FILES = [
   "bin/instasights.mjs",
   "bin/instasights-updater.mjs",
-  "bin/instasights.version.json"
+  "bin/instasights.version.json",
 ];
 function resolveInstalledVersionPath(skillRoot = resolveSkillRoot()) {
   return path2.join(skillRoot, "bin", "instasights.version.json");
@@ -3434,12 +3890,16 @@ function isManagedSkillInstall(skillRoot = resolveSkillRoot()) {
 function parseInstalledVersionMetadata(input) {
   try {
     const parsed = JSON.parse(input);
-    if (typeof parsed.version !== "string" || parsed.version.trim().length === 0) {
+    if (
+      typeof parsed.version !== "string" ||
+      parsed.version.trim().length === 0
+    ) {
       return null;
     }
     return {
       version: parsed.version.trim(),
-      installedAt: typeof parsed.installedAt === "string" ? parsed.installedAt : null
+      installedAt:
+        typeof parsed.installedAt === "string" ? parsed.installedAt : null,
     };
   } catch {
     return null;
@@ -3448,15 +3908,21 @@ function parseInstalledVersionMetadata(input) {
 function parseUpdateCheckCache(input) {
   try {
     const parsed = JSON.parse(input);
-    if (typeof parsed.checkedAt !== "string" || typeof parsed.remoteVersion !== "string" || typeof parsed.updateAvailable !== "boolean" || typeof parsed.manifestUrl !== "string") {
+    if (
+      typeof parsed.checkedAt !== "string" ||
+      typeof parsed.remoteVersion !== "string" ||
+      typeof parsed.updateAvailable !== "boolean" ||
+      typeof parsed.manifestUrl !== "string"
+    ) {
       return null;
     }
     return {
       checkedAt: parsed.checkedAt,
-      localVersion: typeof parsed.localVersion === "string" ? parsed.localVersion : null,
+      localVersion:
+        typeof parsed.localVersion === "string" ? parsed.localVersion : null,
       remoteVersion: parsed.remoteVersion,
       updateAvailable: parsed.updateAvailable,
-      manifestUrl: parsed.manifestUrl
+      manifestUrl: parsed.manifestUrl,
     };
   } catch {
     return null;
@@ -3498,8 +3964,12 @@ async function readUpdateCheckCache(skillRoot = resolveSkillRoot()) {
 async function writeUpdateCheckCache(cache, skillRoot = resolveSkillRoot()) {
   const target = resolveUpdateCachePath(skillRoot);
   await mkdir2(path2.dirname(target), { recursive: true });
-  await writeFile2(target, `${JSON.stringify(cache, null, 2)}
-`, "utf8");
+  await writeFile2(
+    target,
+    `${JSON.stringify(cache, null, 2)}
+`,
+    "utf8",
+  );
 }
 async function clearUpdateCheckCache(skillRoot = resolveSkillRoot()) {
   await rm2(resolveUpdateCachePath(skillRoot), { force: true });
@@ -3552,7 +4022,7 @@ function compareVersions(left, right) {
 function getDefaultCheckResult(status, input) {
   const currentVersion = getCliVersion();
   return {
-    checkedAt: (/* @__PURE__ */ new Date()).toISOString(),
+    checkedAt: /* @__PURE__ */ new Date().toISOString(),
     status,
     manifestUrl: input.manifestUrl ?? null,
     embeddedVersion: EMBEDDED_CLI_VERSION,
@@ -3564,7 +4034,7 @@ function getDefaultCheckResult(status, input) {
     notes: input.notes ?? "",
     fromCache: input.fromCache ?? false,
     manifest: input.manifest ?? null,
-    error: input.error ?? null
+    error: input.error ?? null,
   };
 }
 function validateRemoteFile(input) {
@@ -3572,13 +4042,20 @@ function validateRemoteFile(input) {
     return null;
   }
   const candidate = input;
-  if (typeof candidate.path !== "string" || candidate.path.trim().length === 0 || typeof candidate.url !== "string" || candidate.url.trim().length === 0 || typeof candidate.sha256 !== "string" || !/^[a-fA-F0-9]{64}$/.test(candidate.sha256.trim())) {
+  if (
+    typeof candidate.path !== "string" ||
+    candidate.path.trim().length === 0 ||
+    typeof candidate.url !== "string" ||
+    candidate.url.trim().length === 0 ||
+    typeof candidate.sha256 !== "string" ||
+    !/^[a-fA-F0-9]{64}$/.test(candidate.sha256.trim())
+  ) {
     return null;
   }
   return {
     path: candidate.path.trim(),
     url: candidate.url.trim(),
-    sha256: candidate.sha256.trim().toLowerCase()
+    sha256: candidate.sha256.trim().toLowerCase(),
   };
 }
 function validateRemoteManifest(input) {
@@ -3586,10 +4063,18 @@ function validateRemoteManifest(input) {
     return null;
   }
   const candidate = input;
-  if (typeof candidate.version !== "string" || parseSemver(candidate.version) === null || typeof candidate.publishedAt !== "string" || typeof candidate.notes !== "string" || !Array.isArray(candidate.files)) {
+  if (
+    typeof candidate.version !== "string" ||
+    parseSemver(candidate.version) === null ||
+    typeof candidate.publishedAt !== "string" ||
+    typeof candidate.notes !== "string" ||
+    !Array.isArray(candidate.files)
+  ) {
     return null;
   }
-  const files = candidate.files.map((file) => validateRemoteFile(file)).filter((file) => file !== null);
+  const files = candidate.files
+    .map((file) => validateRemoteFile(file))
+    .filter((file) => file !== null);
   if (files.length !== candidate.files.length || files.length === 0) {
     return null;
   }
@@ -3597,7 +4082,7 @@ function validateRemoteManifest(input) {
     version: candidate.version,
     publishedAt: candidate.publishedAt,
     notes: candidate.notes,
-    files
+    files,
   };
 }
 function hasCompatibleManagedFiles(files) {
@@ -3618,9 +4103,9 @@ async function fetchRemoteManifest(manifestUrl) {
   logUpdate(`Fetching update manifest from ${manifestUrl}`);
   const response = await fetch(manifestUrl, {
     headers: {
-      Accept: "application/json"
+      Accept: "application/json",
     },
-    signal: AbortSignal.timeout(5e3)
+    signal: AbortSignal.timeout(5e3),
   });
   if (!response.ok) {
     throw new Error(`Manifest request failed with status ${response.status}.`);
@@ -3663,12 +4148,17 @@ async function checkForUpdates(options) {
       manifestUrl: null,
       localVersion,
       legacyInstall,
-      notes: "Update manifest URL is not configured for this build."
+      notes: "Update manifest URL is not configured for this build.",
     });
   }
   if (options.allowCache && !options.force) {
     const cache = await readUpdateCheckCache();
-    if (cache && cache.manifestUrl === manifestUrl && cache.localVersion === localVersion && isCacheFresh(cache.checkedAt)) {
+    if (
+      cache &&
+      cache.manifestUrl === manifestUrl &&
+      cache.localVersion === localVersion &&
+      isCacheFresh(cache.checkedAt)
+    ) {
       return getDefaultCheckResult(cache.updateAvailable ? "cache" : "cache", {
         manifestUrl,
         localVersion,
@@ -3676,7 +4166,9 @@ async function checkForUpdates(options) {
         remoteVersion: cache.remoteVersion,
         updateAvailable: cache.updateAvailable,
         fromCache: true,
-        notes: cache.updateAvailable ? `Update ${cache.remoteVersion} is still available.` : "Current version is up to date."
+        notes: cache.updateAvailable
+          ? `Update ${cache.remoteVersion} is still available.`
+          : "Current version is up to date.",
       });
     }
   }
@@ -3687,7 +4179,7 @@ async function checkForUpdates(options) {
         manifestUrl,
         localVersion,
         legacyInstall,
-        error: "Remote manifest is missing required fields."
+        error: "Remote manifest is missing required fields.",
       });
     }
     if (!hasCompatibleManagedFiles(manifest.files)) {
@@ -3698,18 +4190,25 @@ async function checkForUpdates(options) {
         remoteVersion: manifest.version,
         notes: manifest.notes,
         manifest,
-        error: "Remote manifest targets a legacy artifact layout and cannot be applied to the bundled Node runtime."
+        error:
+          "Remote manifest targets a legacy artifact layout and cannot be applied to the bundled Node runtime.",
       });
     }
-    const comparison = localVersion === null ? 1 : compareVersions(manifest.version, localVersion);
-    const updateAvailable = options.force || localVersion === null ? isSameOrNewerVersion(manifest.version, localVersion) : comparison !== null && comparison > 0;
+    const comparison =
+      localVersion === null
+        ? 1
+        : compareVersions(manifest.version, localVersion);
+    const updateAvailable =
+      options.force || localVersion === null
+        ? isSameOrNewerVersion(manifest.version, localVersion)
+        : comparison !== null && comparison > 0;
     const status = updateAvailable ? "update-available" : "current";
     await writeUpdateCheckCache({
-      checkedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      checkedAt: /* @__PURE__ */ new Date().toISOString(),
       localVersion,
       remoteVersion: manifest.version,
       updateAvailable,
-      manifestUrl
+      manifestUrl,
     });
     return getDefaultCheckResult(status, {
       manifestUrl,
@@ -3718,14 +4217,15 @@ async function checkForUpdates(options) {
       legacyInstall,
       updateAvailable,
       notes: manifest.notes,
-      manifest
+      manifest,
     });
   } catch (error) {
     return getDefaultCheckResult("network-error", {
       manifestUrl,
       localVersion,
       legacyInstall,
-      error: error instanceof Error ? error.message : "Unable to fetch updates."
+      error:
+        error instanceof Error ? error.message : "Unable to fetch updates.",
     });
   }
 }
@@ -3733,14 +4233,16 @@ function resolveManagedPath(baseDir, relativePath) {
   const target = path3.resolve(baseDir, relativePath);
   const normalizedBase = `${path3.resolve(baseDir)}${path3.sep}`;
   if (target !== path3.resolve(baseDir) && !target.startsWith(normalizedBase)) {
-    throw new Error(`Refusing to access path outside the managed skill root: ${relativePath}`);
+    throw new Error(
+      `Refusing to access path outside the managed skill root: ${relativePath}`,
+    );
   }
   return target;
 }
 async function downloadManagedFile(stagingDir, file) {
   logUpdate(`Downloading ${file.path} from ${file.url}`);
   const response = await fetch(file.url, {
-    signal: AbortSignal.timeout(15e3)
+    signal: AbortSignal.timeout(15e3),
   });
   if (!response.ok) {
     throw new Error(`Download failed for ${file.path}: ${response.status}`);
@@ -3760,18 +4262,22 @@ async function runUpdaterHelper(payloadPath) {
   const bundledHelperPath = resolveUpdaterEntrypointPath();
   const helperCopyPath = path3.join(
     path3.dirname(payloadPath),
-    "instasights-updater.run.mjs"
+    "instasights-updater.run.mjs",
   );
   await copyFile(bundledHelperPath, helperCopyPath);
   await chmod2(helperCopyPath, 493).catch(() => void 0);
   await new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [helperCopyPath, "--payload", payloadPath], {
-      stdio: "inherit",
-      env: {
-        ...process.env,
-        INSTASIGHTS_SKILL_ROOT: skillRoot
-      }
-    });
+    const child = spawn(
+      process.execPath,
+      [helperCopyPath, "--payload", payloadPath],
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          INSTASIGHTS_SKILL_ROOT: skillRoot,
+        },
+      },
+    );
     child.once("error", reject);
     child.once("exit", (code) => {
       if (code === 0) {
@@ -3792,7 +4298,7 @@ async function applyUpdate(checkResult, options) {
       remoteVersion: checkResult.remoteVersion,
       legacyInstall: checkResult.legacyInstall,
       notes: checkResult.notes,
-      reason: checkResult.error ?? "No remote manifest is available."
+      reason: checkResult.error ?? "No remote manifest is available.",
     };
   }
   if (!hasCompatibleManagedFiles(checkResult.manifest.files)) {
@@ -3804,11 +4310,15 @@ async function applyUpdate(checkResult, options) {
       remoteVersion: checkResult.remoteVersion,
       legacyInstall: checkResult.legacyInstall,
       notes: checkResult.notes,
-      reason: "Remote manifest targets a legacy artifact layout and cannot be applied to the bundled Node runtime."
+      reason:
+        "Remote manifest targets a legacy artifact layout and cannot be applied to the bundled Node runtime.",
     };
   }
-  const canApplyVersion = checkResult.remoteVersion !== null && isSameOrNewerVersion(checkResult.remoteVersion, checkResult.localVersion);
-  const shouldApply = canApplyVersion && (options?.force === true || checkResult.updateAvailable);
+  const canApplyVersion =
+    checkResult.remoteVersion !== null &&
+    isSameOrNewerVersion(checkResult.remoteVersion, checkResult.localVersion);
+  const shouldApply =
+    canApplyVersion && (options?.force === true || checkResult.updateAvailable);
   if (!shouldApply) {
     return {
       applied: false,
@@ -3818,17 +4328,21 @@ async function applyUpdate(checkResult, options) {
       remoteVersion: checkResult.remoteVersion,
       legacyInstall: checkResult.legacyInstall,
       notes: checkResult.notes,
-      reason: "Already running the latest available version."
+      reason: "Already running the latest available version.",
     };
   }
-  const stagingDir = await mkdtemp(path3.join(os.tmpdir(), "instasights-update-"));
+  const stagingDir = await mkdtemp(
+    path3.join(os.tmpdir(), "instasights-update-"),
+  );
   const payloadPath = path3.join(stagingDir, "update-payload.json");
   try {
     logUpdate(
-      `Applying update ${checkResult.localVersion ?? "unversioned"} -> ${checkResult.manifest.version}`
+      `Applying update ${checkResult.localVersion ?? "unversioned"} -> ${checkResult.manifest.version}`,
     );
     await Promise.all(
-      checkResult.manifest.files.map((file) => downloadManagedFile(stagingDir, file))
+      checkResult.manifest.files.map((file) =>
+        downloadManagedFile(stagingDir, file),
+      ),
     );
     await writeFile3(
       payloadPath,
@@ -3837,23 +4351,25 @@ async function applyUpdate(checkResult, options) {
           skillRoot: resolveSkillRoot(),
           stagingDir,
           version: checkResult.manifest.version,
-          files: checkResult.manifest.files.map((file) => ({ path: file.path }))
+          files: checkResult.manifest.files.map((file) => ({
+            path: file.path,
+          })),
         },
         null,
-        2
+        2,
       )}
 `,
-      "utf8"
+      "utf8",
     );
     await runUpdaterHelper(payloadPath);
     logUpdate(`Applied update ${checkResult.manifest.version}`);
     await clearUpdateCheckCache();
     await writeUpdateCheckCache({
-      checkedAt: (/* @__PURE__ */ new Date()).toISOString(),
+      checkedAt: /* @__PURE__ */ new Date().toISOString(),
       localVersion: checkResult.manifest.version,
       remoteVersion: checkResult.manifest.version,
       updateAvailable: false,
-      manifestUrl: checkResult.manifestUrl
+      manifestUrl: checkResult.manifestUrl,
     });
     return {
       applied: true,
@@ -3862,7 +4378,7 @@ async function applyUpdate(checkResult, options) {
       manifestUrl: checkResult.manifestUrl,
       remoteVersion: checkResult.manifest.version,
       legacyInstall: checkResult.legacyInstall,
-      notes: checkResult.manifest.notes
+      notes: checkResult.manifest.notes,
     };
   } finally {
     await rm3(stagingDir, { recursive: true, force: true });
@@ -3877,8 +4393,8 @@ async function relaunchCli(args) {
       env: {
         ...process.env,
         INSTASIGHTS_SKILL_ROOT: skillRoot,
-        [SKIP_UPDATE_CHECK_ENV]: "1"
-      }
+        [SKIP_UPDATE_CHECK_ENV]: "1",
+      },
     });
     child.once("error", reject);
     child.once("exit", (code, signal) => {
@@ -3909,7 +4425,7 @@ async function openBrowser(url) {
   if (platform === "win32") {
     spawn2("cmd", ["/c", "start", "", url], {
       detached: true,
-      stdio: "ignore"
+      stdio: "ignore",
     }).unref();
     return;
   }
@@ -3934,28 +4450,31 @@ function buildLoopbackRedirectUri(port = DEFAULT_CALLBACK_PORT) {
 async function registerPublicClient(input) {
   logRuntime("Registering the CLI OAuth client with the hosted app...", {
     appUrl: input.appUrl,
-    redirectUri: input.redirectUri
+    redirectUri: input.redirectUri,
   });
-  const response = await fetch(`${normalizeAppUrl(input.appUrl)}/oauth/register`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
+  const response = await fetch(
+    `${normalizeAppUrl(input.appUrl)}/oauth/register`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        client_name: "Instasights CLI",
+        redirect_uris: [input.redirectUri],
+        token_endpoint_auth_method: "none",
+        grant_types: ["authorization_code", "refresh_token"],
+        response_types: ["code"],
+        scope: API_BEARER_SCOPE,
+      }),
     },
-    body: JSON.stringify({
-      client_name: "Instasights CLI",
-      redirect_uris: [input.redirectUri],
-      token_endpoint_auth_method: "none",
-      grant_types: ["authorization_code", "refresh_token"],
-      response_types: ["code"],
-      scope: API_BEARER_SCOPE
-    })
-  });
+  );
   const payload = await response.json().catch(() => null);
   if (!response.ok || !payload || !("client_id" in payload)) {
     fail("Unable to register CLI OAuth client.", {
       appUrl: input.appUrl,
       status: response.status,
-      response: payload
+      response: payload,
     });
   }
   return payload;
@@ -3967,18 +4486,18 @@ async function exchangeAuthorizationCode(input) {
     client_id: input.clientId,
     redirect_uri: input.redirectUri,
     code: input.code,
-    code_verifier: input.codeVerifier
+    code_verifier: input.codeVerifier,
   });
   const response = await fetch(`${normalizeAppUrl(input.appUrl)}/oauth/token`, {
     method: "POST",
-    body: formData
+    body: formData,
   });
   const payload = await response.json().catch(() => null);
   if (!response.ok || !payload || !("access_token" in payload)) {
     fail("OAuth code exchange failed.", {
       appUrl: input.appUrl,
       status: response.status,
-      response: payload
+      response: payload,
     });
   }
   return payload;
@@ -3988,18 +4507,18 @@ async function refreshAccessToken(input) {
   const formData = new URLSearchParams({
     grant_type: "refresh_token",
     client_id: input.clientId,
-    refresh_token: input.refreshToken
+    refresh_token: input.refreshToken,
   });
   const response = await fetch(`${normalizeAppUrl(input.appUrl)}/oauth/token`, {
     method: "POST",
-    body: formData
+    body: formData,
   });
   const payload = await response.json().catch(() => null);
   if (!response.ok || !payload || !("access_token" in payload)) {
     fail("OAuth refresh failed.", {
       appUrl: input.appUrl,
       status: response.status,
-      response: payload
+      response: payload,
     });
   }
   return payload;
@@ -4009,14 +4528,20 @@ async function waitForCallback(input) {
   const port = Number.parseInt(redirectUrl.port, 10);
   const hostname = redirectUrl.hostname;
   return await new Promise((resolve, reject) => {
-    logRuntime("Waiting for the browser OAuth callback on the local loopback server...", {
-      redirectUri: input.redirectUri,
-      timeoutMinutes: 10
-    });
-    const timeout = setTimeout(() => {
-      server.close(() => void 0);
-      reject(new Error("Timed out waiting for OAuth callback."));
-    }, 10 * 60 * 1e3);
+    logRuntime(
+      "Waiting for the browser OAuth callback on the local loopback server...",
+      {
+        redirectUri: input.redirectUri,
+        timeoutMinutes: 10,
+      },
+    );
+    const timeout = setTimeout(
+      () => {
+        server.close(() => void 0);
+        reject(new Error("Timed out waiting for OAuth callback."));
+      },
+      10 * 60 * 1e3,
+    );
     const server = http.createServer((request, response) => {
       const requestUrl = new URL(request.url ?? "/", input.redirectUri);
       const code = requestUrl.searchParams.get("code");
@@ -4029,9 +4554,11 @@ async function waitForCallback(input) {
           "<!doctype html>",
           '<html><body style="font-family: system-ui; padding: 32px;">',
           "<h1>Instasights CLI</h1>",
-          error ? `<p>Authentication failed: ${error}</p>` : "<p>Authentication complete. You can return to the terminal.</p>",
-          "</body></html>"
-        ].join("")
+          error
+            ? `<p>Authentication failed: ${error}</p>`
+            : "<p>Authentication complete. You can return to the terminal.</p>",
+          "</body></html>",
+        ].join(""),
       );
       clearTimeout(timeout);
       server.close(() => void 0);
@@ -4043,18 +4570,20 @@ async function waitForCallback(input) {
         resolve({
           code: null,
           state,
-          error
+          error,
         });
         return;
       }
       if (!code) {
-        reject(new Error("OAuth callback did not include an authorization code."));
+        reject(
+          new Error("OAuth callback did not include an authorization code."),
+        );
         return;
       }
       resolve({
         code,
         state,
-        error: null
+        error: null,
       });
     });
     server.once("error", reject);
@@ -4063,8 +4592,16 @@ async function waitForCallback(input) {
 }
 async function runBrowserOAuthLogin(input) {
   const appUrl = normalizeAppUrl(input.appUrl);
-  const redirectUri = input.currentState.redirectUri && !input.port ? input.currentState.redirectUri : buildLoopbackRedirectUri(input.port ?? DEFAULT_CALLBACK_PORT);
-  const registration = input.currentState.clientId && input.currentState.redirectUri === redirectUri && normalizeAppUrl(input.currentState.appUrl) === appUrl ? { client_id: input.currentState.clientId } : await registerPublicClient({ appUrl, redirectUri });
+  const redirectUri =
+    input.currentState.redirectUri && !input.port
+      ? input.currentState.redirectUri
+      : buildLoopbackRedirectUri(input.port ?? DEFAULT_CALLBACK_PORT);
+  const registration =
+    input.currentState.clientId &&
+    input.currentState.redirectUri === redirectUri &&
+    normalizeAppUrl(input.currentState.appUrl) === appUrl
+      ? { client_id: input.currentState.clientId }
+      : await registerPublicClient({ appUrl, redirectUri });
   if (registration.client_id === input.currentState.clientId) {
     logRuntime("Reusing the existing CLI OAuth client registration.");
   }
@@ -4083,26 +4620,29 @@ async function runBrowserOAuthLogin(input) {
     logRuntime("Opening the OAuth authorization page in the browser.");
     await openBrowser(authorizeUrl.toString());
   } else {
-    logRuntime("Browser launch is disabled; use this URL to continue the OAuth flow.", {
-      authorizeUrl: authorizeUrl.toString()
-    });
+    logRuntime(
+      "Browser launch is disabled; use this URL to continue the OAuth flow.",
+      {
+        authorizeUrl: authorizeUrl.toString(),
+      },
+    );
   }
   const callback = await waitForCallback({
     redirectUri,
-    expectedState: state
+    expectedState: state,
   });
   logRuntime("OAuth callback received; finalizing login.");
   if (callback.error) {
     fail("OAuth authorize step failed.", {
       appUrl,
       authorizeUrl: authorizeUrl.toString(),
-      error: callback.error
+      error: callback.error,
     });
   }
   if (!callback.code) {
     fail("OAuth authorize step did not return a code.", {
       appUrl,
-      authorizeUrl: authorizeUrl.toString()
+      authorizeUrl: authorizeUrl.toString(),
     });
   }
   const tokens = await exchangeAuthorizationCode({
@@ -4110,7 +4650,7 @@ async function runBrowserOAuthLogin(input) {
     clientId: registration.client_id,
     redirectUri,
     code: callback.code,
-    codeVerifier
+    codeVerifier,
   });
   return {
     appUrl,
@@ -4119,7 +4659,7 @@ async function runBrowserOAuthLogin(input) {
     accessToken: tokens.access_token,
     refreshToken: tokens.refresh_token ?? input.currentState.refreshToken,
     expiresAt: new Date(Date.now() + tokens.expires_in * 1e3).toISOString(),
-    authorizeUrl: authorizeUrl.toString()
+    authorizeUrl: authorizeUrl.toString(),
   };
 }
 
@@ -4139,25 +4679,30 @@ var InstasightsApiClient = class {
     const state = await readAuthState();
     return {
       ...state,
-      appUrl: this.appUrl
+      appUrl: this.appUrl,
     };
   }
   async refreshIfNeeded(state) {
-    if (!state.clientId || !state.refreshToken || !state.accessToken || !isExpired(state.expiresAt)) {
+    if (
+      !state.clientId ||
+      !state.refreshToken ||
+      !state.accessToken ||
+      !isExpired(state.expiresAt)
+    ) {
       return state;
     }
     logRuntime("Refreshing OAuth access token...");
     const tokens = await refreshAccessToken({
       appUrl: this.appUrl,
       clientId: state.clientId,
-      refreshToken: state.refreshToken
+      refreshToken: state.refreshToken,
     });
     const nextState = {
       ...state,
       appUrl: this.appUrl,
       accessToken: tokens.access_token,
       refreshToken: tokens.refresh_token ?? state.refreshToken,
-      expiresAt: new Date(Date.now() + tokens.expires_in * 1e3).toISOString()
+      expiresAt: new Date(Date.now() + tokens.expires_in * 1e3).toISOString(),
     };
     await writeAuthState(nextState);
     return nextState;
@@ -4167,7 +4712,7 @@ var InstasightsApiClient = class {
     if (!state.accessToken) {
       fail("Authentication required. Run `instasights auth login` first.", {
         appUrl: this.appUrl,
-        scope: API_BEARER_SCOPE
+        scope: API_BEARER_SCOPE,
       });
     }
     return state;
@@ -4176,29 +4721,40 @@ var InstasightsApiClient = class {
     const state = await this.requireAuthenticatedState();
     const method = (init?.method ?? "GET").toUpperCase();
     logRuntime(`Calling Instagram Insights API: ${method} ${path5}`, {
-      appUrl: this.appUrl
+      appUrl: this.appUrl,
     });
     const response = await fetch(`${this.appUrl}${path5}`, {
       ...init,
       headers: {
         Authorization: `Bearer ${state.accessToken}`,
         "Content-Type": "application/json",
-        ...init?.headers ?? {}
-      }
+        ...(init?.headers ?? {}),
+      },
     });
-    if (response.status === 401 && allowRetry && state.refreshToken && state.clientId) {
-      logRuntime(`Received 401 for ${method} ${path5}; retrying after token refresh.`);
+    if (
+      response.status === 401 &&
+      allowRetry &&
+      state.refreshToken &&
+      state.clientId
+    ) {
+      logRuntime(
+        `Received 401 for ${method} ${path5}; retrying after token refresh.`,
+      );
       const refreshed = await this.refreshIfNeeded({
         ...state,
-        expiresAt: (/* @__PURE__ */ new Date(0)).toISOString()
+        expiresAt: /* @__PURE__ */ new Date(0).toISOString(),
       });
-      return this.requestJson(path5, {
-        ...init,
-        headers: {
-          ...init?.headers ?? {},
-          Authorization: `Bearer ${refreshed.accessToken}`
-        }
-      }, false);
+      return this.requestJson(
+        path5,
+        {
+          ...init,
+          headers: {
+            ...(init?.headers ?? {}),
+            Authorization: `Bearer ${refreshed.accessToken}`,
+          },
+        },
+        false,
+      );
     }
     const payload = await response.json().catch(() => null);
     if (!response.ok) {
@@ -4206,22 +4762,21 @@ var InstasightsApiClient = class {
         appUrl: this.appUrl,
         path: path5,
         status: response.status,
-        response: payload
+        response: payload,
       });
     }
-    logRuntime(`Instagram Insights API completed: ${method} ${path5} -> ${response.status}`);
+    logRuntime(
+      `Instagram Insights API completed: ${method} ${path5} -> ${response.status}`,
+    );
     return payload;
   }
   getAccountOverview() {
     return this.requestJson("/api/v1/account");
   }
   cleanReset() {
-    return this.requestJson(
-      "/api/v1/account/clean-reset",
-      {
-        method: "POST"
-      }
-    );
+    return this.requestJson("/api/v1/account/clean-reset", {
+      method: "POST",
+    });
   }
   getLatestSnapshot() {
     return this.requestJson("/api/v1/snapshot/latest");
@@ -4234,27 +4789,22 @@ var InstasightsApiClient = class {
   }
   getReport(days = 30) {
     return this.requestJson(
-      `/api/v1/report?${new URLSearchParams({ days: String(days) }).toString()}`
+      `/api/v1/report?${new URLSearchParams({ days: String(days) }).toString()}`,
     );
   }
   listSyncRuns(searchParams) {
-    return this.requestJson(
-      `/api/v1/sync-runs?${searchParams.toString()}`
-    );
+    return this.requestJson(`/api/v1/sync-runs?${searchParams.toString()}`);
   }
   getSyncRun(syncRunId) {
     return this.requestJson(
-      `/api/v1/sync-runs/${encodeURIComponent(syncRunId)}`
+      `/api/v1/sync-runs/${encodeURIComponent(syncRunId)}`,
     );
   }
   triggerSync(payload) {
-    return this.requestJson(
-      "/api/v1/sync-runs",
-      {
-        method: "POST",
-        body: JSON.stringify(payload)
-      }
-    );
+    return this.requestJson("/api/v1/sync-runs", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
   }
 };
 
@@ -4366,7 +4916,7 @@ var KEYWORD_STOPWORDS = /* @__PURE__ */ new Set([
   "why",
   "with",
   "you",
-  "your"
+  "your",
 ]);
 var NUMBER_WORDS = [
   "one",
@@ -4382,7 +4932,7 @@ var NUMBER_WORDS = [
   "hundred",
   "thousand",
   "million",
-  "billion"
+  "billion",
 ];
 var AI_KEYWORDS = [
   "ai",
@@ -4393,7 +4943,7 @@ var AI_KEYWORDS = [
   "llm",
   "models",
   "prompt",
-  "prompts"
+  "prompts",
 ];
 var FINANCE_KEYWORDS = [
   "finance",
@@ -4409,7 +4959,7 @@ var FINANCE_KEYWORDS = [
   "tax",
   "taxes",
   "wealth",
-  "w2"
+  "w2",
 ];
 var RELATIONSHIP_KEYWORDS = [
   "couple",
@@ -4419,7 +4969,7 @@ var RELATIONSHIP_KEYWORDS = [
   "married",
   "partner",
   "partners",
-  "wife"
+  "wife",
 ];
 var FOUNDER_KEYWORDS = [
   "builder",
@@ -4431,14 +4981,9 @@ var FOUNDER_KEYWORDS = [
   "founders",
   "revenue",
   "startup",
-  "startups"
+  "startups",
 ];
-var WOMEN_IN_TECH_KEYWORDS = [
-  "conference",
-  "female",
-  "tech",
-  "women"
-];
+var WOMEN_IN_TECH_KEYWORDS = ["conference", "female", "tech", "women"];
 function toDate(value) {
   if (!value) {
     return null;
@@ -4482,12 +5027,17 @@ function sum(values) {
   return values.reduce((total, value) => total + value, 0);
 }
 function titleCase(value) {
-  return value.toLowerCase().split(/\s+/).filter(Boolean).map((segment) => {
-    if (/^\$?\d/.test(segment)) {
-      return segment.toUpperCase();
-    }
-    return `${segment.slice(0, 1).toUpperCase()}${segment.slice(1)}`;
-  }).join(" ");
+  return value
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((segment) => {
+      if (/^\$?\d/.test(segment)) {
+        return segment.toUpperCase();
+      }
+      return `${segment.slice(0, 1).toUpperCase()}${segment.slice(1)}`;
+    })
+    .join(" ");
 }
 function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -4505,12 +5055,12 @@ function buildWindowLabel(report) {
   const startLabel = formatDate(since, {
     month: "short",
     day: "numeric",
-    ...sameYear ? {} : { year: "numeric" }
+    ...(sameYear ? {} : { year: "numeric" }),
   });
   const endLabel = formatDate(until, {
     month: "short",
     day: "numeric",
-    year: "numeric"
+    year: "numeric",
   });
   return `${startLabel} \u2013 ${endLabel}`;
 }
@@ -4526,10 +5076,13 @@ function extractSeriesLabel(caption) {
   if (!caption) {
     return null;
   }
-  const lines = caption.split(/\r?\n/).map((line) => normalizeWhitespace(line)).filter(Boolean);
+  const lines = caption
+    .split(/\r?\n/)
+    .map((line) => normalizeWhitespace(line))
+    .filter(Boolean);
   for (const line of lines) {
     const episodeMatch = line.match(
-      /(?:^|\b)(?:ep(?:isode)?\.?\s*\d+\s*[-–—:]?\s*)([A-Za-z0-9$][A-Za-z0-9$ '&/]+)$/i
+      /(?:^|\b)(?:ep(?:isode)?\.?\s*\d+\s*[-–—:]?\s*)([A-Za-z0-9$][A-Za-z0-9$ '&/]+)$/i,
     );
     if (episodeMatch?.[1]) {
       return titleCase(episodeMatch[1]);
@@ -4543,7 +5096,12 @@ function extractSeriesLabel(caption) {
     const uppercaseChars = alphaChars.replace(/[^A-Z]/g, "").length;
     const uppercaseRatio = uppercaseChars / alphaChars.length;
     const wordCount = line.split(/\s+/).length;
-    if (uppercaseRatio >= 0.65 && wordCount >= 2 && wordCount <= 6 && line.length <= 60) {
+    if (
+      uppercaseRatio >= 0.65 &&
+      wordCount >= 2 &&
+      wordCount <= 6 &&
+      line.length <= 60
+    ) {
       return titleCase(line);
     }
   }
@@ -4569,30 +5127,46 @@ function prettifyStoredTheme(value) {
 }
 function classifyHookType(input) {
   const primaryText = normalizeWhitespace(
-    input.hook ?? firstSentence(input.transcript) ?? firstSentence(input.caption)
+    input.hook ??
+      firstSentence(input.transcript) ??
+      firstSentence(input.caption),
   );
   const lower = primaryText.toLowerCase();
   if (!lower) {
     return "Statement Hook";
   }
-  const hasNumberWord = NUMBER_WORDS.some(
-    (word) => new RegExp(`\\b${escapeRegExp(word)}\\b`, "i").test(lower)
+  const hasNumberWord = NUMBER_WORDS.some((word) =>
+    new RegExp(`\\b${escapeRegExp(word)}\\b`, "i").test(lower),
   );
   if (/[0-9$%]/.test(primaryText) || hasNumberWord) {
     return "Number/Stat Hook";
   }
-  if (/\?/.test(primaryText) || /^(did you know|how |what |why |when |where |which |who |if you|you tell me)/i.test(
-    primaryText
-  )) {
+  if (
+    /\?/.test(primaryText) ||
+    /^(did you know|how |what |why |when |where |which |who |if you|you tell me)/i.test(
+      primaryText,
+    )
+  ) {
     return "Question/Challenge Hook";
   }
-  if (/^(i |i'|i’m|i'm|we |we'|we’re|we're|my |our |as a |as an )/i.test(primaryText) || /\b(my|our|we|i)\b/i.test(primaryText)) {
+  if (
+    /^(i |i'|i’m|i'm|we |we'|we’re|we're|my |our |as a |as an )/i.test(
+      primaryText,
+    ) ||
+    /\b(my|our|we|i)\b/i.test(primaryText)
+  ) {
     return "Personal Story Hook";
   }
   return "Statement Hook";
 }
 function keywordTokens(value) {
-  return normalizeWhitespace(value).replace(/https?:\/\/\S+/gi, " ").replace(/[@#][\w_]+/g, " ").toLowerCase().match(/[a-z][a-z0-9']{2,}/g) ?? [];
+  return (
+    normalizeWhitespace(value)
+      .replace(/https?:\/\/\S+/gi, " ")
+      .replace(/[@#][\w_]+/g, " ")
+      .toLowerCase()
+      .match(/[a-z][a-z0-9']{2,}/g) ?? []
+  );
 }
 function extractHashtagsFromCaption(value) {
   if (!value) {
@@ -4609,15 +5183,25 @@ function extractHashtagsFromCaption(value) {
   return [...hashtags];
 }
 function buildPostTitle(post) {
-  const lines = (post.caption ?? "").split(/\r?\n/).map((line) => normalizeWhitespace(line)).filter(Boolean);
-  const firstUsefulLine = lines.find((line) => !/^[@#]/.test(line) && line.length > 3) ?? post.seriesLabel ?? post.hook ?? "Instagram post";
+  const lines = (post.caption ?? "")
+    .split(/\r?\n/)
+    .map((line) => normalizeWhitespace(line))
+    .filter(Boolean);
+  const firstUsefulLine =
+    lines.find((line) => !/^[@#]/.test(line) && line.length > 3) ??
+    post.seriesLabel ??
+    post.hook ??
+    "Instagram post";
   return truncate(firstUsefulLine, 90) ?? "Instagram post";
 }
 function classifyPresentationTheme(post, seriesCounts) {
   if (post.seriesLabel && (seriesCounts.get(post.seriesLabel) ?? 0) >= 2) {
     return post.seriesLabel;
   }
-  const text = [post.caption, post.hook, post.transcript].map((value) => normalizeWhitespace(value).toLowerCase()).filter(Boolean).join(" ");
+  const text = [post.caption, post.hook, post.transcript]
+    .map((value) => normalizeWhitespace(value).toLowerCase())
+    .filter(Boolean)
+    .join(" ");
   const hasFinance = textIncludesKeyword(text, FINANCE_KEYWORDS);
   const hasRelationship = textIncludesKeyword(text, RELATIONSHIP_KEYWORDS);
   const hasAi = textIncludesKeyword(text, AI_KEYWORDS);
@@ -4644,24 +5228,37 @@ function mergeReportMedia(report, mediaItems) {
   const mergedById = /* @__PURE__ */ new Map();
   for (const reportPost of report.posts) {
     mergedById.set(reportPost.id, {
-      reportPost
+      reportPost,
     });
   }
   for (const media of mediaItems) {
     const current = mergedById.get(media.id) ?? {};
     mergedById.set(media.id, {
       ...current,
-      media
+      media,
     });
   }
   const merged = [...mergedById.entries()].map(([id, value]) => {
     const media = value.media;
     const reportPost = value.reportPost;
     const caption = media?.caption ?? reportPost?.caption ?? null;
-    const transcript = media?.transcriptText ?? media?.transcript ?? reportPost?.transcript ?? null;
-    const hook = media?.hook ?? reportPost?.hook ?? firstSentence(transcript) ?? firstSentence(caption);
+    const transcript =
+      media?.transcriptText ??
+      media?.transcript ??
+      reportPost?.transcript ??
+      null;
+    const hook =
+      media?.hook ??
+      reportPost?.hook ??
+      firstSentence(transcript) ??
+      firstSentence(caption);
     const postedAt = media?.postedAt ?? reportPost?.postedAt ?? null;
-    const engagementRateRaw = typeof media?.engagementRate === "number" ? media.engagementRate : typeof reportPost?.engagementRate === "number" ? reportPost.engagementRate : null;
+    const engagementRateRaw =
+      typeof media?.engagementRate === "number"
+        ? media.engagementRate
+        : typeof reportPost?.engagementRate === "number"
+          ? reportPost.engagementRate
+          : null;
     const seriesLabel = extractSeriesLabel(caption);
     return {
       id,
@@ -4673,7 +5270,7 @@ function mergeReportMedia(report, mediaItems) {
       hookType: classifyHookType({
         hook,
         transcript,
-        caption
+        caption,
       }),
       theme: "",
       seriesLabel,
@@ -4684,11 +5281,19 @@ function mergeReportMedia(report, mediaItems) {
       likes: metricValue(media?.likes ?? reportPost?.likes ?? media?.likeCount),
       saves: metricValue(media?.saves ?? reportPost?.saves),
       shares: metricValue(media?.shares ?? reportPost?.shares),
-      comments: metricValue(media?.comments ?? reportPost?.comments ?? media?.commentsCount),
-      engagementRatePercent: typeof engagementRateRaw === "number" ? round(engagementRateRaw * 100, 1) : null,
+      comments: metricValue(
+        media?.comments ?? reportPost?.comments ?? media?.commentsCount,
+      ),
+      engagementRatePercent:
+        typeof engagementRateRaw === "number"
+          ? round(engagementRateRaw * 100, 1)
+          : null,
       hasTranscript: Boolean(transcript),
       storedTheme: media?.theme ?? reportPost?.theme ?? null,
-      hashtags: media?.hashtags && media.hashtags.length > 0 ? media.hashtags : extractHashtagsFromCaption(caption)
+      hashtags:
+        media?.hashtags && media.hashtags.length > 0
+          ? media.hashtags
+          : extractHashtagsFromCaption(caption),
     };
   });
   const seriesCounts = /* @__PURE__ */ new Map();
@@ -4696,7 +5301,10 @@ function mergeReportMedia(report, mediaItems) {
     if (!post.seriesLabel) {
       continue;
     }
-    seriesCounts.set(post.seriesLabel, (seriesCounts.get(post.seriesLabel) ?? 0) + 1);
+    seriesCounts.set(
+      post.seriesLabel,
+      (seriesCounts.get(post.seriesLabel) ?? 0) + 1,
+    );
   }
   return merged.map((post) => {
     const theme = classifyPresentationTheme(post, seriesCounts);
@@ -4706,8 +5314,8 @@ function mergeReportMedia(report, mediaItems) {
       title: buildPostTitle({
         caption: post.caption,
         hook: post.hook,
-        seriesLabel: post.seriesLabel
-      })
+        seriesLabel: post.seriesLabel,
+      }),
     };
   });
 }
@@ -4727,18 +5335,25 @@ function buildKeywordPerformance(posts) {
       const current = stats.get(keyword) ?? {
         keyword,
         totalViews: 0,
-        mentions: 0
+        mentions: 0,
       };
       current.totalViews += post.views;
       current.mentions += 1;
       stats.set(keyword, current);
     }
   }
-  const ranked = [...stats.values()].filter((keyword) => keyword.mentions >= 2 || keyword.totalViews >= 5e3).sort((a, b) => {
-    const wordCountA = a.keyword.split(" ").length;
-    const wordCountB = b.keyword.split(" ").length;
-    return b.totalViews - a.totalViews || b.mentions - a.mentions || wordCountB - wordCountA || a.keyword.localeCompare(b.keyword);
-  });
+  const ranked = [...stats.values()]
+    .filter((keyword) => keyword.mentions >= 2 || keyword.totalViews >= 5e3)
+    .sort((a, b) => {
+      const wordCountA = a.keyword.split(" ").length;
+      const wordCountB = b.keyword.split(" ").length;
+      return (
+        b.totalViews - a.totalViews ||
+        b.mentions - a.mentions ||
+        wordCountB - wordCountA ||
+        a.keyword.localeCompare(b.keyword)
+      );
+    });
   const selected = [];
   for (const keyword of ranked) {
     const keywordWords = keyword.keyword.split(" ");
@@ -4746,7 +5361,10 @@ function buildKeywordPerformance(posts) {
       if (keywordWords.length !== 1) {
         return false;
       }
-      return existing.keyword.includes(keyword.keyword) && existing.totalViews >= keyword.totalViews * 0.9;
+      return (
+        existing.keyword.includes(keyword.keyword) &&
+        existing.totalViews >= keyword.totalViews * 0.9
+      );
     });
     if (isSuppressed) {
       continue;
@@ -4759,29 +5377,40 @@ function buildKeywordPerformance(posts) {
   return selected.map((keyword) => ({
     keyword: keyword.keyword,
     totalViews: keyword.totalViews,
-    mentions: keyword.mentions
+    mentions: keyword.mentions,
   }));
 }
 function buildHashtagPerformance(posts) {
   const stats = /* @__PURE__ */ new Map();
   for (const post of posts) {
     const tags = new Set(
-      (post.hashtags && post.hashtags.length > 0 ? post.hashtags : extractHashtagsFromCaption(post.caption)).map((tag) => tag.replace(/^#/, "").toLowerCase()).filter(Boolean)
+      (post.hashtags && post.hashtags.length > 0
+        ? post.hashtags
+        : extractHashtagsFromCaption(post.caption)
+      )
+        .map((tag) => tag.replace(/^#/, "").toLowerCase())
+        .filter(Boolean),
     );
     for (const tag of tags) {
       const current = stats.get(tag) ?? {
         hashtag: tag,
         totalViews: 0,
-        postCount: 0
+        postCount: 0,
       };
       current.totalViews += post.views;
       current.postCount += 1;
       stats.set(tag, current);
     }
   }
-  return [...stats.values()].sort((a, b) => {
-    return b.totalViews - a.totalViews || b.postCount - a.postCount || a.hashtag.localeCompare(b.hashtag);
-  }).slice(0, 12);
+  return [...stats.values()]
+    .sort((a, b) => {
+      return (
+        b.totalViews - a.totalViews ||
+        b.postCount - a.postCount ||
+        a.hashtag.localeCompare(b.hashtag)
+      );
+    })
+    .slice(0, 12);
 }
 function buildThemePerformance(posts, totalViews) {
   const byTheme = /* @__PURE__ */ new Map();
@@ -4790,26 +5419,34 @@ function buildThemePerformance(posts, totalViews) {
     grouped.push(post);
     byTheme.set(post.theme, grouped);
   }
-  return [...byTheme.entries()].map(([label, themedPosts]) => {
-    const views = themedPosts.map((post) => post.views);
-    const reach = themedPosts.map((post) => post.reach);
-    const saves = themedPosts.map((post) => post.saves);
-    const shares = themedPosts.map((post) => post.shares);
-    const engagementRates = themedPosts.map((post) => post.engagementRatePercent);
-    return {
-      label,
-      totalViews: sum(views),
-      totalReach: sum(reach),
-      postCount: themedPosts.length,
-      avgViews: average(views),
-      avgEngagementRatePercent: averageNullable(engagementRates),
-      avgSaves: average(saves),
-      avgShares: average(shares),
-      shareOfViews: totalViews > 0 ? sum(views) / totalViews : 0
-    };
-  }).sort((a, b) => {
-    return b.totalViews - a.totalViews || b.avgViews - a.avgViews || a.label.localeCompare(b.label);
-  });
+  return [...byTheme.entries()]
+    .map(([label, themedPosts]) => {
+      const views = themedPosts.map((post) => post.views);
+      const reach = themedPosts.map((post) => post.reach);
+      const saves = themedPosts.map((post) => post.saves);
+      const shares = themedPosts.map((post) => post.shares);
+      const engagementRates = themedPosts.map(
+        (post) => post.engagementRatePercent,
+      );
+      return {
+        label,
+        totalViews: sum(views),
+        totalReach: sum(reach),
+        postCount: themedPosts.length,
+        avgViews: average(views),
+        avgEngagementRatePercent: averageNullable(engagementRates),
+        avgSaves: average(saves),
+        avgShares: average(shares),
+        shareOfViews: totalViews > 0 ? sum(views) / totalViews : 0,
+      };
+    })
+    .sort((a, b) => {
+      return (
+        b.totalViews - a.totalViews ||
+        b.avgViews - a.avgViews ||
+        a.label.localeCompare(b.label)
+      );
+    });
 }
 function buildHookPerformance(posts) {
   const byHook = /* @__PURE__ */ new Map();
@@ -4818,20 +5455,27 @@ function buildHookPerformance(posts) {
     grouped.push(post);
     byHook.set(post.hookType, grouped);
   }
-  return [...byHook.entries()].map(([label, hookedPosts]) => {
-    const avgViews = average(hookedPosts.map((post) => post.views));
-    const bestPost = [...hookedPosts].sort((a, b) => b.views - a.views)[0] ?? null;
-    return {
-      label,
-      avgViews,
-      postCount: hookedPosts.length,
-      shareOfPosts: posts.length > 0 ? hookedPosts.length / posts.length : 0,
-      bestExample: bestPost?.hook ?? bestPost?.title ?? null,
-      bestViews: bestPost?.views ?? 0
-    };
-  }).sort((a, b) => {
-    return b.avgViews - a.avgViews || b.postCount - a.postCount || a.label.localeCompare(b.label);
-  });
+  return [...byHook.entries()]
+    .map(([label, hookedPosts]) => {
+      const avgViews = average(hookedPosts.map((post) => post.views));
+      const bestPost =
+        [...hookedPosts].sort((a, b) => b.views - a.views)[0] ?? null;
+      return {
+        label,
+        avgViews,
+        postCount: hookedPosts.length,
+        shareOfPosts: posts.length > 0 ? hookedPosts.length / posts.length : 0,
+        bestExample: bestPost?.hook ?? bestPost?.title ?? null,
+        bestViews: bestPost?.views ?? 0,
+      };
+    })
+    .sort((a, b) => {
+      return (
+        b.avgViews - a.avgViews ||
+        b.postCount - a.postCount ||
+        a.label.localeCompare(b.label)
+      );
+    });
 }
 function buildPerformancePatterns(input) {
   const rows = [];
@@ -4842,25 +5486,25 @@ function buildPerformancePatterns(input) {
   if (topHook) {
     rows.push({
       pattern: `${topHook.label} openings`,
-      value: `${formatCompactNumber(topHook.avgViews)} avg views`
+      value: `${formatCompactNumber(topHook.avgViews)} avg views`,
     });
   }
   if (topTheme) {
     rows.push({
       pattern: `${topTheme.label} theme`,
-      value: `${formatPercent(topTheme.shareOfViews * 100, 0)} of total views`
+      value: `${formatPercent(topTheme.shareOfViews * 100, 0)} of total views`,
     });
   }
   if (seriesPosts.length >= 2) {
     rows.push({
       pattern: "Recurring series labels",
-      value: `${formatCompactNumber(average(seriesPosts.map((post) => post.views)))} avg views`
+      value: `${formatCompactNumber(average(seriesPosts.map((post) => post.views)))} avg views`,
     });
   }
   if (withTranscripts.length > 0) {
     rows.push({
       pattern: "Posts with transcript-backed hooks",
-      value: `${formatCompactNumber(average(withTranscripts.map((post) => post.views)))} avg views`
+      value: `${formatCompactNumber(average(withTranscripts.map((post) => post.views)))} avg views`,
     });
   }
   return rows.slice(0, 4);
@@ -4868,135 +5512,174 @@ function buildPerformancePatterns(input) {
 function buildHookGuidance(hookPerformance) {
   const topHook = hookPerformance[0]?.label ?? "Statement Hook";
   return [
-    topHook === "Number/Stat Hook" ? {
-      title: "Lead with a concrete number",
-      body: "Specific numbers, dollar amounts, and percentages are the fastest way to signal a clear payoff."
-    } : {
-      title: `Lean into ${topHook.replace(" Hook", "").toLowerCase()} framing`,
-      body: "The strongest opening pattern in this window is worth repeating with fresh subject matter."
-    },
+    topHook === "Number/Stat Hook"
+      ? {
+          title: "Lead with a concrete number",
+          body: "Specific numbers, dollar amounts, and percentages are the fastest way to signal a clear payoff.",
+        }
+      : {
+          title: `Lean into ${topHook.replace(" Hook", "").toLowerCase()} framing`,
+          body: "The strongest opening pattern in this window is worth repeating with fresh subject matter.",
+        },
     {
       title: "Keep the first beat short",
-      body: "The best-performing hooks land in one fast sentence and make the payoff obvious before the viewer can scroll away."
+      body: "The best-performing hooks land in one fast sentence and make the payoff obvious before the viewer can scroll away.",
     },
     {
       title: "Tie the claim to a practical outcome",
-      body: "Hooks that quickly connect to money, growth, or a concrete transformation tend to travel farther and earn more saves."
+      body: "Hooks that quickly connect to money, growth, or a concrete transformation tend to travel farther and earn more saves.",
     },
     {
       title: "Make the topic easy to classify",
-      body: "Consistent series labels, repeated language, and recognizable themes help viewers know why they should keep watching."
-    }
+      body: "Consistent series labels, repeated language, and recognizable themes help viewers know why they should keep watching.",
+    },
   ];
 }
 function buildStrategicInsights(input) {
-  const { posts, totals, themePerformance, hookPerformance, keywordPerformance } = input;
+  const {
+    posts,
+    totals,
+    themePerformance,
+    hookPerformance,
+    keywordPerformance,
+  } = input;
   const overallAvgViews = totals.avgViews;
-  const lowestTheme = [...themePerformance].filter((theme) => theme.postCount >= 2).sort((a, b) => a.avgViews - b.avgViews)[0] ?? null;
-  const lowestHook = [...hookPerformance].filter((hook) => hook.postCount >= 2).sort((a, b) => a.avgViews - b.avgViews)[0] ?? null;
-  const promisingTheme = [...themePerformance].filter((theme) => theme.postCount <= 2 && theme.avgViews >= overallAvgViews).sort((a, b) => b.avgViews - a.avgViews)[0] ?? null;
-  const promisingHook = [...hookPerformance].filter((hook) => hook.postCount <= 2 && hook.avgViews >= overallAvgViews).sort((a, b) => b.avgViews - a.avgViews)[0] ?? null;
+  const lowestTheme =
+    [...themePerformance]
+      .filter((theme) => theme.postCount >= 2)
+      .sort((a, b) => a.avgViews - b.avgViews)[0] ?? null;
+  const lowestHook =
+    [...hookPerformance]
+      .filter((hook) => hook.postCount >= 2)
+      .sort((a, b) => a.avgViews - b.avgViews)[0] ?? null;
+  const promisingTheme =
+    [...themePerformance]
+      .filter(
+        (theme) => theme.postCount <= 2 && theme.avgViews >= overallAvgViews,
+      )
+      .sort((a, b) => b.avgViews - a.avgViews)[0] ?? null;
+  const promisingHook =
+    [...hookPerformance]
+      .filter((hook) => hook.postCount <= 2 && hook.avgViews >= overallAvgViews)
+      .sort((a, b) => b.avgViews - a.avgViews)[0] ?? null;
   const transcriptlessPosts = posts.filter((post) => !post.hasTranscript);
-  const transcriptlessAvgViews = transcriptlessPosts.length > 0 ? average(transcriptlessPosts.map((post) => post.views)) : null;
+  const transcriptlessAvgViews =
+    transcriptlessPosts.length > 0
+      ? average(transcriptlessPosts.map((post) => post.views))
+      : null;
   const doMoreOf = [];
   const doLessOf = [];
   const untappedOpportunities = [];
   if (themePerformance[0]) {
     doMoreOf.push({
       title: `${themePerformance[0].label} is carrying the period`,
-      body: `This theme drove ${formatCompactNumber(themePerformance[0].totalViews)} views across ${themePerformance[0].postCount} posts, or ${formatPercent(themePerformance[0].shareOfViews * 100, 0)} of the total window.`
+      body: `This theme drove ${formatCompactNumber(themePerformance[0].totalViews)} views across ${themePerformance[0].postCount} posts, or ${formatPercent(themePerformance[0].shareOfViews * 100, 0)} of the total window.`,
     });
   }
   if (hookPerformance[0]) {
     doMoreOf.push({
       title: `${hookPerformance[0].label} is the strongest opener`,
-      body: `Posts using this hook pattern averaged ${formatCompactNumber(hookPerformance[0].avgViews)} views across ${hookPerformance[0].postCount} posts.`
+      body: `Posts using this hook pattern averaged ${formatCompactNumber(hookPerformance[0].avgViews)} views across ${hookPerformance[0].postCount} posts.`,
     });
   }
-  const saveHeavyTheme = [...themePerformance].sort((a, b) => b.avgSaves - a.avgSaves)[0] ?? null;
+  const saveHeavyTheme =
+    [...themePerformance].sort((a, b) => b.avgSaves - a.avgSaves)[0] ?? null;
   if (saveHeavyTheme && saveHeavyTheme !== themePerformance[0]) {
     doMoreOf.push({
       title: `${saveHeavyTheme.label} earns strong save behavior`,
-      body: `It averages ${formatCompactNumber(saveHeavyTheme.avgSaves)} saves and ${formatCompactNumber(saveHeavyTheme.avgShares)} shares per post, a sign people want to revisit or forward it.`
+      body: `It averages ${formatCompactNumber(saveHeavyTheme.avgSaves)} saves and ${formatCompactNumber(saveHeavyTheme.avgShares)} shares per post, a sign people want to revisit or forward it.`,
     });
   }
   if (lowestTheme && lowestTheme.avgViews < overallAvgViews * 0.8) {
     doLessOf.push({
       title: `${lowestTheme.label} is trailing the rest of the mix`,
-      body: `It averaged ${formatCompactNumber(lowestTheme.avgViews)} views across ${lowestTheme.postCount} posts versus ${formatCompactNumber(overallAvgViews)} overall.`
+      body: `It averaged ${formatCompactNumber(lowestTheme.avgViews)} views across ${lowestTheme.postCount} posts versus ${formatCompactNumber(overallAvgViews)} overall.`,
     });
   }
   if (lowestHook && lowestHook.avgViews < overallAvgViews * 0.8) {
     doLessOf.push({
       title: `${lowestHook.label} needs a sharper first line`,
-      body: `This hook pattern averaged ${formatCompactNumber(lowestHook.avgViews)} views, making it the weakest repeated opening format in the window.`
+      body: `This hook pattern averaged ${formatCompactNumber(lowestHook.avgViews)} views, making it the weakest repeated opening format in the window.`,
     });
   }
-  if (transcriptlessAvgViews !== null && transcriptlessPosts.length > 0 && transcriptlessAvgViews < overallAvgViews) {
+  if (
+    transcriptlessAvgViews !== null &&
+    transcriptlessPosts.length > 0 &&
+    transcriptlessAvgViews < overallAvgViews
+  ) {
     doLessOf.push({
       title: "Posts without a clear spoken/text hook are lagging",
-      body: `Posts missing transcript-backed hooks averaged ${formatCompactNumber(transcriptlessAvgViews)} views, below the ${formatCompactNumber(overallAvgViews)} account average.`
+      body: `Posts missing transcript-backed hooks averaged ${formatCompactNumber(transcriptlessAvgViews)} views, below the ${formatCompactNumber(overallAvgViews)} account average.`,
     });
   }
   if (promisingTheme) {
     untappedOpportunities.push({
       title: `${promisingTheme.label} has upside with more volume`,
-      body: `It averaged ${formatCompactNumber(promisingTheme.avgViews)} views while only showing up in ${promisingTheme.postCount} posts this period.`
+      body: `It averaged ${formatCompactNumber(promisingTheme.avgViews)} views while only showing up in ${promisingTheme.postCount} posts this period.`,
     });
   }
   if (promisingHook) {
     untappedOpportunities.push({
       title: `${promisingHook.label} deserves more repetitions`,
-      body: `This hook type averaged ${formatCompactNumber(promisingHook.avgViews)} views but only appeared in ${promisingHook.postCount} posts.`
+      body: `This hook type averaged ${formatCompactNumber(promisingHook.avgViews)} views but only appeared in ${promisingHook.postCount} posts.`,
     });
   }
   if (keywordPerformance[0]) {
     untappedOpportunities.push({
       title: "Repeat the strongest audience language earlier",
-      body: `Keywords like \u201C${keywordPerformance[0].keyword}\u201D appeared in posts worth ${formatCompactNumber(keywordPerformance[0].totalViews)} total views, so that phrasing is worth bringing into hooks, covers, and captions.`
+      body: `Keywords like \u201C${keywordPerformance[0].keyword}\u201D appeared in posts worth ${formatCompactNumber(keywordPerformance[0].totalViews)} total views, so that phrasing is worth bringing into hooks, covers, and captions.`,
     });
   }
   return {
     doMoreOf: doMoreOf.slice(0, 4),
     doLessOf: doLessOf.slice(0, 3),
-    untappedOpportunities: untappedOpportunities.slice(0, 4)
+    untappedOpportunities: untappedOpportunities.slice(0, 4),
   };
 }
 function buildNumberCallouts(input) {
   const { posts, totals, themePerformance, hookPerformance, starPost } = input;
-  const restPosts = starPost ? posts.filter((post) => post.title !== starPost.title) : posts;
-  const averageWithoutStar = starPost && restPosts.length > 0 ? average(restPosts.map((post) => post.views)) : null;
+  const restPosts = starPost
+    ? posts.filter((post) => post.title !== starPost.title)
+    : posts;
+  const averageWithoutStar =
+    starPost && restPosts.length > 0
+      ? average(restPosts.map((post) => post.views))
+      : null;
   const topHook = hookPerformance[0];
   const dominantTheme = themePerformance[0];
-  const coverage = posts.length > 0 ? posts.filter((post) => post.hasTranscript).length / posts.length : 0;
+  const coverage =
+    posts.length > 0
+      ? posts.filter((post) => post.hasTranscript).length / posts.length
+      : 0;
   const callouts = [];
   if (starPost && totals.views > 0) {
     callouts.push({
-      value: formatPercent(starPost.views / totals.views * 100, 0),
-      description: "of this 30-day window\u2019s total views came from the top post."
+      value: formatPercent((starPost.views / totals.views) * 100, 0),
+      description:
+        "of this 30-day window\u2019s total views came from the top post.",
     });
   }
   if (dominantTheme) {
     callouts.push({
       value: formatPercent(dominantTheme.shareOfViews * 100, 0),
-      description: `of total views came from ${dominantTheme.label}.`
+      description: `of total views came from ${dominantTheme.label}.`,
     });
   }
   if (averageWithoutStar !== null) {
     callouts.push({
       value: formatCompactNumber(averageWithoutStar),
-      description: "average views per post after removing the top outlier."
+      description: "average views per post after removing the top outlier.",
     });
   }
   if (topHook && totals.avgViews > 0) {
     callouts.push({
       value: `${round(topHook.avgViews / totals.avgViews, 1)}x`,
-      description: `${topHook.label.replace(" Hook", "")} hooks versus the overall average view baseline.`
+      description: `${topHook.label.replace(" Hook", "")} hooks versus the overall average view baseline.`,
     });
   } else {
     callouts.push({
       value: formatPercent(coverage * 100, 0),
-      description: "of posts included a transcript-backed hook in this window."
+      description: "of posts included a transcript-backed hook in this window.",
     });
   }
   return callouts.slice(0, 4);
@@ -5017,9 +5700,15 @@ function formatPercent(value, precision = 1) {
   return `${round(value, precision)}%`;
 }
 function buildDashboardModel(input) {
-  const mergedPosts = mergeReportMedia(input.report, input.mediaItems).sort((a, b) => {
-    return b.views - a.views || (toDate(b.postedAt)?.getTime() ?? 0) - (toDate(a.postedAt)?.getTime() ?? 0);
-  });
+  const mergedPosts = mergeReportMedia(input.report, input.mediaItems).sort(
+    (a, b) => {
+      return (
+        b.views - a.views ||
+        (toDate(b.postedAt)?.getTime() ?? 0) -
+          (toDate(a.postedAt)?.getTime() ?? 0)
+      );
+    },
+  );
   const posts = mergedPosts.map(({ storedTheme, hashtags, ...post }) => {
     void storedTheme;
     void hashtags;
@@ -5032,19 +5721,34 @@ function buildDashboardModel(input) {
     saves: input.report.aggregates.totals.saves,
     shares: input.report.aggregates.totals.shares,
     postCount: input.report.aggregates.totals.postCount,
-    avgViews: input.report.aggregates.totals.postCount > 0 ? input.report.aggregates.totals.views / input.report.aggregates.totals.postCount : 0,
-    avgEngagementRatePercent: typeof input.report.aggregates.totals.avgEngagementRate === "number" ? round(input.report.aggregates.totals.avgEngagementRate * 100, 1) : null
+    avgViews:
+      input.report.aggregates.totals.postCount > 0
+        ? input.report.aggregates.totals.views /
+          input.report.aggregates.totals.postCount
+        : 0,
+    avgEngagementRatePercent:
+      typeof input.report.aggregates.totals.avgEngagementRate === "number"
+        ? round(input.report.aggregates.totals.avgEngagementRate * 100, 1)
+        : null,
   };
   const starPostSource = posts[0] ?? null;
-  const avgWithoutStar = starPostSource && posts.length > 1 ? average(posts.slice(1).map((post) => post.views)) : null;
-  const starPost = starPostSource ? {
-    title: starPostSource.title,
-    hook: starPostSource.hook,
-    views: starPostSource.views,
-    multiplier: avgWithoutStar && avgWithoutStar > 0 ? round(starPostSource.views / avgWithoutStar, 1) : null,
-    theme: starPostSource.theme,
-    permalink: starPostSource.permalink
-  } : null;
+  const avgWithoutStar =
+    starPostSource && posts.length > 1
+      ? average(posts.slice(1).map((post) => post.views))
+      : null;
+  const starPost = starPostSource
+    ? {
+        title: starPostSource.title,
+        hook: starPostSource.hook,
+        views: starPostSource.views,
+        multiplier:
+          avgWithoutStar && avgWithoutStar > 0
+            ? round(starPostSource.views / avgWithoutStar, 1)
+            : null,
+        theme: starPostSource.theme,
+        permalink: starPostSource.permalink,
+      }
+    : null;
   const themePerformance = buildThemePerformance(posts, totals.views);
   const hookPerformance = buildHookPerformance(posts);
   const keywordPerformance = buildKeywordPerformance(posts);
@@ -5052,26 +5756,32 @@ function buildDashboardModel(input) {
     mergedPosts.map((post) => ({
       caption: post.caption,
       views: post.views,
-      hashtags: post.hashtags
-    }))
+      hashtags: post.hashtags,
+    })),
   );
   const strategicInsights = buildStrategicInsights({
     posts,
     totals,
     themePerformance,
     hookPerformance,
-    keywordPerformance
+    keywordPerformance,
   });
-  const username = input.account?.username ?? input.report.accountSummary.username ?? "instagram-account";
+  const username =
+    input.account?.username ??
+    input.report.accountSummary.username ??
+    "instagram-account";
   return {
     username,
     title: `${username} | Instasights`,
     windowLabel: buildWindowLabel(input.report),
-    generatedAtLabel: formatDate(toDate(input.report.generatedAt) ?? /* @__PURE__ */ new Date(), {
-      month: "short",
-      day: "numeric",
-      year: "numeric"
-    }),
+    generatedAtLabel: formatDate(
+      toDate(input.report.generatedAt) ?? /* @__PURE__ */ new Date(),
+      {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      },
+    ),
     postCountLabel: `${totals.postCount} ${totals.postCount === 1 ? "Post" : "Posts"}`,
     totals,
     statCards: [
@@ -5079,34 +5789,34 @@ function buildDashboardModel(input) {
         label: "Total Views",
         value: totals.views,
         sublabel: `all ${totals.postCount} posts`,
-        compact: true
+        compact: true,
       },
       {
         label: "Total Reach",
         value: totals.reach,
         sublabel: "unique accounts",
-        compact: true
+        compact: true,
       },
       {
         label: "Total Likes",
         value: totals.likes,
-        sublabel: "across period"
+        sublabel: "across period",
       },
       {
         label: "Total Saves",
         value: totals.saves,
-        sublabel: "bookmarks"
+        sublabel: "bookmarks",
       },
       {
         label: "Total Shares",
         value: totals.shares,
-        sublabel: "sends + reposts"
+        sublabel: "sends + reposts",
       },
       {
         label: "Posts",
         value: totals.postCount,
-        sublabel: `${input.report.window.days}-day window`
-      }
+        sublabel: `${input.report.window.days}-day window`,
+      },
     ],
     starPost,
     themePerformance,
@@ -5118,7 +5828,7 @@ function buildDashboardModel(input) {
     performancePatterns: buildPerformancePatterns({
       themePerformance,
       hookPerformance,
-      posts
+      posts,
     }),
     hookGuidance: buildHookGuidance(hookPerformance),
     strategicInsights,
@@ -5127,72 +5837,93 @@ function buildDashboardModel(input) {
       totals,
       themePerformance,
       hookPerformance,
-      starPost
-    })
+      starPost,
+    }),
   };
 }
 
 // src/report-html.ts
 function escapeHtml(value) {
-  return (value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  return (value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 function serializeJsonForScript(value) {
-  return JSON.stringify(value).replace(/</g, "\\u003c").replace(/>/g, "\\u003e").replace(/&/g, "\\u0026").replace(/\u2028/g, "\\u2028").replace(/\u2029/g, "\\u2029");
+  return JSON.stringify(value)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
 }
 function renderEmptyState(message) {
   return `<div class="empty-state">${escapeHtml(message)}</div>`;
 }
 function renderThemeBars(items) {
   if (items.length === 0) {
-    return renderEmptyState("No themed posts were available for this report window.");
+    return renderEmptyState(
+      "No themed posts were available for this report window.",
+    );
   }
   const maxViews = Math.max(...items.map((item) => item.totalViews), 1);
-  return items.map((item) => {
-    const width = item.totalViews / maxViews * 100;
-    return `
+  return items
+    .map((item) => {
+      const width = (item.totalViews / maxViews) * 100;
+      return `
         <div class="bar-item">
           <div class="bar-meta">
             <span class="bar-label">${escapeHtml(item.label)}</span>
             <span class="bar-value">${escapeHtml(
-      `${formatCompactNumber(item.totalViews)} views \xB7 ${item.postCount} posts \xB7 ${formatPercent(
-        item.shareOfViews * 100,
-        0
-      )}`
-    )}</span>
+              `${formatCompactNumber(item.totalViews)} views \xB7 ${item.postCount} posts \xB7 ${formatPercent(
+                item.shareOfViews * 100,
+                0,
+              )}`,
+            )}</span>
           </div>
           <div class="bar-track"><div class="bar-fill" style="width:${width.toFixed(1)}%"></div></div>
         </div>
       `;
-  }).join("");
+    })
+    .join("");
 }
 function renderHookBars(items) {
   if (items.length === 0) {
-    return renderEmptyState("No hook patterns were available for this report window.");
+    return renderEmptyState(
+      "No hook patterns were available for this report window.",
+    );
   }
   const maxViews = Math.max(...items.map((item) => item.avgViews), 1);
-  return items.map((item, index) => {
-    const width = item.avgViews / maxViews * 100;
-    return `
+  return items
+    .map((item, index) => {
+      const width = (item.avgViews / maxViews) * 100;
+      return `
         <div class="bar-item">
           <div class="bar-meta">
             <span class="bar-label ${index === 0 ? "bar-label-top" : ""}">${escapeHtml(item.label)}${index === 0 ? ' <span class="top-chip">Top</span>' : ""}</span>
             <span class="bar-value">${escapeHtml(
-      `${formatCompactNumber(item.avgViews)} avg \xB7 ${item.postCount} posts`
-    )}</span>
+              `${formatCompactNumber(item.avgViews)} avg \xB7 ${item.postCount} posts`,
+            )}</span>
           </div>
           <div class="bar-track"><div class="bar-fill alt" style="width:${width.toFixed(1)}%"></div></div>
         </div>
       `;
-  }).join("");
+    })
+    .join("");
 }
 function renderKeywordBars(items) {
   if (items.length === 0) {
-    return renderEmptyState("No repeated caption keywords were strong enough to surface.");
+    return renderEmptyState(
+      "No repeated caption keywords were strong enough to surface.",
+    );
   }
   const maxViews = Math.max(...items.map((item) => item.totalViews), 1);
-  return items.map((item, index) => {
-    const width = item.totalViews / maxViews * 100;
-    return `
+  return items
+    .map((item, index) => {
+      const width = (item.totalViews / maxViews) * 100;
+      return `
         <div class="keyword-item">
           <div class="keyword-rank">${index + 1}</div>
           <div class="keyword-main">
@@ -5203,11 +5934,14 @@ function renderKeywordBars(items) {
           <div class="keyword-mentions">${escapeHtml(`${item.mentions}x`)}</div>
         </div>
       `;
-  }).join("");
+    })
+    .join("");
 }
 function renderHashtagTable(model) {
   if (model.hashtagPerformance.length === 0) {
-    return renderEmptyState("No hashtags were available for this report window.");
+    return renderEmptyState(
+      "No hashtags were available for this report window.",
+    );
   }
   return `
     <table class="data-table compact-table">
@@ -5219,15 +5953,17 @@ function renderHashtagTable(model) {
         </tr>
       </thead>
       <tbody>
-        ${model.hashtagPerformance.map(
-    (item) => `
+        ${model.hashtagPerformance
+          .map(
+            (item) => `
               <tr>
                 <td class="mono">#${escapeHtml(item.hashtag)}</td>
                 <td>${escapeHtml(formatCompactNumber(item.totalViews))}</td>
                 <td>${item.postCount}</td>
               </tr>
-            `
-  ).join("")}
+            `,
+          )
+          .join("")}
       </tbody>
     </table>
   `;
@@ -5246,30 +5982,37 @@ function hookToneClass(label) {
 }
 function renderHookCards(model) {
   if (model.hookPerformance.length === 0) {
-    return renderEmptyState("No hook patterns were available for this report window.");
+    return renderEmptyState(
+      "No hook patterns were available for this report window.",
+    );
   }
-  return model.hookPerformance.map(
-    (item, index) => `
+  return model.hookPerformance
+    .map(
+      (item, index) => `
         <div class="hook-card">
           <div class="hook-card-label">${escapeHtml(item.label)}</div>
           <div class="hook-card-avg ${hookToneClass(item.label)}">${escapeHtml(
-      formatCompactNumber(item.avgViews)
-    )}</div>
+            formatCompactNumber(item.avgViews),
+          )}</div>
           <div class="hook-card-count">
             avg views \xB7 ${item.postCount} posts \xB7 ${escapeHtml(formatPercent(item.shareOfPosts * 100, 0))}
             ${index === 0 ? '<span class="top-chip">Top</span>' : ""}
           </div>
           <div class="hook-card-example">${escapeHtml(item.bestExample ?? "No example available.")}</div>
         </div>
-      `
-  ).join("");
+      `,
+    )
+    .join("");
 }
 function renderTopHooks(model) {
   if (model.topHooks.length === 0) {
-    return renderEmptyState("No hook excerpts were available for this report window.");
+    return renderEmptyState(
+      "No hook excerpts were available for this report window.",
+    );
   }
-  return model.topHooks.map(
-    (post, index) => `
+  return model.topHooks
+    .map(
+      (post, index) => `
         <div class="top-hook-item">
           <div class="top-hook-rank ${index === 0 ? "top-hook-rank-first" : ""}">${index + 1}</div>
           <div class="top-hook-body">
@@ -5277,18 +6020,21 @@ function renderTopHooks(model) {
             <div class="top-hook-meta">
               <span class="top-hook-views">${escapeHtml(formatCompactNumber(post.views))} views</span>
               <span class="hook-pill ${hookToneClass(post.hookType)}">${escapeHtml(
-      post.hookType.replace(" Hook", "")
-    )}</span>
+                post.hookType.replace(" Hook", ""),
+              )}</span>
               ${index === 0 ? '<span class="mini-badge mini-badge-hot">Viral</span>' : ""}
             </div>
           </div>
         </div>
-      `
-  ).join("");
+      `,
+    )
+    .join("");
 }
 function renderPatternTable(rows) {
   if (rows.length === 0) {
-    return renderEmptyState("No repeatable performance patterns were strong enough to summarize.");
+    return renderEmptyState(
+      "No repeatable performance patterns were strong enough to summarize.",
+    );
   }
   return `
     <table class="data-table compact-table">
@@ -5299,14 +6045,16 @@ function renderPatternTable(rows) {
         </tr>
       </thead>
       <tbody>
-        ${rows.map(
-    (row) => `
+        ${rows
+          .map(
+            (row) => `
               <tr>
                 <td>${escapeHtml(row.pattern)}</td>
                 <td>${escapeHtml(row.value)}</td>
               </tr>
-            `
-  ).join("")}
+            `,
+          )
+          .join("")}
       </tbody>
     </table>
   `;
@@ -5317,8 +6065,9 @@ function renderInsightList(items, emptyMessage) {
   }
   return `
     <div class="insight-list">
-      ${items.map(
-    (item, index) => `
+      ${items
+        .map(
+          (item, index) => `
             <div class="insight-item">
               <div class="insight-index">${index + 1}</div>
               <div class="insight-body">
@@ -5326,25 +6075,30 @@ function renderInsightList(items, emptyMessage) {
                 <div class="insight-copy">${escapeHtml(item.body)}</div>
               </div>
             </div>
-          `
-  ).join("")}
+          `,
+        )
+        .join("")}
     </div>
   `;
 }
 function renderNumberCallouts(model) {
   if (model.numberCallouts.length === 0) {
-    return renderEmptyState("No quantitative callouts were available for this report window.");
+    return renderEmptyState(
+      "No quantitative callouts were available for this report window.",
+    );
   }
   return `
     <div class="number-grid">
-      ${model.numberCallouts.map(
-    (item) => `
+      ${model.numberCallouts
+        .map(
+          (item) => `
             <div class="number-card">
               <div class="number-value">${escapeHtml(item.value)}</div>
               <div class="number-copy">${escapeHtml(item.description)}</div>
             </div>
-          `
-  ).join("")}
+          `,
+        )
+        .join("")}
     </div>
   `;
 }
@@ -5358,9 +6112,16 @@ function renderStarPost(model) {
       <div class="star-content">
         <div class="star-title">Star Post \u2014 ${escapeHtml(model.starPost.title)}</div>
         <div class="star-copy">
-          ${model.starPost.multiplier ? escapeHtml(
-    `${model.starPost.multiplier}x above the rest of the set. ${model.starPost.hook ?? ""}`
-  ) : escapeHtml(model.starPost.hook ?? "Top-performing post in this report window.")}
+          ${
+            model.starPost.multiplier
+              ? escapeHtml(
+                  `${model.starPost.multiplier}x above the rest of the set. ${model.starPost.hook ?? ""}`,
+                )
+              : escapeHtml(
+                  model.starPost.hook ??
+                    "Top-performing post in this report window.",
+                )
+          }
         </div>
       </div>
       <div class="star-metric">
@@ -6117,17 +6878,21 @@ function renderReportHtml(model) {
 
     <section class="pane active" id="pane-overview">
       <div class="stat-grid">
-        ${model.statCards.map(
-    (card) => `
+        ${model.statCards
+          .map(
+            (card) => `
               <article class="stat-card">
                 <div class="stat-label">${escapeHtml(card.label)}</div>
                 <div class="stat-value">${escapeHtml(
-      card.compact ? formatCompactNumber(card.value) : Math.round(card.value).toLocaleString("en-US")
-    )}</div>
+                  card.compact
+                    ? formatCompactNumber(card.value)
+                    : Math.round(card.value).toLocaleString("en-US"),
+                )}</div>
                 <div class="stat-sub">${escapeHtml(card.sublabel)}</div>
               </article>
-            `
-  ).join("")}
+            `,
+          )
+          .join("")}
       </div>
 
       ${renderStarPost(model)}
@@ -6249,9 +7014,9 @@ function renderReportHtml(model) {
           </div>
         </div>
         ${renderInsightList(
-    model.hookGuidance,
-    "No hook guidance was available for this report window."
-  )}
+          model.hookGuidance,
+          "No hook guidance was available for this report window.",
+        )}
       </article>
     </section>
 
@@ -6259,25 +7024,25 @@ function renderReportHtml(model) {
       <article class="insight-section">
         <h2 class="insight-section-title">Do More Of</h2>
         ${renderInsightList(
-    model.strategicInsights.doMoreOf,
-    "No repeatable strengths were strong enough to summarize."
-  )}
+          model.strategicInsights.doMoreOf,
+          "No repeatable strengths were strong enough to summarize.",
+        )}
       </article>
 
       <article class="insight-section">
         <h2 class="insight-section-title">Do Less Of / Reconsider</h2>
         ${renderInsightList(
-    model.strategicInsights.doLessOf,
-    "No consistent weak spots stood out strongly enough to summarize."
-  )}
+          model.strategicInsights.doLessOf,
+          "No consistent weak spots stood out strongly enough to summarize.",
+        )}
       </article>
 
       <article class="insight-section">
         <h2 class="insight-section-title">Untapped Opportunities</h2>
         ${renderInsightList(
-    model.strategicInsights.untappedOpportunities,
-    "No clear near-term opportunities were strong enough to summarize."
-  )}
+          model.strategicInsights.untappedOpportunities,
+          "No clear near-term opportunities were strong enough to summarize.",
+        )}
       </article>
 
       <article class="insight-section">
@@ -6490,7 +7255,10 @@ function renderReportHtml(model) {
 
 // src/report-generator.ts
 function slugify(value) {
-  const slug = value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  const slug = value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
   return slug || "account";
 }
 function toDate2(value) {
@@ -6515,12 +7283,12 @@ function assertSupportedReportDays(days) {
 function getReadyReport(response) {
   if (response.status === "not_linked") {
     throw new Error(
-      "No linked Instagram account found. Run `instasights instagram link --open` first."
+      "No linked Instagram account found. Run `instasights instagram link --open` first.",
     );
   }
   if (response.status === "not_synced" || !response.report) {
     throw new Error(
-      "No synced analysis report is available. Run `instasights sync run --wait` first."
+      "No synced analysis report is available. Run `instasights sync run --wait` first.",
     );
   }
   return response.report;
@@ -6532,13 +7300,13 @@ async function listAllReportMedia(input) {
   while (true) {
     logRuntime("Fetching report media page...", {
       page,
-      cursor
+      cursor,
     });
     const searchParams = buildMediaListSearchParams({
       limit: input.limit ?? 100,
       since: input.since,
       until: input.until,
-      flatMetrics: true
+      flatMetrics: true,
     });
     if (cursor) {
       searchParams.set("cursor", cursor);
@@ -6557,7 +7325,7 @@ async function listAllReportMedia(input) {
 }
 function buildDefaultReportOutputPath(input) {
   const filename = `instagram-report-${slugify(input.username ?? "account")}-${input.days}d-${formatFileDate(
-    input.generatedAt
+    input.generatedAt,
   )}.html`;
   return path4.resolve(input.cwd ?? process.cwd(), filename);
 }
@@ -6572,35 +7340,41 @@ async function generateHtmlReport(input) {
   const mediaItems = await listAllReportMedia({
     client: input.client,
     since: report.window.since,
-    until: report.window.until
+    until: report.window.until,
   });
   const model = buildDashboardModel({
     account: reportResponse.account,
     report,
-    mediaItems
+    mediaItems,
   });
   logRuntime("Rendering report HTML in memory...", {
-    postCount: model.posts.length
+    postCount: model.posts.length,
   });
   const html = renderReportHtml(model);
-  const resolvedOutputPath = input.outputPath ? path4.resolve(input.cwd ?? process.cwd(), input.outputPath) : buildDefaultReportOutputPath({
-    cwd: input.cwd,
-    username: model.username,
-    generatedAt: report.generatedAt,
-    days
-  });
+  const resolvedOutputPath = input.outputPath
+    ? path4.resolve(input.cwd ?? process.cwd(), input.outputPath)
+    : buildDefaultReportOutputPath({
+        cwd: input.cwd,
+        username: model.username,
+        generatedAt: report.generatedAt,
+        days,
+      });
   logRuntime("Writing the HTML report to disk...", {
-    outputPath: resolvedOutputPath
+    outputPath: resolvedOutputPath,
   });
   await mkdir4(path4.dirname(resolvedOutputPath), { recursive: true });
-  await writeFile4(resolvedOutputPath, `${html}
-`, "utf8");
+  await writeFile4(
+    resolvedOutputPath,
+    `${html}
+`,
+    "utf8",
+  );
   return {
     outputPath: resolvedOutputPath,
     days,
     username: model.username,
     generatedAt: report.generatedAt,
-    postCount: model.posts.length
+    postCount: model.posts.length,
   };
 }
 
@@ -6609,7 +7383,8 @@ function buildPaginationSummary(totalItems, page, pageSize) {
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
   const normalizedPage = Math.min(Math.max(1, page), totalPages);
   const startIndex = totalItems === 0 ? 0 : (normalizedPage - 1) * pageSize;
-  const endIndex = totalItems === 0 ? 0 : Math.min(startIndex + pageSize, totalItems);
+  const endIndex =
+    totalItems === 0 ? 0 : Math.min(startIndex + pageSize, totalItems);
   return {
     page: normalizedPage,
     pageSize,
@@ -6620,14 +7395,14 @@ function buildPaginationSummary(totalItems, page, pageSize) {
     nextPage: normalizedPage < totalPages ? normalizedPage + 1 : null,
     previousPage: normalizedPage > 1 ? normalizedPage - 1 : null,
     startIndex,
-    endIndex
+    endIndex,
   };
 }
 function paginateList(items, page, pageSize) {
   const pagination = buildPaginationSummary(items.length, page, pageSize);
   return {
     items: items.slice(pagination.startIndex, pagination.endIndex),
-    pagination
+    pagination,
   };
 }
 function paginateReportResponse(response, page, pageSize) {
@@ -6638,32 +7413,36 @@ function paginateReportResponse(response, page, pageSize) {
         posts: buildPaginationSummary(0, page, pageSize),
         hashtags: buildPaginationSummary(0, page, pageSize),
         themeAverages: buildPaginationSummary(0, page, pageSize),
-        topPostsByMetric: {}
-      }
+        topPostsByMetric: {},
+      },
     };
   }
   const paginatedPosts = paginateList(response.report.posts, page, pageSize);
   const paginatedHashtags = paginateList(
     response.report.aggregates.hashtags,
     page,
-    pageSize
+    pageSize,
   );
   const paginatedThemeAverages = paginateList(
     response.report.aggregates.themeAverages,
     page,
-    pageSize
+    pageSize,
   );
   const topPostsByMetric = Object.fromEntries(
-    Object.entries(response.report.aggregates.topPostsByMetric).map(([metric, posts]) => {
-      const paginated = paginateList(posts, page, pageSize);
-      return [metric, paginated.items];
-    })
+    Object.entries(response.report.aggregates.topPostsByMetric).map(
+      ([metric, posts]) => {
+        const paginated = paginateList(posts, page, pageSize);
+        return [metric, paginated.items];
+      },
+    ),
   );
   const topPostsByMetricPagination = Object.fromEntries(
-    Object.entries(response.report.aggregates.topPostsByMetric).map(([metric, posts]) => {
-      const paginated = paginateList(posts, page, pageSize);
-      return [metric, paginated.pagination];
-    })
+    Object.entries(response.report.aggregates.topPostsByMetric).map(
+      ([metric, posts]) => {
+        const paginated = paginateList(posts, page, pageSize);
+        return [metric, paginated.pagination];
+      },
+    ),
   );
   return {
     ...response,
@@ -6674,15 +7453,15 @@ function paginateReportResponse(response, page, pageSize) {
         ...response.report.aggregates,
         hashtags: paginatedHashtags.items,
         themeAverages: paginatedThemeAverages.items,
-        topPostsByMetric
-      }
+        topPostsByMetric,
+      },
     },
     pagination: {
       posts: paginatedPosts.pagination,
       hashtags: paginatedHashtags.pagination,
       themeAverages: paginatedThemeAverages.pagination,
-      topPostsByMetric: topPostsByMetricPagination
-    }
+      topPostsByMetric: topPostsByMetricPagination,
+    },
   };
 }
 
@@ -6695,11 +7474,13 @@ function deriveSetupStatus(input) {
   const instagramLinkUrl = new URL("/api/login", input.appUrl).toString();
   const developersUrl = new URL("/developers", input.appUrl).toString();
   const latestCompletedAt = latestSyncRun?.completedAt ?? null;
-  const ageHours = latestCompletedAt ? roundHours(
-    (Date.now() - new Date(latestCompletedAt).getTime()) / (60 * 60 * 1e3)
-  ) : null;
+  const ageHours = latestCompletedAt
+    ? roundHours(
+        (Date.now() - new Date(latestCompletedAt).getTime()) / (60 * 60 * 1e3),
+      )
+    : null;
   const isActiveSync = Boolean(
-    latestSyncRun && ["queued", "running"].includes(latestSyncRun.status)
+    latestSyncRun && ["queued", "running"].includes(latestSyncRun.status),
   );
   const isFresh = ageHours !== null && ageHours < input.staleAfterHours;
   if (!input.overview.account) {
@@ -6712,12 +7493,13 @@ function deriveSetupStatus(input) {
         isFresh: false,
         latestCompletedAt: null,
         ageHours: null,
-        summary: "No Instagram account is linked yet."
+        summary: "No Instagram account is linked yet.",
       },
       instagramLinkUrl,
       developersUrl,
       recommendedNextAction: "connect_instagram",
-      recommendedPrompt: "Run `instasights instagram link --open` to connect Instagram, then rerun `setup status`."
+      recommendedPrompt:
+        "Run `instasights instagram link --open` to connect Instagram, then rerun `setup status`.",
     };
   }
   if (isActiveSync) {
@@ -6730,12 +7512,14 @@ function deriveSetupStatus(input) {
         isFresh: false,
         latestCompletedAt,
         ageHours,
-        summary: `A sync is currently ${latestSyncRun?.status ?? "running"}.`
+        summary: `A sync is currently ${latestSyncRun?.status ?? "running"}.`,
       },
       instagramLinkUrl,
       developersUrl,
       recommendedNextAction: "wait_for_sync",
-      recommendedPrompt: latestSyncRun?.id ? `Run \`sync get ${latestSyncRun.id}\` or \`sync run --wait\`.` : "Check sync run status again before continuing."
+      recommendedPrompt: latestSyncRun?.id
+        ? `Run \`sync get ${latestSyncRun.id}\` or \`sync run --wait\`.`
+        : "Check sync run status again before continuing.",
     };
   }
   if (!latestCompletedAt) {
@@ -6748,12 +7532,12 @@ function deriveSetupStatus(input) {
         isFresh: false,
         latestCompletedAt: null,
         ageHours: null,
-        summary: "No completed sync is available yet."
+        summary: "No completed sync is available yet.",
       },
       instagramLinkUrl,
       developersUrl,
       recommendedNextAction: "trigger_sync",
-      recommendedPrompt: `Run \`sync run --stale-after-hours ${input.staleAfterHours}\`.`
+      recommendedPrompt: `Run \`sync run --stale-after-hours ${input.staleAfterHours}\`.`,
     };
   }
   if (!isFresh) {
@@ -6766,12 +7550,12 @@ function deriveSetupStatus(input) {
         isFresh: false,
         latestCompletedAt,
         ageHours,
-        summary: `The latest completed sync is ${ageHours ?? "unknown"} hours old.`
+        summary: `The latest completed sync is ${ageHours ?? "unknown"} hours old.`,
       },
       instagramLinkUrl,
       developersUrl,
       recommendedNextAction: "trigger_sync",
-      recommendedPrompt: `Run \`sync run --stale-after-hours ${input.staleAfterHours}\`.`
+      recommendedPrompt: `Run \`sync run --stale-after-hours ${input.staleAfterHours}\`.`,
     };
   }
   return {
@@ -6783,12 +7567,13 @@ function deriveSetupStatus(input) {
       isFresh: true,
       latestCompletedAt,
       ageHours,
-      summary: "The latest completed sync is fresh enough for analysis."
+      summary: "The latest completed sync is fresh enough for analysis.",
     },
     instagramLinkUrl,
     developersUrl,
     recommendedNextAction: "analyze",
-    recommendedPrompt: "Run `snapshot latest` for account analysis, then `media list` or `media get <id>` for drilldowns."
+    recommendedPrompt:
+      "Run `snapshot latest` for account analysis, then `media list` or `media get <id>` for drilldowns.",
   };
 }
 
@@ -6806,10 +7591,16 @@ var STEP_TO_PHASE = {
   comments: "fetching comments",
   persist: "persisting results",
   "transcribe-media": "transcribing video",
-  "finalize-analysis": "finalizing analysis"
+  "finalize-analysis": "finalizing analysis",
 };
 function formatCountProgress(completed, total) {
-  if (typeof completed !== "number" || !Number.isFinite(completed) || typeof total !== "number" || !Number.isFinite(total) || total <= 0) {
+  if (
+    typeof completed !== "number" ||
+    !Number.isFinite(completed) ||
+    typeof total !== "number" ||
+    !Number.isFinite(total) ||
+    total <= 0
+  ) {
     return null;
   }
   return `${completed}/${total}`;
@@ -6821,13 +7612,22 @@ function getSyncPhase(currentStep) {
   return STEP_TO_PHASE[currentStep] ?? currentStep.replaceAll("-", " ");
 }
 function formatDurationEstimate(seconds) {
-  if (typeof seconds !== "number" || !Number.isFinite(seconds) || seconds <= 0) {
+  if (
+    typeof seconds !== "number" ||
+    !Number.isFinite(seconds) ||
+    seconds <= 0
+  ) {
     return "Expect roughly 1-5 minutes depending on account size and transcript backlog.";
   }
   const roundedSeconds = Math.max(30, Math.round(seconds / 30) * 30);
   const minutes = Math.floor(roundedSeconds / 60);
   const remainderSeconds = roundedSeconds % 60;
-  const formatted = minutes > 0 && remainderSeconds > 0 ? `${minutes}m ${remainderSeconds}s` : minutes > 0 ? `${minutes}m` : `${roundedSeconds}s`;
+  const formatted =
+    minutes > 0 && remainderSeconds > 0
+      ? `${minutes}m ${remainderSeconds}s`
+      : minutes > 0
+        ? `${minutes}m`
+        : `${roundedSeconds}s`;
   return `A recent sync finished in about ${formatted}, so this run may take around that long.`;
 }
 function buildSyncProgressSnapshot(syncRun) {
@@ -6842,11 +7642,12 @@ function buildSyncProgressSnapshot(syncRun) {
     completedBundles: syncRun.progress?.completedBundles ?? null,
     totalBundles: syncRun.progress?.totalBundles ?? null,
     activeBundleLabel: syncRun.progress?.activeBundleLabel ?? null,
-    transcriptCompletedCount: syncRun.progress?.transcriptCompletedCount ?? null,
+    transcriptCompletedCount:
+      syncRun.progress?.transcriptCompletedCount ?? null,
     transcriptFailedCount: syncRun.progress?.transcriptFailedCount ?? null,
     transcriptEligibleCount: syncRun.progress?.transcriptEligibleCount ?? null,
     activeTranscriptMediaId: syncRun.progress?.activeTranscriptMediaId ?? null,
-    error: syncRun.error ?? null
+    error: syncRun.error ?? null,
   };
 }
 function hasMeaningfulSyncProgressChange(left, right) {
@@ -6854,9 +7655,7 @@ function hasMeaningfulSyncProgressChange(left, right) {
 }
 function formatSyncProgressLine(syncRun) {
   const phase = getSyncPhase(syncRun.currentStep);
-  const parts = [
-    `Sync ${syncRun.id} is ${syncRun.status} during ${phase}`
-  ];
+  const parts = [`Sync ${syncRun.id} is ${syncRun.status} during ${phase}`];
   if (typeof syncRun.progressPercent === "number") {
     parts.push(`(${syncRun.progressPercent}%)`);
   }
@@ -6865,14 +7664,15 @@ function formatSyncProgressLine(syncRun) {
   }
   const bundleProgress = formatCountProgress(
     syncRun.progress?.completedBundles ?? null,
-    syncRun.progress?.totalBundles ?? null
+    syncRun.progress?.totalBundles ?? null,
   );
   if (bundleProgress) {
     parts.push(`bundles ${bundleProgress}`);
   }
   const transcriptProgress = formatCountProgress(
-    (syncRun.progress?.transcriptCompletedCount ?? 0) + (syncRun.progress?.transcriptFailedCount ?? 0),
-    syncRun.progress?.transcriptEligibleCount ?? null
+    (syncRun.progress?.transcriptCompletedCount ?? 0) +
+      (syncRun.progress?.transcriptFailedCount ?? 0),
+    syncRun.progress?.transcriptEligibleCount ?? null,
   );
   if (transcriptProgress) {
     parts.push(`transcripts ${transcriptProgress}`);
@@ -6881,32 +7681,34 @@ function formatSyncProgressLine(syncRun) {
     parts.push(`active bundle: ${syncRun.progress.activeBundleLabel}`);
   }
   if (syncRun.progress?.activeTranscriptMediaId) {
-    parts.push(`active transcript: ${syncRun.progress.activeTranscriptMediaId}`);
+    parts.push(
+      `active transcript: ${syncRun.progress.activeTranscriptMediaId}`,
+    );
   }
   return parts.join(" ");
 }
 function logSyncRunQueued(input) {
   if (input.queuedNewRun) {
     logRuntime(
-      `Queued Instagram sync ${input.syncRunId ?? input.syncRun?.id ?? "unknown"}.`
+      `Queued Instagram sync ${input.syncRunId ?? input.syncRun?.id ?? "unknown"}.`,
     );
     logRuntime(formatDurationEstimate(input.syncRun?.durationSeconds ?? null));
     return;
   }
   if (input.reusedExistingRun && input.syncRun) {
     logRuntime(
-      `Reusing active Instagram sync ${input.syncRun.id}; waiting for the existing run to finish.`
+      `Reusing active Instagram sync ${input.syncRun.id}; waiting for the existing run to finish.`,
     );
     logRuntime(formatDurationEstimate(input.syncRun.durationSeconds ?? null));
     return;
   }
   if (input.syncRun) {
     logRuntime(
-      `No new sync was queued for ${input.syncRun.id}. ${input.reason ?? "Existing data is still fresh."}`
+      `No new sync was queued for ${input.syncRun.id}. ${input.reason ?? "Existing data is still fresh."}`,
     );
     if (input.syncRun.durationSeconds) {
       logRuntime(
-        `Latest completed run duration: ${formatDurationEstimate(input.syncRun.durationSeconds)}`
+        `Latest completed run duration: ${formatDurationEstimate(input.syncRun.durationSeconds)}`,
       );
     }
   }
@@ -6918,12 +7720,15 @@ function resolveWaitableSyncRunId(result) {
   if (!("syncRun" in result) || !result.syncRun) {
     return null;
   }
-  return ["queued", "running"].includes(result.syncRun.status) ? result.syncRun.id : null;
+  return ["queued", "running"].includes(result.syncRun.status)
+    ? result.syncRun.id
+    : null;
 }
 async function waitForSyncRun(input) {
   const pollIntervalMs = input.pollIntervalMs ?? 1e3;
   const heartbeatIntervalMs = input.heartbeatIntervalMs ?? 1e4;
-  const sleep = input.sleep ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
+  const sleep =
+    input.sleep ?? ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
   let previousSnapshot = null;
   let lastMeaningfulLogAt = Date.now();
   while (true) {
@@ -6939,7 +7744,7 @@ async function waitForSyncRun(input) {
         lastMeaningfulLogAt = Date.now();
       } else if (Date.now() - lastMeaningfulLogAt >= heartbeatIntervalMs) {
         logRuntime(
-          `Still waiting on sync ${syncRun.id}; last known phase is ${syncRun.currentStep ?? "queued"} (${syncRun.progressPercent ?? 0}%).`
+          `Still waiting on sync ${syncRun.id}; last known phase is ${syncRun.currentStep ?? "queued"} (${syncRun.progressPercent ?? 0}%).`,
         );
         lastMeaningfulLogAt = Date.now();
       }
@@ -6969,7 +7774,7 @@ function getRootOptions(context) {
   return {
     appUrl: normalizeAppUrl(parentOpts?.appUrl ?? DEFAULT_APP_URL),
     json: parentOpts?.json === true,
-    browser: parentOpts?.browser !== false
+    browser: parentOpts?.browser !== false,
   };
 }
 async function runHandled(task) {
@@ -7006,8 +7811,8 @@ function printTopLevelHelp() {
       "Global options:",
       "  --app-url <url>",
       "  --json",
-      "  --no-browser"
-    ].join("\n")
+      "  --no-browser",
+    ].join("\n"),
   );
 }
 var InstasightsCli = class {
@@ -7022,7 +7827,7 @@ var InstasightsCli = class {
       if (action === "status") {
         const state = await runWithRuntimeLogging(
           "Checking local authentication status",
-          async () => readAuthState()
+          async () => readAuthState(),
         );
         printJson({
           authenticated: Boolean(state.accessToken),
@@ -7030,49 +7835,50 @@ var InstasightsCli = class {
           clientId: state.clientId,
           redirectUri: state.redirectUri,
           expiresAt: state.expiresAt,
-          hasRefreshToken: Boolean(state.refreshToken)
+          hasRefreshToken: Boolean(state.refreshToken),
         });
         return;
       }
       if (action === "logout") {
         await runWithRuntimeLogging(
           "Clearing local authentication state",
-          async () => clearAuthTokens()
+          async () => clearAuthTokens(),
         );
         printJson({
           loggedOut: true,
-          appUrl: root.appUrl
+          appUrl: root.appUrl,
         });
         return;
       }
       if (action === "login") {
         const currentState = await runWithRuntimeLogging(
           "Loading current OAuth state",
-          async () => readAuthState()
+          async () => readAuthState(),
         );
         const port = parseOptionalInt(this.port, "port");
         const nextState = await runWithRuntimeLogging(
           "Starting browser OAuth login",
-          async () => runBrowserOAuthLogin({
-            appUrl: root.appUrl,
-            browser: root.browser,
-            currentState: {
-              ...currentState,
-              appUrl: root.appUrl
-            },
-            port
-          })
+          async () =>
+            runBrowserOAuthLogin({
+              appUrl: root.appUrl,
+              browser: root.browser,
+              currentState: {
+                ...currentState,
+                appUrl: root.appUrl,
+              },
+              port,
+            }),
         );
         await runWithRuntimeLogging(
           "Persisting refreshed local OAuth state",
-          async () => writeAuthState(nextState)
+          async () => writeAuthState(nextState),
         );
         printJson({
           authenticated: true,
           appUrl: nextState.appUrl,
           clientId: nextState.clientId,
           redirectUri: nextState.redirectUri,
-          expiresAt: nextState.expiresAt
+          expiresAt: nextState.expiresAt,
         });
         return;
       }
@@ -7085,10 +7891,9 @@ var InstasightsCli = class {
         fail("Unsupported setup action.", { action });
       }
       const root = getRootOptions(this);
-      const staleAfterHours = parseOptionalInt(
-        this.staleAfterHours,
-        "stale-after-hours"
-      ) ?? DEFAULT_STALE_AFTER_HOURS;
+      const staleAfterHours =
+        parseOptionalInt(this.staleAfterHours, "stale-after-hours") ??
+        DEFAULT_STALE_AFTER_HOURS;
       const client = new InstasightsApiClient(root.appUrl);
       const setupStatus = await runWithRuntimeLogging(
         "Evaluating Instagram setup status",
@@ -7097,11 +7902,15 @@ var InstasightsCli = class {
           return deriveSetupStatus({
             overview,
             appUrl: root.appUrl,
-            staleAfterHours
+            staleAfterHours,
           });
-        }
+        },
       );
-      if (setupStatus.status === "not_linked" && this.openLink && root.browser) {
+      if (
+        setupStatus.status === "not_linked" &&
+        this.openLink &&
+        root.browser
+      ) {
         await openBrowser(setupStatus.instagramLinkUrl);
       }
       printJson(setupStatus);
@@ -7114,8 +7923,8 @@ var InstasightsCli = class {
       printJson(
         await runWithRuntimeLogging(
           "Clearing linked Instagram data while keeping the CLI logged in",
-          async () => client.cleanReset()
-        )
+          async () => client.cleanReset(),
+        ),
       );
     });
   }
@@ -7127,10 +7936,9 @@ var InstasightsCli = class {
       const root = getRootOptions(this);
       const client = new InstasightsApiClient(root.appUrl);
       printJson(
-        await runWithRuntimeLogging(
-          "Fetching account overview",
-          async () => client.getAccountOverview()
-        )
+        await runWithRuntimeLogging("Fetching account overview", async () =>
+          client.getAccountOverview(),
+        ),
       );
     });
   }
@@ -7144,8 +7952,8 @@ var InstasightsCli = class {
       printJson(
         await runWithRuntimeLogging(
           "Fetching the latest synced snapshot",
-          async () => client.getLatestSnapshot()
-        )
+          async () => client.getLatestSnapshot(),
+        ),
       );
     });
   }
@@ -7160,8 +7968,8 @@ var InstasightsCli = class {
         printJson(
           await runWithRuntimeLogging(
             `Fetching media item ${mediaId}`,
-            async () => client.getMedia(mediaId)
-          )
+            async () => client.getMedia(mediaId),
+          ),
         );
         return;
       }
@@ -7175,29 +7983,19 @@ var InstasightsCli = class {
           since: options.since,
           until: options.until,
           days: days ?? void 0,
-          flatMetrics: options.flatMetrics === true
+          flatMetrics: options.flatMetrics === true,
         });
         printJson(
-          await runWithRuntimeLogging(
-            "Listing synced media",
-            async () => client.listMedia(searchParams)
-          )
+          await runWithRuntimeLogging("Listing synced media", async () =>
+            client.listMedia(searchParams),
+          ),
         );
         return;
       }
       if (action === "analyze") {
-        const days = parseOptionalInt(
-          this.days,
-          "days"
-        ) ?? 30;
-        const page = parseOptionalInt(
-          this.paginate,
-          "paginate"
-        );
-        const pageSize = parseOptionalInt(
-          this.pageSize,
-          "page-size"
-        ) ?? 10;
+        const days = parseOptionalInt(this.days, "days") ?? 30;
+        const page = parseOptionalInt(this.paginate, "paginate");
+        const pageSize = parseOptionalInt(this.pageSize, "page-size") ?? 10;
         if (days !== 30) {
           fail("media analyze currently supports only --days 30.", { days });
         }
@@ -7209,10 +8007,12 @@ var InstasightsCli = class {
         }
         const reportResponse = await runWithRuntimeLogging(
           `Fetching the ${days}-day media analysis report`,
-          async () => client.getReport(days)
+          async () => client.getReport(days),
         );
         printJson(
-          page === void 0 ? reportResponse : paginateReportResponse(reportResponse, page, pageSize)
+          page === void 0
+            ? reportResponse
+            : paginateReportResponse(reportResponse, page, pageSize),
         );
         return;
       }
@@ -7224,19 +8024,15 @@ var InstasightsCli = class {
       const root = getRootOptions(this);
       const client = new InstasightsApiClient(root.appUrl);
       if (action === "list") {
-        const limit = parseOptionalInt(
-          this.limit,
-          "limit"
-        );
+        const limit = parseOptionalInt(this.limit, "limit");
         const searchParams = new URLSearchParams();
         if (limit) {
           searchParams.set("limit", String(limit));
         }
         printJson(
-          await runWithRuntimeLogging(
-            "Listing recent sync runs",
-            async () => client.listSyncRuns(searchParams)
-          )
+          await runWithRuntimeLogging("Listing recent sync runs", async () =>
+            client.listSyncRuns(searchParams),
+          ),
         );
         return;
       }
@@ -7247,8 +8043,8 @@ var InstasightsCli = class {
         printJson(
           await runWithRuntimeLogging(
             `Fetching sync run ${syncRunId}`,
-            async () => client.getSyncRun(syncRunId)
-          )
+            async () => client.getSyncRun(syncRunId),
+          ),
         );
         return;
       }
@@ -7256,11 +8052,13 @@ var InstasightsCli = class {
         const options = this;
         const payload = {
           force: options.force === true,
-          staleAfterHours: parseOptionalInt(options.staleAfterHours, "stale-after-hours") ?? DEFAULT_STALE_AFTER_HOURS
+          staleAfterHours:
+            parseOptionalInt(options.staleAfterHours, "stale-after-hours") ??
+            DEFAULT_STALE_AFTER_HOURS,
         };
         const result = await runWithRuntimeLogging(
           "Submitting the sync request",
-          async () => client.triggerSync(payload)
+          async () => client.triggerSync(payload),
         );
         if (options.wait) {
           const syncRun = "syncRun" in result ? result.syncRun : null;
@@ -7269,15 +8067,16 @@ var InstasightsCli = class {
             queuedNewRun: result.queuedNewRun,
             reusedExistingRun: result.reusedExistingRun,
             syncRun,
-            syncRunId: "syncRunId" in result ? result.syncRunId : queuedId ?? void 0,
-            reason: "reason" in result ? result.reason : void 0
+            syncRunId:
+              "syncRunId" in result ? result.syncRunId : (queuedId ?? void 0),
+            reason: "reason" in result ? result.reason : void 0,
           });
           if (!queuedId) {
             printJson(result);
             return;
           }
           logRuntime(
-            "Polling sync status every 1 second and printing full sync status updates until the run completes."
+            "Polling sync status every 1 second and printing full sync status updates until the run completes.",
           );
           await waitForSyncRun({
             client,
@@ -7285,7 +8084,7 @@ var InstasightsCli = class {
             pollIntervalMs: 1e3,
             onPoll: (detail) => {
               printJson(detail);
-            }
+            },
           });
           return;
         }
@@ -7307,12 +8106,13 @@ var InstasightsCli = class {
       printJson(
         await runWithRuntimeLogging(
           `Generating the ${days}-day HTML report`,
-          async () => generateHtmlReport({
-            client,
-            days,
-            outputPath: options.output
-          })
-        )
+          async () =>
+            generateHtmlReport({
+              client,
+              days,
+              outputPath: options.output,
+            }),
+        ),
       );
     });
   }
@@ -7328,11 +8128,13 @@ var InstasightsCli = class {
         logRuntime("Opening the Instagram linking handoff in the browser.");
         await openBrowser(instagramLinkUrl);
       } else {
-        logRuntime("Browser launch is disabled; printing the Instagram linking URL instead.");
+        logRuntime(
+          "Browser launch is disabled; printing the Instagram linking URL instead.",
+        );
       }
       printJson({
         instagramLinkUrl,
-        openedInBrowser: shouldOpen
+        openedInBrowser: shouldOpen,
       });
     });
   }
@@ -7344,10 +8146,11 @@ var InstasightsCli = class {
       const shouldApply = action === "apply" || options.apply === true;
       const result = await runWithRuntimeLogging(
         "Checking for CLI updates",
-        async () => checkForUpdates({
-          allowCache: false,
-          force
-        })
+        async () =>
+          checkForUpdates({
+            allowCache: false,
+            force,
+          }),
       );
       if (action !== "check" && action !== "apply") {
         fail("Unsupported update action.", { action });
@@ -7358,93 +8161,229 @@ var InstasightsCli = class {
       }
       const applyResult = await runWithRuntimeLogging(
         "Applying the CLI update",
-        async () => applyUpdate(result, {
-          force
-        })
+        async () =>
+          applyUpdate(result, {
+            force,
+          }),
       );
       printJson({
         ...result,
-        apply: applyResult
+        apply: applyResult,
       });
     });
   }
 };
-__decorateClass([
-  (0, import_commander_ts.option)("--app-url <url>", "Use a different Instasights app URL")
-], InstasightsCli.prototype, "appUrl", 2);
-__decorateClass([
-  (0, import_commander_ts.option)("--json", "Legacy compatibility flag; data commands already default to JSON")
-], InstasightsCli.prototype, "json", 2);
-__decorateClass([
-  (0, import_commander_ts.option)("--no-browser", "Disable automatic browser launch")
-], InstasightsCli.prototype, "browser", 2);
-__decorateClass([
-  (0, import_commander_ts.command)(),
-  (0, import_commander_ts.commandOption)("--port <n>", "Use a specific localhost callback port"),
-  __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstasightsCli.prototype, "auth", 1);
-__decorateClass([
-  (0, import_commander_ts.command)(),
-  (0, import_commander_ts.commandOption)("--stale-after-hours <n>", "Freshness threshold in hours"),
-  (0, import_commander_ts.commandOption)("--open-link", "Open the Instagram linking handoff when status is not_linked"),
-  __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstasightsCli.prototype, "setup", 1);
-__decorateClass([
-  (0, import_commander_ts.command)()
-], InstasightsCli.prototype, "clean-reset", 1);
-__decorateClass([
-  (0, import_commander_ts.command)(),
-  __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstasightsCli.prototype, "account", 1);
-__decorateClass([
-  (0, import_commander_ts.command)(),
-  __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstasightsCli.prototype, "snapshot", 1);
-__decorateClass([
-  (0, import_commander_ts.command)(),
-  (0, import_commander_ts.commandOption)("--limit <n>", "Maximum number of items to fetch"),
-  (0, import_commander_ts.commandOption)("--media-type <type>", "Filter by media type"),
-  (0, import_commander_ts.commandOption)("--since <iso>", "Only include media posted at or after this ISO timestamp"),
-  (0, import_commander_ts.commandOption)("--until <iso>", "Only include media posted at or before this ISO timestamp"),
-  (0, import_commander_ts.commandOption)("--days <n>", "Only include media from the trailing N days"),
-  (0, import_commander_ts.commandOption)("--flat-metrics", "Include stored flat metrics and analysis fields"),
-  (0, import_commander_ts.commandOption)("--paginate <page>", "Paginate large analysis arrays for easier machine parsing"),
-  (0, import_commander_ts.commandOption)("--page-size <n>", "Number of items per page when --paginate is used"),
-  __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
-  __decorateParam(1, (0, import_commander_ts.optionalArg)("mediaId"))
-], InstasightsCli.prototype, "media", 1);
-__decorateClass([
-  (0, import_commander_ts.command)(),
-  (0, import_commander_ts.commandOption)("--limit <n>", "Maximum number of sync runs to fetch"),
-  (0, import_commander_ts.commandOption)("--force", "Force a new sync even when data is fresh"),
-  (0, import_commander_ts.commandOption)("--stale-after-hours <n>", "Freshness threshold in hours"),
-  (0, import_commander_ts.commandOption)("--wait", "Poll until the sync reaches a terminal state"),
-  __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
-  __decorateParam(1, (0, import_commander_ts.optionalArg)("syncRunId"))
-], InstasightsCli.prototype, "sync", 1);
-__decorateClass([
-  (0, import_commander_ts.command)(),
-  (0, import_commander_ts.commandOption)("--days <n>", "Report window in days"),
-  (0, import_commander_ts.commandOption)("--output <path>", "Write the generated HTML report to this path"),
-  __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstasightsCli.prototype, "report", 1);
-__decorateClass([
-  (0, import_commander_ts.command)(),
-  (0, import_commander_ts.commandOption)("--open", "Open the Instagram linking handoff in the browser"),
-  __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstasightsCli.prototype, "instagram", 1);
-__decorateClass([
-  (0, import_commander_ts.command)(),
-  (0, import_commander_ts.commandOption)("--apply", "Apply the update immediately after checking"),
-  (0, import_commander_ts.commandOption)("--force", "Reinstall the published version even when versions match"),
-  __decorateParam(0, (0, import_commander_ts.requiredArg)("action"))
-], InstasightsCli.prototype, "update", 1);
-InstasightsCli = __decorateClass([
-  (0, import_commander_ts.program)(),
-  (0, import_commander_ts.version)(CLI_VERSION),
-  (0, import_commander_ts.description)("Instasights skill CLI"),
-  (0, import_commander_ts.usage)("[global options] <command> [subcommand]")
-], InstasightsCli);
+__decorateClass(
+  [
+    (0, import_commander_ts.option)(
+      "--app-url <url>",
+      "Use a different Instasights app URL",
+    ),
+  ],
+  InstasightsCli.prototype,
+  "appUrl",
+  2,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.option)(
+      "--json",
+      "Legacy compatibility flag; data commands already default to JSON",
+    ),
+  ],
+  InstasightsCli.prototype,
+  "json",
+  2,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.option)(
+      "--no-browser",
+      "Disable automatic browser launch",
+    ),
+  ],
+  InstasightsCli.prototype,
+  "browser",
+  2,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.command)(),
+    (0, import_commander_ts.commandOption)(
+      "--port <n>",
+      "Use a specific localhost callback port",
+    ),
+    __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
+  ],
+  InstasightsCli.prototype,
+  "auth",
+  1,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.command)(),
+    (0, import_commander_ts.commandOption)(
+      "--stale-after-hours <n>",
+      "Freshness threshold in hours",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--open-link",
+      "Open the Instagram linking handoff when status is not_linked",
+    ),
+    __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
+  ],
+  InstasightsCli.prototype,
+  "setup",
+  1,
+);
+__decorateClass(
+  [(0, import_commander_ts.command)()],
+  InstasightsCli.prototype,
+  "clean-reset",
+  1,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.command)(),
+    __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
+  ],
+  InstasightsCli.prototype,
+  "account",
+  1,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.command)(),
+    __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
+  ],
+  InstasightsCli.prototype,
+  "snapshot",
+  1,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.command)(),
+    (0, import_commander_ts.commandOption)(
+      "--limit <n>",
+      "Maximum number of items to fetch",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--media-type <type>",
+      "Filter by media type",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--since <iso>",
+      "Only include media posted at or after this ISO timestamp",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--until <iso>",
+      "Only include media posted at or before this ISO timestamp",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--days <n>",
+      "Only include media from the trailing N days",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--flat-metrics",
+      "Include stored flat metrics and analysis fields",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--paginate <page>",
+      "Paginate large analysis arrays for easier machine parsing",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--page-size <n>",
+      "Number of items per page when --paginate is used",
+    ),
+    __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
+    __decorateParam(1, (0, import_commander_ts.optionalArg)("mediaId")),
+  ],
+  InstasightsCli.prototype,
+  "media",
+  1,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.command)(),
+    (0, import_commander_ts.commandOption)(
+      "--limit <n>",
+      "Maximum number of sync runs to fetch",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--force",
+      "Force a new sync even when data is fresh",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--stale-after-hours <n>",
+      "Freshness threshold in hours",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--wait",
+      "Poll until the sync reaches a terminal state",
+    ),
+    __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
+    __decorateParam(1, (0, import_commander_ts.optionalArg)("syncRunId")),
+  ],
+  InstasightsCli.prototype,
+  "sync",
+  1,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.command)(),
+    (0, import_commander_ts.commandOption)(
+      "--days <n>",
+      "Report window in days",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--output <path>",
+      "Write the generated HTML report to this path",
+    ),
+    __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
+  ],
+  InstasightsCli.prototype,
+  "report",
+  1,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.command)(),
+    (0, import_commander_ts.commandOption)(
+      "--open",
+      "Open the Instagram linking handoff in the browser",
+    ),
+    __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
+  ],
+  InstasightsCli.prototype,
+  "instagram",
+  1,
+);
+__decorateClass(
+  [
+    (0, import_commander_ts.command)(),
+    (0, import_commander_ts.commandOption)(
+      "--apply",
+      "Apply the update immediately after checking",
+    ),
+    (0, import_commander_ts.commandOption)(
+      "--force",
+      "Reinstall the published version even when versions match",
+    ),
+    __decorateParam(0, (0, import_commander_ts.requiredArg)("action")),
+  ],
+  InstasightsCli.prototype,
+  "update",
+  1,
+);
+InstasightsCli = __decorateClass(
+  [
+    (0, import_commander_ts.program)(),
+    (0, import_commander_ts.version)(CLI_VERSION),
+    (0, import_commander_ts.description)("Instasights skill CLI"),
+    (0, import_commander_ts.usage)("[global options] <command> [subcommand]"),
+  ],
+  InstasightsCli,
+);
 function runCli() {
   new InstasightsCli();
 }
@@ -7455,7 +8394,7 @@ async function main() {
   if (canAutoUpdate(args)) {
     const result = await checkForUpdates({
       allowCache: true,
-      force: false
+      force: false,
     });
     if (result.updateAvailable) {
       try {
@@ -7465,7 +8404,10 @@ async function main() {
           return;
         }
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Unable to apply automatic updates.";
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Unable to apply automatic updates.";
         console.error(`[instasights:update] ${message}`);
       }
     }
@@ -7473,7 +8415,8 @@ async function main() {
   runCli();
 }
 void main().catch((error) => {
-  const message = error instanceof Error ? error.message : "CLI execution failed.";
+  const message =
+    error instanceof Error ? error.message : "CLI execution failed.";
   console.error(message);
   process.exit(1);
 });
@@ -7485,12 +8428,12 @@ reflect-metadata/Reflect.js:
   Licensed under the Apache License, Version 2.0 (the "License"); you may not use
   this file except in compliance with the License. You may obtain a copy of the
   License at http://www.apache.org/licenses/LICENSE-2.0
-  
+
   THIS CODE IS PROVIDED ON AN *AS IS* BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
   KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION ANY IMPLIED
   WARRANTIES OR CONDITIONS OF TITLE, FITNESS FOR A PARTICULAR PURPOSE,
   MERCHANTABLITY OR NON-INFRINGEMENT.
-  
+
   See the Apache Version 2.0 License for specific language governing permissions
   and limitations under the License.
   ***************************************************************************** *)

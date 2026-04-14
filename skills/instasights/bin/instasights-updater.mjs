@@ -7,25 +7,30 @@ import { chmod, copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 // src/constants.ts
-var DEFAULT_APP_URL = "https://project-qah0p.vercel.app";
+var DEFAULT_APP_URL = "https://instasights.kingscrosslabs.com";
 var DEFAULT_UPDATE_MANIFEST_URL = `${DEFAULT_APP_URL}/api/cli/latest`;
 
 // src/build-constants.ts
-var EMBEDDED_CLI_VERSION = true ? "1.0.0" : process.env.INSTASIGHTS_EMBEDDED_VERSION ?? "1.0.0";
-var EMBEDDED_UPDATE_MANIFEST_URL = true ? "https://project-qah0p.vercel.app/api/cli/latest" : process.env.INSTASIGHTS_EMBEDDED_UPDATE_MANIFEST_URL ?? DEFAULT_UPDATE_MANIFEST_URL2;
+var EMBEDDED_CLI_VERSION = true
+  ? "1.0.0"
+  : (process.env.INSTASIGHTS_EMBEDDED_VERSION ?? "1.0.0");
+var EMBEDDED_UPDATE_MANIFEST_URL = true
+  ? "https://instasights.kingscrosslabs.com/api/cli/latest"
+  : (process.env.INSTASIGHTS_EMBEDDED_UPDATE_MANIFEST_URL ??
+    DEFAULT_UPDATE_MANIFEST_URL2);
 
 // src/version.ts
 var AUTO_UPDATE_TTL_MS = 12 * 60 * 60 * 1e3;
 var MANAGED_SKILL_FILES = [
   "bin/instasights.mjs",
   "bin/instasights-updater.mjs",
-  "bin/instasights.version.json"
+  "bin/instasights.version.json",
 ];
 
 // src/updater-helper.ts
 function parseArg(flag, argv = process.argv) {
   const index = argv.indexOf(flag);
-  return index === -1 ? null : argv[index + 1] ?? null;
+  return index === -1 ? null : (argv[index + 1] ?? null);
 }
 function getRequiredArg(flag, argv = process.argv) {
   const value = parseArg(flag, argv);
@@ -38,14 +43,16 @@ function resolveManagedPath(baseDir, relativePath) {
   const target = path.resolve(baseDir, relativePath);
   const normalizedBase = `${path.resolve(baseDir)}${path.sep}`;
   if (target !== path.resolve(baseDir) && !target.startsWith(normalizedBase)) {
-    throw new Error(`Refusing to write outside the managed skill root: ${relativePath}`);
+    throw new Error(
+      `Refusing to write outside the managed skill root: ${relativePath}`,
+    );
   }
   return target;
 }
 async function applyStagedUpdate(input) {
   const versionPath = resolveManagedPath(
     input.skillRoot,
-    "bin/instasights.version.json"
+    "bin/instasights.version.json",
   );
   for (const file of input.files) {
     if (!MANAGED_SKILL_FILES.includes(file.path)) {
@@ -64,13 +71,13 @@ async function applyStagedUpdate(input) {
     `${JSON.stringify(
       {
         version: input.version,
-        installedAt: (/* @__PURE__ */ new Date()).toISOString()
+        installedAt: /* @__PURE__ */ new Date().toISOString(),
       },
       null,
-      2
+      2,
     )}
 `,
-    "utf8"
+    "utf8",
   );
   await chmod(versionPath, 420).catch(() => void 0);
 }
@@ -82,7 +89,8 @@ async function runUpdaterHelperMain(argv = process.argv) {
 
 // src/updater-helper-main.ts
 void runUpdaterHelperMain().catch((error) => {
-  const message = error instanceof Error ? error.message : "Updater helper execution failed.";
+  const message =
+    error instanceof Error ? error.message : "Updater helper execution failed.";
   console.error(message);
   process.exit(1);
 });

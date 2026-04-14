@@ -2,7 +2,7 @@
   "mcpServers": {
     "instagram": {
       "type": "http",
-      "url": "https://project-qah0p.vercel.app/mcp"
+      "url": "https://instasights.kingscrosslabs.com/mcp"
     }
   }
 }
