@@ -1145,6 +1145,22 @@ export async function getLatestInstagramSyncRun(userId: string) {
   )[0] ?? null;
 }
 
+export async function getLatestCompletedInstagramSyncRun(userId: string) {
+  return (
+    await getDb()
+      .select()
+      .from(instagramSyncRuns)
+      .where(
+        and(
+          eq(instagramSyncRuns.userId, userId),
+          eq(instagramSyncRuns.status, "completed"),
+        ),
+      )
+      .orderBy(desc(instagramSyncRuns.completedAt), desc(instagramSyncRuns.id))
+      .limit(1)
+  )[0] ?? null;
+}
+
 export async function getLatestActiveInstagramSyncRunByUserId(userId: string) {
   const rows = await getDb()
     .select()

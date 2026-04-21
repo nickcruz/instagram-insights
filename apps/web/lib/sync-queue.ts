@@ -2,6 +2,7 @@ import {
   createInstagramSyncRun,
   getInstagramAccountByUserId,
   getLatestActiveInstagramSyncRunByUserId,
+  getLatestCompletedInstagramSyncRun,
   getLatestInstagramSyncRun,
   markInstagramSyncRunFailed,
   serializeSyncRunSummary,
@@ -82,20 +83,20 @@ export async function queueInstagramSync(input: {
       };
     }
 
-    const latestRun = await getLatestInstagramSyncRun(input.userId);
+    const latestCompletedRun = await getLatestCompletedInstagramSyncRun(input.userId);
 
-    if (latestRun?.completedAt) {
-      const ageMs = Date.now() - latestRun.completedAt.getTime();
+    if (latestCompletedRun?.completedAt) {
+      const ageMs = Date.now() - latestCompletedRun.completedAt.getTime();
       const staleAfterMs = staleAfterHours * 60 * 60 * 1000;
 
       if (ageMs < staleAfterMs) {
         return {
           statusCode: 200,
           body: {
-            syncRun: serializeSyncRunSummary(latestRun),
+            syncRun: serializeSyncRunSummary(latestCompletedRun),
             reusedExistingRun: false,
             queuedNewRun: false,
-            reason: `Latest sync is newer than ${staleAfterHours} hours.`,
+            reason: `Latest successful sync is newer than ${staleAfterHours} hours.`,
           },
         };
       }
